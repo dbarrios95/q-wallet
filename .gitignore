@@ -1,0 +1,32 @@
+# Node
+node_modules/
+dist/
+.expo/
+*.log
+# Android / Expo
+android/
+ios/
+*.apk
+*.aab
+*.keystore
+*.jks
+# Secretos (nunca al repo)
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!example.tfvars
+crash.log
+# Sistema / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+# Evidencias crudas sin censurar
+docs/evidencias/_raw/
