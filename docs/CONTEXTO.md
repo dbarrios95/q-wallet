@@ -134,6 +134,11 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 | tailwindcss | 3.4.19 (NativeWind 4 no soporta Tailwind 4) |
 | react-native-ssl-public-key-pinning | 1.2.6 |
 | freerasp-react-native | 5.2.2 |
+| expo-screen-capture | ~57.0.3 |
+| expo-splash-screen | ~57.0.9 |
+| @expo-google-fonts/inter | 0.4.2 |
+| lucide-react-native | 1.51.0 |
+| zod | 4.6.5 |
 
 #### Backend (`/services`)
 | Paquete / componente | Versión |
