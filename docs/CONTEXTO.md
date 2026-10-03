@@ -98,7 +98,7 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 | Android Studio / SDK Android | Estable vigente al instalar → anotar en BITACORA |
 | Docker Desktop / Engine | Estable vigente al instalar → anotar en BITACORA |
 | AWS CLI | v2, estable vigente al instalar → anotar en BITACORA |
-| Gemini CLI (`@google/gemini-cli`) | 0.62.0 |
+| Antigravity CLI (agy) | 1.2.16 |
 | create-expo-app | 5.0.0 (plantilla `blank-typescript@sdk-57`) |
 
 #### App móvil (`/mobile`)
@@ -139,6 +139,7 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 | @expo-google-fonts/inter | 0.4.2 |
 | lucide-react-native | 1.51.0 |
 | zod | 4.6.5 |
+| eslint | 10.12.0 |
 
 #### Backend (`/services`)
 | Paquete / componente | Versión |
@@ -384,12 +385,12 @@ GEMINI.md
 
 | Campo | Valor |
 |---|---|
-| Última actualización | 03-oct-2026 |
-| Fase actual | Entrega 1 — Selección y Planificación + Activos y Riesgos |
-| Versión de la app | Sin código; repo por crear |
-| Completado | Contexto, plan, plantillas, stack, versiones; estrategia cambiada a seguro desde el diseño |
-| En curso | — |
-| Siguiente paso | Pasos 0–3 de `INICIO.md` (sáb 3 – dom 4) y prompt de arranque de Gemini CLI |
-| Bloqueos | Pendientes del §10 |
+| Última actualización | 03-oct-2026 (Sesión 1 autónoma) |
+| Fase actual | Entrega 1 — Selección y Planificación + Activos y Riesgos (andamiaje móvil completado) |
+| Versión de la app | Expo SDK 57 (React Native 0.86.3, TS strict), NativeWind 4.2.7, Tailwind 3.4.19, Reanimated 4, expo-router, 8 pantallas simuladas |
+| Completado | Script dev-env.ps1; app Expo SDK 57 inicializada; NativeWind 4 + Reanimated 4; app.json seguro (gt.qwallet.app, allowBackup: false); sistema de diseño y tokens (Inter, #0B1F3A, #00A86B); 9 componentes reutilizables; mocks GTQ en centavos; 8 pantallas con expo-router; FLAG_SECURE en transfer, unlock y profile; validaciones zod strict; cero console.log; ESLint 10.12.0 y tsc --noEmit limpios (0 errores); reporte SCA npm audit |
+| En curso | Elaboración documental de la Entrega 1 (sábado 17-oct) |
+| Siguiente paso | Instalación manual por el usuario (JDK 17, Terraform 1.16.5, Android Studio/adb y primer `npx expo run:android`); avance documental |
+| Bloqueos | Pendientes del §10 (nombres de integrantes, asignación de roles, fecha de entrega final, plantilla UMG) |
 | Recursos AWS desplegados | Ninguno |
 | Gasto AWS acumulado | US$0 |

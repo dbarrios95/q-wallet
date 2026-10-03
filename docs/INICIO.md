@@ -8,7 +8,7 @@
 
 ```
 C:\dev\q-wallet\              ← raíz del repo (GitHub, público). Ruta corta a propósito: Android falla con rutas largas en Windows
-├── GEMINI.md                  ← Gemini CLI lo lee automáticamente
+├── GEMINI.md                  ← Antigravity CLI (agy) lo lee automáticamente
 ├── README.md
 ├── SECURITY.md                ← política de seguridad (evidencia capa 7)
 ├── .gitignore                 ← bloquea .env, keystores, tfstate, android/
@@ -43,7 +43,7 @@ El zip `q-wallet-repo.zip` ya trae esta estructura con todos los archivos en su 
 |---|---|
 | Proyecto de Claude | Instrucciones = texto de `INSTRUCCIONES.md`. Conocimiento = `CONTEXTO.md`, `BITACORA.md`, `PLAN_FASES.md`, `REGISTRO_RIESGOS.md`, `CHECKLIST_EVIDENCIAS.md`, enunciado y rúbrica |
 | Gem de Gemini | Lo mismo que el proyecto de Claude |
-| Gemini CLI | Nada: lee `GEMINI.md` y `docs/` del repo |
+| Antigravity CLI (agy) | Nada: lee `GEMINI.md` y `docs/` del repo |
 
 Cada vez que cambien `CONTEXTO.md` o `BITACORA.md`, vuelvan a subirlos al proyecto de Claude y a la Gem.
 
@@ -71,7 +71,6 @@ Cerrar y abrir PowerShell, luego:
 nvm install 24.21.0
 nvm use 24.21.0
 node -v                                   # debe decir v24.21.0
-npm install -g @google/gemini-cli@0.62.0
 git config --global core.longpaths true
 git config --global core.autocrlf input   # respeta LF del .editorconfig
 ```
@@ -130,7 +129,7 @@ Anotar en `BITACORA.md` las versiones instaladas de Git, Android Studio, Docker 
 ### Paso 3 — Asistentes (I1)
 
 1. Crear el proyecto de Claude y la Gem de Gemini con los archivos de la tabla anterior.
-2. Instalar Gemini CLI y ejecutar `gemini` en la raíz del repo para verificar que lee `GEMINI.md`.
+2. Ejecutar `agy --dangerously-skip-permissions` en la raíz del repo para verificar que lee `GEMINI.md`.
 
 ### Paso 4 — Primera sesión de la Entrega 1
 
@@ -168,7 +167,7 @@ npx expo run:android
 
 Commit al terminar: `chore(mobile): inicializa Expo SDK 57 con dependencias fijadas`.
 
-### Paso 6 — Primer prompt para Gemini CLI (dentro de `mobile/`)
+### Paso 6 — Primer prompt para Antigravity CLI (agy --dangerously-skip-permissions) (dentro de `mobile/`)
 
 > Lee GEMINI.md y docs/CONTEXTO.md. Configura en /mobile: NativeWind 4.2.7 con tailwindcss 3.4.19, expo-router con entrada `expo-router/entry` y Reanimated 4 con worklets.
 >

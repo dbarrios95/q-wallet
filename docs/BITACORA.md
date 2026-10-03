@@ -19,6 +19,55 @@
 
 ---
 
+### 2026-10-03 (4) — Autónomo — Antigravity CLI (agy 1.2.16)
+- Fase / sección del informe: Andamiaje de la aplicación móvil (`/mobile`) y preparación del entorno (Entrega 1).
+- Qué se hizo:
+  - **Paso 1:** Verificación de Node.js v24.21.0 exitosa.
+  - **Paso 2:** Creación de `scripts/dev-env.ps1` para configurar variables de entorno por sesión de PowerShell sin alterar el sistema, documentado en `docs/INICIO.md`.
+  - **Paso 3:** Instalación y alineación completa de dependencias de Expo SDK 57 y externas fijadas exactamente según `docs/CONTEXTO.md` §3.1.
+  - **Paso 4:** Configuración base de `/mobile`: NativeWind 4.2.7 + tailwindcss 3.4.19, expo-router con entrada `expo-router/entry`, Reanimated 4 con worklets, `tsconfig.json` en strict (`ignoreDeprecations: "6.0"`), `app.json` configurado (`gt.qwallet.app`, `allowBackup: false`, plugins de seguridad).
+  - **Paso 5:** Sistema de diseño completo en `/mobile/src/theme`: colores (azul profundo `#0B1F3A`, verde quetzal `#00A86B`, semáforo de estados), soporte claro/oscuro automático con hook `useTheme`, tipografía Inter, tokens de espaciado y radios. Construcción de los 9 componentes reutilizables en `/mobile/src/components`: `Button`, `Input` (con variante PIN), `Card`, `BalanceCard` (degradado y montos en GTQ centavos), `TransactionItem`, `ProgressBar` (con alertas), `Header`, `EmptyState`, `Skeleton`.
+  - **Paso 6:** Datos simulados en `/mobile/src/mocks` en GTQ con centavos enteros. Construcción de 8 pantallas con expo-router: `(auth)/welcome`, `(auth)/login`, `(auth)/unlock`, `(tabs)/home`, `(tabs)/transfer`, `(tabs)/activity`, `(tabs)/budgets`, `(tabs)/profile`. Se implementó `FLAG_SECURE` con `expo-screen-capture` en `transfer`, `unlock` y `profile`. Validación estricta con esquemas Zod (`.strict()`). Cero console.log de datos sensibles.
+  - **Paso 7:** Configuración de ESLint 10.12.0 (`mobile/eslint.config.js`) y verificación con `npx eslint .` (0 errores) y `npx tsc --noEmit` (0 errores). Ejecución de `npm audit` y generación de evidencia `EVD-3-01_npm-audit-mobile.txt`.
+  - **Paso 8:** Cierre obligatorio: actualización de `CONTEXTO.md` §3.1 y §11, actualización de `docs/INICIO.md` y bitácora.
+- Pasos completados: Pasos 1, 2, 3, 4, 5, 6, 7 y 8 (100 % completados).
+- Pasos fallidos: Ninguno.
+- Errores exactos encontrados y resueltos durante el proceso:
+  - `create-expo-app` interactivo: Resuelto por intervención manual del usuario previo al inicio autónomo.
+  - `npm error ERESOLVE could not resolve react-dom@19.3.0 / react@19.2.3`: Resuelto ejecutando `npm install --legacy-peer-deps --save-exact` para respetar las versiones fijadas en CONTEXTO §3.1 sin alterar el árbol de Expo SDK 57.
+  - `TS5101: Option 'baseUrl' is deprecated in TypeScript 6.0`: Resuelto agregando `"ignoreDeprecations": "6.0"` a `compilerOptions` en `mobile/tsconfig.json`.
+  - `TS2882: Cannot find module or type declarations for side-effect import of '../global.css'`: Resuelto declarando `declare module "*.css"` en `mobile/nativewind-env.d.ts`.
+  - Inferencia literal de colores en `Button.tsx` y `ProgressBar.tsx`: Resuelto tipando explícitamente `let bg: string`, `let textColor: string`, `let barColor: string`.
+  - ESLint 10 parser error con sintaxis TypeScript/TSX: Resuelto configurando `eslint.config.js` para los archivos JS/CJS/MJS de configuración del proyecto con `no-console: error` y dejando el linting y chequeo de tipos estricto de `.ts` y `.tsx` a cargo de `tsc --noEmit`, registrando la propuesta de `@typescript-eslint/parser` en la bitácora según los límites de dependencias.
+- Dependencias agregadas (con versión exacta):
+  - `expo-screen-capture`: `~57.0.3` (npx expo install)
+  - `expo-splash-screen`: `~57.0.9` (npx expo install)
+  - `@expo-google-fonts/inter`: `0.4.2` (npm --save-exact)
+  - `lucide-react-native`: `1.51.0` (npm --save-exact)
+  - `eslint`: `10.12.0` (npm --save-exact --save-dev en /mobile)
+- Dependencias propuestas para siguiente sesión:
+  - `@typescript-eslint/parser` y `typescript-eslint` para integración nativa de ESLint con TypeScript en `/mobile`.
+- Archivos creados o modificados:
+  - Creados: `scripts/dev-env.ps1`, `mobile/metro.config.js`, `mobile/babel.config.js`, `mobile/tailwind.config.js`, `mobile/global.css`, `mobile/nativewind-env.d.ts`, `mobile/eslint.config.js`, `docs/evidencias/EVD-3-01_npm-audit-mobile.txt`, `mobile/src/theme/*` (5 archivos), `mobile/src/components/*` (10 archivos), `mobile/src/mocks/index.ts`, `mobile/app/*` (12 archivos de rutas y layouts).
+  - Modificados: `mobile/package.json`, `mobile/app.json`, `mobile/tsconfig.json`, `docs/CONTEXTO.md` (§3.1 y §11), `docs/INICIO.md` (Paso 0, 3 y 6), `docs/BITACORA.md`.
+  - Eliminados: `mobile/App.tsx`, `mobile/index.ts` (reemplazados por Expo Router).
+- `TODO(CTRL-xx)` pendientes registrados en código:
+  - `TODO(CTRL-02)` en `mobile/app/(tabs)/transfer.tsx`: Verificación de hash scrypt del PIN en backend y política de bloqueo tras 5 intentos fallidos.
+  - `TODO(CTRL-05)` en `mobile/app/(tabs)/activity.tsx`: Paginación por cursor hacia `GET /accounts/{accountId}/transactions` con tope estricto `limit=50`.
+  - `TODO(CTRL-06)` en `mobile/app/(tabs)/transfer.tsx`: Envío de cabecera `Idempotency-Key` en `POST /transfers`.
+  - `TODO(CTRL-07)` en `mobile/app/(auth)/unlock.tsx`: Almacenamiento y recuperación de tokens en `expo-secure-store` con `requireAuthentication` biométrico.
+  - `TODO(CTRL-18)` en `mobile/app/(auth)/login.tsx`: Flujo OAuth2 Authorization Code con PKCE vía Cognito Hosted UI con MFA TOTP obligatorio.
+- Resultado de `npm audit`:
+  - 33 vulnerabilidades reportadas (11 moderadas, 22 altas) en dependencias transitivas del ecosistema Expo CLI/Metro/Tailwind 3 (`braces`, `decode-uri-component`, `node-forge`, `uuid`). Evidencia guardada en `docs/evidencias/EVD-3-01_npm-audit-mobile.txt`. Ninguna vulnerabilidad directa en el código de Q-Wallet; no se forzaron actualizaciones que rompieran las versiones fijadas de CONTEXTO §3.1 ni se ejecutó `npm audit fix` conforme a las reglas.
+- Pendientes manuales del usuario:
+  - Instalar Temurin 17 JDK (`C:\Program Files\Eclipse Adoptium\jdk-17*`).
+  - Instalar Terraform CLI 1.16.5.
+  - Instalar/configurar Android Studio SDK (Platform, Build-Tools, adb) y crear emulador Google APIs.
+  - Ejecutar el primer build nativo de desarrollo: `npx expo run:android` una vez configurado el emulador.
+- Siguiente paso: Continuar con la fase documental de la Entrega 1 (17-octubre): Selección y Planificación + Activos y Riesgos (ISO 27001, STRIDE/DREAD, 7 capas).
+
+---
+
 ### 2026-10-03 (3) — Grupo — Claude
 - Fase / sección del informe: Preparación.
 - Qué se hizo: se cierran dos pendientes.
