@@ -1,4 +1,4 @@
-# scripts/dev-env.ps1
+﻿# scripts/dev-env.ps1
 # Configuración del entorno de desarrollo para la sesión actual de PowerShell de Q-Wallet
 
 Write-Host "=== Configurando entorno de desarrollo Q-Wallet ===" -ForegroundColor Cyan
