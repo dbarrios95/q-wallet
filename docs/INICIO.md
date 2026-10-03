@@ -83,6 +83,11 @@ git config --global core.autocrlf input   # respeta LF del .editorconfig
   - `%ANDROID_HOME%\platform-tools`
   - `%ANDROID_HOME%\emulator`
 
+Alternativamente, para configurar las variables automáticamente solo en la sesión actual de PowerShell sin modificar variables del sistema, ejecutar desde la raíz del repo:
+```powershell
+.\scripts\dev-env.ps1
+```
+
 **Android Studio:**
 - **SDK Manager:** instalar SDK Platform, Build-Tools y Command-line Tools. Anotar sus versiones en la bitácora.
 - **Device Manager:** crear un emulador con imagen **Google APIs**, sin Play Store, para poder rootearlo en las pruebas de freeRASP/Frida.
