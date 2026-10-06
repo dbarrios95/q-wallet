@@ -19,6 +19,35 @@
 
 ---
 
+### 2026-10-05 (2) — Manual — Claude + PowerShell + GitHub web
+- Fase / sección del informe: Preparación. Seguridad del repositorio (CTRL-10, CTRL-16, CTRL-21).
+- Qué se hizo:
+  - `.github/dependabot.yml` (ya existía con npm `/mobile`, npm `/services`, terraform `/infra` y github-actions `/`): se agregó `open-pull-requests-limit: 0` a las dos entradas npm. Solo PR de seguridad; sin PR de versión que rompan SDK 57 ni las versiones fijadas de §3.1. Terraform y github-actions siguen con PR de versión semanales (revisión manual).
+  - Referencias al audit actualizadas a `EVD-3-00_npm-audit-mobile.txt` en esta bitácora. El ID `EVD-3-01` queda reservado para el pipeline de GitHub Actions (CHECKLIST_EVIDENCIAS).
+  - Hallazgo: el repo era **privado**, en contra de §3. En GitHub Free los rulesets no se aplican en repos privados: el primer push de prueba (`f91caf0`, commit vacío) pasó a `main`.
+  - gitleaks 8.30.1 (Docker `zricethezav/gitleaks:v8.30.1`) sobre el historial completo (16 commits): `no leaks found`. Después se hizo **público** el repo.
+  - Ruleset `main-protegida`: Active, target default branch, bypass vacío, reglas Restrict deletions, Block force pushes, Require pull request (0 approvals). Verificado: push directo rechazado con `GH013`.
+  - Advanced Security: Dependency graph, Dependabot alerts, Dependabot security updates, Secret Protection y Push protection activos. CodeQL Default setup **no** activado (se usará workflow avanzado fijado por SHA).
+  - Evidencias subidas por rama `chore/evidencias-github` + PR.
+- Errores encontrados y corregidos:
+  1. Reemplazo masivo `EVD-3-01 → EVD-3-00` (commit `10a87fc`) alteró por error `CHECKLIST_EVIDENCIAS.md` (ID del pipeline) y `TRASPASO_CHAT.md`, y sobrescribió `dependabot.yml`. Corregido en `06ff85c` restaurando desde `b271357`.
+  2. `dependabot.yml` sin salto de línea final (here-string de PowerShell). Corregido en `43cacc7`.
+  3. El primer ruleset no se guardó (la API `/rulesets` devolvía vacío). Se recreó y se presionó **Create**.
+- Archivos creados o modificados: `.github/dependabot.yml`, `docs/BITACORA.md`, `docs/CONTEXTO.md`, `docs/TRASPASO_CHAT.md`, `docs/evidencias/*`.
+- Decisiones tomadas (y por qué):
+  - Repo público: rulesets, secret scanning, push protection y CodeQL gratis; Actions sin límite de minutos. El diseño no depende de ocultar código.
+  - Desde ahora **ningún commit directo a `main`**, tampoco de agy: rama → PR → merge.
+- Cambios de versión: ninguno.
+- Evidencias generadas (EVD-): `EVD-1-04a_github-secret-protection.png`, `EVD-1-04b_github-dependabot.png`, `EVD-1-04c_github-ruleset-main.png`, `EVD-1-06_ruleset-push-rechazado.png`, `EVD-1-07_gitleaks-historial-pre-publico.png`.
+- IDs nuevos: ninguno.
+- Hallazgos para el informe:
+  - Dependabot reporta 5 vulnerabilidades (2 altas, 3 moderadas) en `main`; `npm audit` reportó 33. Conciliar en la fase de SCA (probable deduplicación por advisory).
+  - Dependabot abrió 6 ramas/PR en `/mobile` (reanimated 4.7.0, react-native-svg 15.15.5, tailwindcss 4.3.3, typescript 7.0.2 y dos grupos `multi-*`). Tailwind 4 rompe NativeWind 4 y TypeScript 7 sale de §3.1: **no se mergean**. Revisar si alguno es de seguridad y cerrar los de versión.
+- Problemas / bloqueos: ninguno.
+- Siguiente paso: revisar y cerrar los PR de Dependabot; corregir textos falsos de la UI.
+
+---
+
 ### 2026-10-05 — Manual — Claude + PowerShell (cierre por agy)
 - Fase / sección del informe: Preparación del entorno. Primer build nativo Android.
 - Qué se hizo:
