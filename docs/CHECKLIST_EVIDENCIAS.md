@@ -28,7 +28,7 @@ Como no hay demo en vivo, toda afirmación técnica del informe necesita una evi
 
 | ✔ | EVD | Qué debe verse |
 |---|---|---|
-| ☐ | EVD-3-00 | Pipeline de GitHub Actions con todos los jobs |
+| ☐ | EVD-3-01 | Pipeline de GitHub Actions con todos los jobs |
 | ☐ | EVD-3-02 | Semgrep: resultado del escaneo |
 | ☐ | EVD-3-03 | CodeQL / SonarQube Cloud: dashboard (quality gate) |
 | ☐ | EVD-3-04 | Dependency-Check / Snyk: reporte SCA |
