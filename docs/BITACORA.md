@@ -60,7 +60,7 @@
   - **Paso 4:** Configuración base de `/mobile`: NativeWind 4.2.7 + tailwindcss 3.4.19, expo-router con entrada `expo-router/entry`, Reanimated 4 con worklets, `tsconfig.json` en strict (`ignoreDeprecations: "6.0"`), `app.json` configurado (`gt.qwallet.app`, `allowBackup: false`, plugins de seguridad).
   - **Paso 5:** Sistema de diseño completo en `/mobile/src/theme`: colores (azul profundo `#0B1F3A`, verde quetzal `#00A86B`, semáforo de estados), soporte claro/oscuro automático con hook `useTheme`, tipografía Inter, tokens de espaciado y radios. Construcción de los 9 componentes reutilizables en `/mobile/src/components`: `Button`, `Input` (con variante PIN), `Card`, `BalanceCard` (degradado y montos en GTQ centavos), `TransactionItem`, `ProgressBar` (con alertas), `Header`, `EmptyState`, `Skeleton`.
   - **Paso 6:** Datos simulados en `/mobile/src/mocks` en GTQ con centavos enteros. Construcción de 8 pantallas con expo-router: `(auth)/welcome`, `(auth)/login`, `(auth)/unlock`, `(tabs)/home`, `(tabs)/transfer`, `(tabs)/activity`, `(tabs)/budgets`, `(tabs)/profile`. Se implementó `FLAG_SECURE` con `expo-screen-capture` en `transfer`, `unlock` y `profile`. Validación estricta con esquemas Zod (`.strict()`). Cero console.log de datos sensibles.
-  - **Paso 7:** Configuración de ESLint 10.12.0 (`mobile/eslint.config.js`) y verificación con `npx eslint .` (0 errores) y `npx tsc --noEmit` (0 errores). Ejecución de `npm audit` y generación de evidencia `EVD-3-01_npm-audit-mobile.txt`.
+  - **Paso 7:** Configuración de ESLint 10.12.0 (`mobile/eslint.config.js`) y verificación con `npx eslint .` (0 errores) y `npx tsc --noEmit` (0 errores). Ejecución de `npm audit` y generación de evidencia `EVD-3-00_npm-audit-mobile.txt`.
   - **Paso 8:** Cierre obligatorio: actualización de `CONTEXTO.md` §3.1 y §11, actualización de `docs/INICIO.md` y bitácora.
 - Pasos completados: Pasos 1, 2, 3, 4, 5, 6, 7 y 8 (100 % completados).
 - Pasos fallidos: Ninguno.
@@ -80,7 +80,7 @@
 - Dependencias propuestas para siguiente sesión:
   - `@typescript-eslint/parser` y `typescript-eslint` para integración nativa de ESLint con TypeScript en `/mobile`.
 - Archivos creados o modificados:
-  - Creados: `scripts/dev-env.ps1`, `mobile/metro.config.js`, `mobile/babel.config.js`, `mobile/tailwind.config.js`, `mobile/global.css`, `mobile/nativewind-env.d.ts`, `mobile/eslint.config.js`, `docs/evidencias/EVD-3-01_npm-audit-mobile.txt`, `mobile/src/theme/*` (5 archivos), `mobile/src/components/*` (10 archivos), `mobile/src/mocks/index.ts`, `mobile/app/*` (12 archivos de rutas y layouts).
+  - Creados: `scripts/dev-env.ps1`, `mobile/metro.config.js`, `mobile/babel.config.js`, `mobile/tailwind.config.js`, `mobile/global.css`, `mobile/nativewind-env.d.ts`, `mobile/eslint.config.js`, `docs/evidencias/EVD-3-00_npm-audit-mobile.txt`, `mobile/src/theme/*` (5 archivos), `mobile/src/components/*` (10 archivos), `mobile/src/mocks/index.ts`, `mobile/app/*` (12 archivos de rutas y layouts).
   - Modificados: `mobile/package.json`, `mobile/app.json`, `mobile/tsconfig.json`, `docs/CONTEXTO.md` (§3.1 y §11), `docs/INICIO.md` (Paso 0, 3 y 6), `docs/BITACORA.md`.
   - Eliminados: `mobile/App.tsx`, `mobile/index.ts` (reemplazados por Expo Router).
 - `TODO(CTRL-xx)` pendientes registrados en código:
@@ -90,7 +90,7 @@
   - `TODO(CTRL-07)` en `mobile/app/(auth)/unlock.tsx`: Almacenamiento y recuperación de tokens en `expo-secure-store` con `requireAuthentication` biométrico.
   - `TODO(CTRL-18)` en `mobile/app/(auth)/login.tsx`: Flujo OAuth2 Authorization Code con PKCE vía Cognito Hosted UI con MFA TOTP obligatorio.
 - Resultado de `npm audit`:
-  - 33 vulnerabilidades reportadas (11 moderadas, 22 altas) en dependencias transitivas del ecosistema Expo CLI/Metro/Tailwind 3 (`braces`, `decode-uri-component`, `node-forge`, `uuid`). Evidencia guardada en `docs/evidencias/EVD-3-01_npm-audit-mobile.txt`. Ninguna vulnerabilidad directa en el código de Q-Wallet; no se forzaron actualizaciones que rompieran las versiones fijadas de CONTEXTO §3.1 ni se ejecutó `npm audit fix` conforme a las reglas.
+  - 33 vulnerabilidades reportadas (11 moderadas, 22 altas) en dependencias transitivas del ecosistema Expo CLI/Metro/Tailwind 3 (`braces`, `decode-uri-component`, `node-forge`, `uuid`). Evidencia guardada en `docs/evidencias/EVD-3-00_npm-audit-mobile.txt`. Ninguna vulnerabilidad directa en el código de Q-Wallet; no se forzaron actualizaciones que rompieran las versiones fijadas de CONTEXTO §3.1 ni se ejecutó `npm audit fix` conforme a las reglas.
 - Pendientes manuales del usuario:
   - Instalar Temurin 17 JDK (`C:\Program Files\Eclipse Adoptium\jdk-17*`).
   - Instalar Terraform CLI 1.16.5.

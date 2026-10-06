@@ -99,7 +99,7 @@ Luego presionar `a`. Usar `npx expo run:android` (build nativo) **solo** si se c
 ## 5. Lo que sigue (en orden)
 
 1. **Cierre de sesión con agy:** ejecutar `docs/agy/CIERRE_SESION_2026-10-05.md` (actualiza CONTEXTO, BITÁCORA, INICIO y `.gitignore`, y hace commit).
-2. **Push y seguridad de GitHub:** pasos 3.2 y 3.3 del traspaso anterior (renombrar `EVD-3-01` a `EVD-3-00`, push, rulesets, Dependabot, secret scanning, push protection). Captura `EVD-1-04`.
+2. **Push y seguridad de GitHub:** pasos 3.2 y 3.3 del traspaso anterior (renombrar `EVD-3-00` a `EVD-3-00`, push, rulesets, Dependabot, secret scanning, push protection). Captura `EVD-1-04`.
 3. **Corregir textos falsos de la UI** (ver §6). Antes de cualquier captura para el informe.
 4. **Configurar `expo-build-properties`**: hoy está registrado sin opciones, así que no aplica ningún endurecimiento.
 5. **Cuenta AWS**: Free Plan en `us-east-1`, MFA root, IAM Identity Center, presupuesto de US$5 (`EVD-1-03`). Verificar WAF y ECR.
