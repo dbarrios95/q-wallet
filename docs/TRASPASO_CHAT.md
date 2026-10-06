@@ -1,7 +1,7 @@
-# TRASPASO — Q-Wallet (estado al 05-oct-2026)
+# TRASPASO — Q-Wallet (estado al 03-oct-2026)
 
 > Pegar el **Prompt de arranque** (al final) en un chat nuevo del proyecto de Claude.
-> Adjuntar también `docs/CONTEXTO.md` y `docs/BITACORA.md` **ya actualizados por agy** (ver `docs/agy/CIERRE_SESION_2026-10-05.md`).
+> Adjuntar también `docs/CONTEXTO.md` y `docs/BITACORA.md` actualizados desde el repo.
 
 ---
 
@@ -9,123 +9,152 @@
 
 | Ítem | Estado |
 |---|---|
-| Proyecto | Opción A, app móvil Fintech **Q-Wallet**, segura desde el diseño |
+| Proyecto | Opción A, app móvil Fintech **Q-Wallet**, seguro desde el diseño (indicación del catedrático) |
 | Ponderación | 4 × 5 puntos |
-| Entrega 1 | **Sábado 17-oct-2026** (secciones 0, 1 y 2). **No iniciada.** Quedan 12 días |
-| Repo local | `C:\dev\q-wallet`, rama `main` |
+| Entrega 1 | **Sábado 17-oct-2026**: secciones 0, 1 y 2. **No iniciada** |
+| Repo local | `C:\dev\q-wallet`, rama `main`, último commit `04799fd docs: cierre de sesión autónoma` |
 | Repo remoto | `https://github.com/dbarrios95/q-wallet.git` (push **por confirmar**) |
-| App | **Primer build nativo Android exitoso.** La app carga en el emulador (pantalla Welcome). 8 pantallas, 9 componentes, datos simulados |
+| App | Expo SDK 57 con UI completa y datos simulados (8 pantallas, 9 componentes, tokens de diseño). `tsc`, `eslint` y `expo install --check` limpios |
 | Backend / AWS | Sin iniciar. **Cuenta AWS aún no creada** |
 
 ### Entorno instalado
 
 | Herramienta | Versión | Nota |
 |---|---|---|
-| Node.js | 24.21.0 | |
-| JDK | Temurin 17.0.20.1 (sesión) + Temurin 21 (sistema) | `scripts/dev-env.ps1` activa el 17 |
-| Android SDK | `C:\Users\dbarr\AppData\Local\Android\Sdk` | Platform 36, Build-Tools 36.0.0, NDK 27.1.12297006 (lo instaló Gradle) |
-| AVD | `Pixel_8_API_36` | Google APIs x86_64 (sin Play, para permitir `adb root` en el pentest) |
-| ADB | 1.0.41 (37.0.1) | |
-| Terraform | 1.16.5 | `C:\tools\terraform` |
+| Node.js | 24.21.0 | MSI en `C:\Program Files\nodejs` |
+| Terraform | 1.16.5 | Manual en `C:\tools\terraform`, con SHA256 verificado |
+| JDK | Temurin 17 instalado + Temurin 21 (por defecto del sistema) | `scripts/dev-env.ps1` activa el 17 solo en la sesión |
 | AWS CLI | 2.15.33 | |
 | Docker | 29.1.3 | |
-| Antigravity CLI (`agy`) | 1.2.16 | |
-
-### Build Android que funciona
-
-Versiones que resolvió Expo: compileSdk 36, targetSdk 36, minSdk 24, Kotlin 2.1.20, Gradle 9.3.1, Metro 0.84.5.
+| Antigravity CLI (`agy`) | 1.2.16 | Gemini CLI fue descontinuado para cuentas personales |
+| Android Studio | **Pendiente** | |
 
 ---
 
-## 2. Correcciones de esta sesión (05-oct)
+## 2. Lecciones aprendidas (no repetir errores)
 
-El andamiaje del agente solo se había validado con `tsc` y `eslint`, nunca con un build nativo. Al compilar aparecieron cinco errores:
-
-| # | Síntoma | Causa | Corrección |
-|---|---|---|---|
-| 1 | `ERR_UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING` | `expo-screen-capture` registrado en `plugins` de `app.json`, pero no tiene config plugin | Se quitó de `plugins`. FLAG_SECURE sigue activo con el hook en runtime |
-| 2 | Gradle: `Could not find TalsecSecurity-Community-ReactNative:19.2.3` | `freerasp-react-native` instalado, pero sin registrar su plugin (que agrega el repositorio Maven de Talsec) | Se agregó a `plugins` |
-| 3 | `Cannot read properties of undefined (reading 'android')` en `withAndroidR8Version` | El plugin de freeRASP exige un objeto de opciones | `["freerasp-react-native", { "android": {} }]` (sin override de R8) |
-| 4 | `Duplicate plugin/preset detected` (worklets) | `babel.config.js` declaraba `react-native-worklets/plugin` y `react-native-reanimated/plugin`, que en Reanimated 4 son el mismo | Se quitaron los dos. `babel-preset-expo` ya lo inyecta |
-| 5 | `Cannot find module 'babel-preset-expo'` (en Metro se ve como `reading 'transformFile'`) | `--legacy-peer-deps` dejó el preset anidado en `expo/node_modules` | `npx expo install babel-preset-expo -- --legacy-peer-deps` → 57.0.13 en la raíz |
-
-Además se corrigió `dev-env.ps1` a UTF-8 con BOM (commit `bfe776e`).
+- **Antigravity CLI:** `agy` se ejecuta **desde PowerShell**, nunca escribiendo el comando dentro de la sesión de agy.
+- **Modo autónomo:** `agy --dangerously-skip-permissions --effort high -i "..."`. Para retomar una sesión: `agy --dangerously-skip-permissions -c`.
+- **Prompts largos:** guardarlos en un `.md` dentro de `docs/` y pedirle a agy que lo lea. Pegarlos en la terminal puede cortarlos.
+- **Comandos interactivos:** `create-expo-app` (y cualquier comando que pregunte algo) se cuelga en modo autónomo. Hay que exigir flags no interactivos (`--yes`, `CI=1`).
+- **npm audit:** **nunca** usar `npm audit fix` ni `--force`, porque rompe la alineación con el SDK 57. Las vulnerabilidades se documentan en la fase de SCA.
+- **Red inestable:** `expo install --check` puede fallar con error de TLS. Funciona reintentando o usando `$env:EXPO_OFFLINE="1"`.
+- **winget:** no tiene las versiones recién publicadas. En ese caso se instala manualmente y se verifica el hash.
+- **Rutas de PowerShell:** `PS C:\...>` en las instrucciones es solo la ubicación, no un comando.
 
 ---
 
-## 3. Lecciones aprendidas (acumuladas)
+## 3. Lo que sigue (en orden)
 
-- `agy` se ejecuta **desde PowerShell**, nunca dentro de la sesión de agy.
-- Modo autónomo: `agy --dangerously-skip-permissions --effort high -i "..."`. Para retomar: `agy --dangerously-skip-permissions -c`.
-- Prompts largos: guardarlos en `docs/agy/*.md` y pedirle a agy que los lea.
-- Hay que exigir flags no interactivos (`--yes`, `CI=1`). Los comandos interactivos cuelgan a agy.
-- **Nunca** usar `npm audit fix` ni `--force`.
-- **Toda ventana nueva de PowerShell**: primero `cd C:\dev\q-wallet` y luego `. .\scripts\dev-env.ps1`. Sin eso no existen `adb`, `emulator` ni el JDK 17.
-- **Cada cambio de agy en la app se valida con build nativo** (`npx expo run:android` o `npx expo start --clear` + `a`), no solo con `tsc`/`eslint`.
-- Un paquete agregado a `plugins` de `app.json` debe tener `app.plugin.js`. Algunos plugins exigen objeto de opciones.
-- Ante un error de Metro, el error real está **arriba** (`Failed to construct transformer`). Prueba rápida de Babel:
-  ```powershell
-  node -e "try{require('@babel/core').transformFileSync('app/_layout.tsx',{caller:{name:'metro',bundler:'metro',platform:'android'}});console.log('BABEL OK')}catch(e){console.log(e.message)}"
-  ```
-- `--legacy-peer-deps` puede dejar dependencias necesarias anidadas. Revisar con `npm ls <paquete>`.
-- Imagen del emulador: siempre **Google APIs**, nunca Google Play.
-
----
-
-## 4. Arranque diario de la app
-
-**Ventana 1** (emulador):
+### 3.1 Verificar el JDK 17 (PowerShell normal)
 
 ```powershell
+Get-ChildItem "C:\Program Files\Eclipse Adoptium"
 cd C:\dev\q-wallet
 . .\scripts\dev-env.ps1
-emulator -avd Pixel_8_API_36
+java -version
 ```
 
-**Ventana 2** (Metro):
+`java -version` debe mostrar **17** solo en esta ventana.
+
+### 3.2 Corregir el ID de la evidencia y subir el repo
+
+```powershell
+cd C:\dev\q-wallet
+Get-ChildItem docs\evidencias
+```
+
+Si existe `EVD-3-01_npm-audit-mobile.txt`, renombrarlo:
+
+```powershell
+git mv docs/evidencias/EVD-3-01_npm-audit-mobile.txt docs/evidencias/EVD-3-00_npm-audit-mobile.txt
+git commit -m "docs: corrige ID de evidencia npm audit"
+```
+
+Si existe un duplicado `EVD-3-00_npm-audit-plantilla.txt`, borrarlo con `git rm` o `Remove-Item`.
+
+Subir el repo:
+
+```powershell
+git remote add origin https://github.com/dbarrios95/q-wallet.git
+git push -u origin main
+```
+
+Si `git remote add` dice que el remoto ya existe, correr solo `git push -u origin main`.
+
+### 3.3 Configurar la seguridad de GitHub (navegador)
+
+- **Settings → Branches / Rulesets** sobre `main`:
+  - Require a pull request.
+  - Block force pushes.
+  - **No** marcar *Require approvals* (trabajo individual).
+- **Settings → Advanced Security / Code security**, activar:
+  - Dependabot alerts.
+  - Dependabot security updates.
+  - Secret scanning.
+  - Push protection.
+  - Private vulnerability reporting.
+- Captura de pantalla → `docs\evidencias\EVD-1-04_github-seguridad.png`.
+
+### 3.4 Android Studio (PowerShell como administrador)
+
+```powershell
+winget install --id Google.AndroidStudio -e
+```
+
+Luego, en la interfaz de Android Studio:
+
+1. Instalación **Standard**.
+2. **More Actions → SDK Manager → SDK Tools**, marcar:
+   - Android SDK Platform-Tools.
+   - Android SDK Command-line Tools (latest).
+3. **Virtual Device Manager → Create device**: Pixel 8 con imagen **Google APIs** (no Google Play).
+4. Iniciar el emulador y dejarlo abierto.
+
+### 3.5 Primer build (PowerShell normal)
 
 ```powershell
 cd C:\dev\q-wallet
 . .\scripts\dev-env.ps1
-adb devices
 cd mobile
-npx expo start
+npx expo run:android
 ```
 
-Luego presionar `a`. Usar `npx expo run:android` (build nativo) **solo** si se cambia `app.json`, plugins o dependencias nativas.
+- El primer build tarda de 10 a 20 minutos.
+- Si funciona: guardar una captura de la app en el emulador como `EVD-1-05_app-emulador.png`.
+- Si falla: copiar las últimas 30 líneas del error.
+
+### 3.6 Cuenta AWS (navegador, INICIO.md Paso 2)
+
+1. Crear la cuenta en **Free Plan**, región `us-east-1`.
+2. Activar MFA en el usuario root.
+3. Crear un usuario en IAM Identity Center con MFA.
+4. Configurar un presupuesto de US$5 con alertas al 50/80/100 %.
+   - Captura → `EVD-1-03`.
+5. Verificar que el Free Plan permita **WAF** y **ECR**. Anotar el resultado en la bitácora.
+
+### 3.7 Entrega 1 (PRIORIDAD; quedan 13 días)
+
+1. Crear la Gem en gemini.google.com:
+   - Instrucciones: el texto de `INSTRUCCIONES.md`.
+   - Conocimiento: `CONTEXTO.md`, `PLAN_FASES.md`, `REGISTRO_RIESGOS.md`, `CHECKLIST_EVIDENCIAS.md`, `BITACORA.md`, el enunciado y la rúbrica.
+2. Ejecutar los prompts **P1 a P5** de `PLAN_FASES.md`, uno por conversación.
+3. Instalar OWASP Threat Dragon 2.6.2 para el DFD y STRIDE (sección 2.3).
+
+### 3.8 Cierre de cada sesión
+
+- Actualizar `CONTEXTO.md` §11 y `BITACORA.md`, luego hacer commit y push.
+- Volver a subir ambos archivos al proyecto de Claude y a la Gem.
 
 ---
 
-## 5. Lo que sigue (en orden)
+## 4. Pendientes por responder
 
-1. **Cierre de sesión con agy:** ejecutar `docs/agy/CIERRE_SESION_2026-10-05.md` (actualiza CONTEXTO, BITÁCORA, INICIO y `.gitignore`, y hace commit).
-2. **Push y seguridad de GitHub:** pasos 3.2 y 3.3 del traspaso anterior (renombrar `EVD-3-01` a `EVD-3-00`, push, rulesets, Dependabot, secret scanning, push protection). Captura `EVD-1-04`.
-3. **Corregir textos falsos de la UI** (ver §6). Antes de cualquier captura para el informe.
-4. **Configurar `expo-build-properties`**: hoy está registrado sin opciones, así que no aplica ningún endurecimiento.
-5. **Cuenta AWS**: Free Plan en `us-east-1`, MFA root, IAM Identity Center, presupuesto de US$5 (`EVD-1-03`). Verificar WAF y ECR.
-6. **Entrega 1 (PRIORIDAD):** Gem en Gemini, prompts P1 a P5 de `PLAN_FASES.md`, Threat Dragon 2.6.2 para DFD/STRIDE.
-
----
-
-## 6. Problemas detectados en la app (pendientes)
-
-- **Textos de la pantalla Welcome con afirmaciones falsas:**
-  - "Cifrado de extremo a extremo": una billetera P2P no es E2E, porque el backend debe leer las transacciones. Lo correcto es "cifrado en tránsito (TLS 1.2+) y en reposo".
-  - "Cumplimiento JM-104-2021" y "estándares bancarios": no se puede afirmar cumplimiento sin auditoría. En un curso de seguridad lo van a señalar. Opciones: quitarlo o redactarlo como "diseñado con referencia a JM-104-2021".
-- **`expo-build-properties` sin opciones.**
-- **Badge bajo "Q-Wallet" con contraste bajo** (texto verde sobre verde, ilegible).
-- **33 vulnerabilidades transitivas** en `npm audit`. Se documentan en la fase de SCA.
-
----
-
-## 7. Pendientes por responder
-
-- [ ] ¿El proyecto completo lo hace una sola persona? Si es así, recalcular el calendario de la Entrega 1.
+- [ ] ¿El proyecto completo lo hace **una sola persona** o solo la instalación? Si es una sola, hay que recalcular el calendario de la Entrega 1.
 - [ ] Nombres de los integrantes y sus roles.
-- [ ] Fechas de las entregas parciales y final.
-- [ ] ¿Existe plantilla oficial UMG?
+- [ ] Fecha de la entrega final y de las entregas parciales.
+- [ ] ¿Existe plantilla oficial UMG de portada o Word?
 - [ ] ¿El Free Plan de AWS permite WAF y ECR?
-- [ ] ¿Se hizo el push a GitHub?
 
 ---
 
@@ -136,7 +165,7 @@ Continúo el proyecto final de Seguridad en Aplicaciones (UMG): app móvil Finte
 
 Estoy en Windows con PowerShell. Dame siempre los comandos exactos y en orden, indicando si van en PowerShell normal o como administrador, y qué resultado debo esperar de cada uno.
 
-Situación: voy por la sección 5 de TRASPASO_CHAT.md. [Indica aquí el último paso completado y pega la salida o error, si hay.]
+Situación: voy por la sección 3 de TRASPASO_CHAT.md. [Indica aquí el último paso completado y pega la salida o error, si hay.]
 
 Respóndeme breve y directo. Si detectas algo mal planteado, dímelo sin suavizar.
 ```

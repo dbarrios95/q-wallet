@@ -76,7 +76,8 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 | Logs/Auditoría | CloudWatch Logs + CloudTrail → S3 | Fuente del SIEM |
 | SIEM | **Wazuh** en Docker local (lee CloudTrail/CloudWatch) | Gratis |
 | IaC | Terraform | Checkov/tfsec/Trivy |
-| CI/CD | GitHub Actions (repo público), despliegue a AWS vía **OIDC** (sin llaves estáticas) | |
+| CI/CD | GitHub Actions, despliegue a AWS vía **OIDC** (sin llaves estáticas) | |
+| Repositorio | `github.com/dbarrios95/q-wallet`, **público** desde 05-oct-2026. Ruleset `main-protegida`: sin commits directos a `main` (rama → PR → merge) | Rulesets, secret scanning, push protection y CodeQL gratis solo en repos públicos |
 | Región AWS | `us-east-1` | Menor costo, disponibilidad completa de servicios |
 | Dominio | Ninguno: endpoint `execute-api` de AWS | Costo $0 |
 | Sistema operativo del equipo | Windows (PowerShell); repo en `C:\dev\q-wallet` | Evita el límite de longitud de rutas en builds Android |
@@ -279,18 +280,18 @@ GitHub Actions --OIDC--> AWS (ECR, Lambda, Terraform)
 | CTRL-07 | Tokens en `expo-secure-store` (Keystore) con `requireAuthentication` biométrico | Robo de tokens en el dispositivo | MASVS-STORAGE | 1 |
 | CTRL-08 | TLS 1.2+ en el endpoint por defecto de API Gateway (sin dominio propio, por costo) + pinning de las llaves públicas de Amazon Root CA, con pin de respaldo. TLS 1.3 queda como riesgo residual **aceptado** y recomendación del roadmap | MITM | MASVS-NETWORK | 1 |
 | CTRL-09 | Logs JSON estructurados con redacción de tokens y PII + `correlationId` | Fuga en logs / repudio | A09 / CWE-532 | 1 / 7 |
-| CTRL-10 | SCA en CI que falla con hallazgos High/Critical + Dependabot | Dependencias vulnerables | A06 | 2c |
+| CTRL-10 | SCA en CI que falla con hallazgos High/Critical + Dependabot (alerts + security updates; npm con `open-pull-requests-limit: 0` = solo PR de seguridad) | Dependencias vulnerables | A06 | 2c |
 | CTRL-11 | Dockerfile multi-stage, imagen base fijada por digest, usuario no root | Contenedor comprometido | CIS Docker | 3 |
 | CTRL-12 | Terraform: S3 con Block Public Access + SSE-KMS + versionado; un rol IAM de menor privilegio por Lambda; Checkov en CI | Mala configuración cloud | CIS AWS | 4 / 5 |
 | CTRL-13 | CORS restringido, cabeceras de seguridad, errores genéricos con `correlationId` | Divulgación de información | API8:2023 | 2d |
 | CTRL-14 | Autorización por función: grupo Cognito `admins` validado en el authorizer **y** en el handler | BFLA / escalada de privilegios | API5:2023 | 2b |
 | CTRL-15 | freeRASP (root/hook/emulador/tampering) + Hermes bytecode + R8 | Ingeniería inversa / hooking | MASVS-RESILIENCE | 2a / 3 |
-| CTRL-16 | Cero secretos en el cliente; secretos en SSM; gitleaks en CI | Secretos expuestos | CWE-798 | 2a / 7 |
+| CTRL-16 | Cero secretos en el cliente; secretos en SSM; gitleaks en CI + Secret Protection y push protection de GitHub (historial escaneado sin hallazgos antes de publicar) | Secretos expuestos | CWE-798 | 2a / 7 |
 | CTRL-17 | AWS WAF: Core Rule Set + Known Bad Inputs + regla rate-based | OWASP Top 10 / DoS de capa 7 | — | 5 |
 | CTRL-18 | MFA TOTP obligatorio + OAuth2 Authorization Code + PKCE + tokens de corta vida | Suplantación | MASVS-AUTH | 2b |
 | CTRL-19 | DynamoDB, S3 y CloudWatch Logs cifrados con KMS CMK propia, con rotación anual | Divulgación en reposo | ISO 27001 A.8.24 | 1 |
 | CTRL-20 | CloudTrail multi-región + CloudWatch → Wazuh con reglas de alerta | Detección / repudio | ISO 27001 A.8.15–16 | 7 |
-| CTRL-21 | Despliegue por OIDC GitHub → AWS (sin llaves estáticas); rama `main` protegida | Compromiso de CI/CD | SLSA / A08 | 7 |
+| CTRL-21 | Despliegue por OIDC GitHub → AWS (sin llaves estáticas); ruleset `main-protegida` (PR obligatorio, sin force push ni borrado, bypass vacío) | Compromiso de CI/CD | SLSA / A08 | 7 |
 
 ## 6. Escalas de valoración (fijas, no cambiar)
 
@@ -394,6 +395,8 @@ GEMINI.md
 - [ ] ¿La Entrega 1 incluye presentación?
 - [ ] ¿Existe plantilla oficial de portada UMG?
 - [ ] Verificar que el Free Plan de AWS permite WAF y ECR.
+- [ ] Revisar los 6 PR de Dependabot en `/mobile`: cerrar los de versión (Tailwind 4 y TypeScript 7 rompen §3.1).
+- [ ] Conciliar 5 alertas de Dependabot vs. 33 de `npm audit` (fase SCA).
 
 ---
 
@@ -403,12 +406,13 @@ GEMINI.md
 
 | Campo | Valor |
 |---|---|
-| Última actualización | 05-oct-2026 (Manual Claude + PowerShell; cierre agy) |
-| Fase actual | Entrega 1 — Selección y Planificación + Activos y Riesgos (primer build nativo Android exitoso) |
+| Última actualización | 05-oct-2026 (2) (Manual Claude + PowerShell + GitHub web) |
+| Fase actual | Preparación del entorno, cerrando; luego Entrega 1 — Selección y Planificación + Activos y Riesgos |
 | Versión de la app | Expo SDK 57 (React Native 0.86.3, TS strict), NativeWind 4.2.7, Tailwind 3.4.19, Reanimated 4, expo-router, freeRASP 5.2.2, 8 pantallas simuladas |
-| Completado | Primer build nativo Android exitoso el 2026-10-05 (`npx expo run:android`), la app carga en el emulador (`Pixel_8_API_36`, pantalla Welcome). Evidencia generada: `EVD-1-05_app-emulador.png`. Script `dev-env.ps1` en UTF-8 con BOM. Correcciones de configuración: plugins en `app.json` (freeRASP con repositorio Maven de Talsec; retiro de `expo-screen-capture` de plugins manteniendo FLAG_SECURE en runtime), plugins duplicados de Reanimated/worklets eliminados de `babel.config.js`, `babel-preset-expo@57.0.13` como dependencia directa. |
-| En curso | Elaboración documental de la Entrega 1 (sábado 17-oct-2026) |
-| Siguiente paso / Pendientes | 1) Push y seguridad de GitHub; 2) Corregir los textos falsos de la UI (ver BITACORA / Paso 4); 3) Configurar `expo-build-properties`; 4) Cuenta AWS; 5) Entrega 1 (17-oct-2026) |
-| Bloqueos | Pendientes del §10 (nombres de integrantes, asignación de roles, fecha de entrega final, plantilla UMG) |
+| Completado | Primer build nativo Android (`EVD-1-05`). Repo público con ruleset `main-protegida` verificado (`EVD-1-04c`, `EVD-1-06`), Secret Protection y push protection (`EVD-1-04a`), Dependabot alerts + security updates (`EVD-1-04b`), gitleaks del historial sin hallazgos (`EVD-1-07`). `dependabot.yml` con npm solo seguridad. |
+| En curso | — |
+| Siguiente paso / Pendientes | 1) Revisar y cerrar PR de Dependabot de versión; 2) Corregir textos falsos de la UI; 3) Configurar `expo-build-properties`; 4) Cuenta AWS; 5) Entrega 1 (17-oct-2026) |
+| Regla de trabajo | Sin commits directos a `main` (personas ni agy): rama → PR → merge. Cada cambio de la app se valida con build nativo |
+| Bloqueos | Pendientes del §10 |
 | Recursos AWS desplegados | Ninguno |
 | Gasto AWS acumulado | US$0 |
