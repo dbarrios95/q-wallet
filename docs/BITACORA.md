@@ -19,6 +19,38 @@
 
 ---
 
+### 2026-10-05 — Manual — Claude + PowerShell (cierre por agy)
+- Fase / sección del informe: Preparación del entorno. Primer build nativo Android.
+- Qué se hizo:
+  - `scripts/dev-env.ps1` re-guardado en UTF-8 con BOM (commit bfe776e).
+  - Instalación de Android Studio y SDK. NDK 27.1.12297006 y Build-Tools 36.0.0 instalados automáticamente por Gradle.
+  - Creación del AVD `Pixel_8_API_36`, Google APIs x86_64. Se eligió la imagen sin Google Play porque permite `adb root`, necesario para el pentest (certificado del proxy y Frida).
+  - Primer `npx expo run:android` exitoso. La app abre en el emulador en la pantalla Welcome.
+- Errores encontrados y corregidos:
+  1. `PluginError ERR_UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING`. Causa: `expo-screen-capture` estaba registrado en `plugins` de `app.json`, pero no tiene config plugin. Corrección: se quitó de `plugins`. FLAG_SECURE se mantiene en runtime.
+  2. Gradle: `Could not find com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:19.2.3`. Causa: `freerasp-react-native` estaba instalado, pero su config plugin (que agrega el repositorio Maven de Talsec) no estaba registrado. Corrección: se agregó a `plugins`.
+  3. `TypeError: Cannot read properties of undefined (reading 'android')` en `withAndroidR8Version`. Causa: el plugin de freeRASP exige un objeto de opciones. Corrección: `["freerasp-react-native", { "android": {} }]`, sin override de R8.
+  4. `Duplicate plugin/preset detected` (react-native-worklets/plugin y react-native-reanimated/plugin). Causa: ambos estaban declarados en `babel.config.js` y en Reanimated 4 son el mismo plugin. Corrección: se eliminaron los dos; `babel-preset-expo` lo inyecta.
+  5. `Cannot find module 'babel-preset-expo'`. En Metro se manifestaba como `TypeError: Cannot read properties of undefined (reading 'transformFile')`. Causa: `--legacy-peer-deps` dejó el preset anidado en `expo/node_modules`. Corrección: `npx expo install babel-preset-expo -- --legacy-peer-deps`.
+  - Se descartó NativeWind como causa (se probó Metro sin `withNativeWind`).
+- Archivos creados o modificados: `scripts/dev-env.ps1`, `mobile/app.json`, `mobile/babel.config.js`, `mobile/package.json`, `mobile/package-lock.json`, `mobile/.gitignore` (no se modificó, ya contenía /ios y /android), `docs/CONTEXTO.md`, `docs/BITACORA.md`, `docs/INICIO.md`.
+- Decisiones tomadas (y por qué):
+  - `android/` e `ios/` fuera de git (CNG): se regeneran desde `app.json`, y versionarlos desincroniza la configuración.
+  - Imagen Google APIs en lugar de Google Play, para permitir el pentest dinámico.
+  - Sin override de R8 en freeRASP: el override solo hace falta con versiones antiguas del Android Gradle Plugin, y el proyecto usa Gradle 9.3.1.
+- Cambios de versión: + `babel-preset-expo` ~57.0.13.
+- Evidencias generadas (EVD-): EVD-1-05_app-emulador.png (confirmado en docs/evidencias, 111.242 bytes).
+- IDs nuevos: ninguno.
+- Hallazgos para el informe:
+  - El andamiaje autónomo de la sesión 2026-10-03 (4) se validó solo con `tsc` y `eslint`, y tenía 4 errores de configuración que solo aparecieron con el build nativo. Desde ahora, todo cambio se valida con build.
+  - `--legacy-peer-deps` puede ocultar dependencias faltantes. Se debe revisar con `npm ls` en la fase de SCA.
+  - `expo-build-properties` está registrado sin opciones, por lo que no aplica endurecimiento.
+  - La pantalla Welcome afirma "Cifrado de extremo a extremo" y "Cumplimiento JM-104-2021". Ninguna de las dos afirmaciones es sostenible: la arquitectura no es E2E y no hay auditoría de cumplimiento. Pendiente de corrección.
+- Problemas / bloqueos: ninguno.
+- Siguiente paso: push y seguridad de GitHub; corrección de textos de la UI; cuenta AWS; Entrega 1 (17-oct-2026).
+
+---
+
 ### 2026-10-03 (4) — Autónomo — Antigravity CLI (agy 1.2.16)
 - Fase / sección del informe: Andamiaje de la aplicación móvil (`/mobile`) y preparación del entorno (Entrega 1).
 - Qué se hizo:

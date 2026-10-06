@@ -93,18 +93,31 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 | Herramienta | Versión |
 |---|---|
 | Node.js (local y CI) | 24.21.0 (LTS) |
-| JDK | Temurin 17 (requerido por React Native/Gradle) |
+| JDK | Temurin JDK 17.0.20.1 |
 | Terraform CLI | 1.16.5 |
-| Android Studio / SDK Android | Estable vigente al instalar → anotar en BITACORA |
+| Android SDK | `%LOCALAPPDATA%\Android\Sdk` (Platform 36, Build-Tools 36.0.0, NDK 27.1.12297006) |
+| AVD | `Pixel_8_API_36`: Google APIs, x86_64, **sin Google Play** (permite `adb root` para pentest) |
+| ADB | 1.0.41 |
 | Docker Desktop / Engine | Estable vigente al instalar → anotar en BITACORA |
 | AWS CLI | v2, estable vigente al instalar → anotar en BITACORA |
 | Antigravity CLI (agy) | 1.2.16 |
 | create-expo-app | 5.0.0 (plantilla `blank-typescript@sdk-57`) |
 
+#### Build resuelto por Expo (Android)
+| Parámetro | Versión / Valor |
+|---|---|
+| compileSdk | 36 |
+| targetSdk | 36 |
+| minSdk | 24 |
+| Kotlin | 2.1.20 |
+| Gradle | 9.3.1 |
+| Metro | 0.84.5 |
+
 #### App móvil (`/mobile`)
 | Paquete | Versión |
 |---|---|
 | expo (SDK 57) | ~57.0.26 |
+| babel-preset-expo | ~57.0.13 (instalado con `npx expo install babel-preset-expo -- --legacy-peer-deps`) |
 | react-native | 0.86.3 (la fijada por SDK 57; no usar 0.87) |
 | react | 19.2.3 |
 | typescript | ~6.0.3 |
@@ -140,6 +153,11 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 | lucide-react-native | 1.51.0 |
 | zod | 4.6.5 |
 | eslint | 10.12.0 |
+
+#### Configuración de `app.json` (plugins y seguridad nativa)
+- **Lista de plugins vigente:** `expo-router`, `expo-build-properties`, `expo-secure-store`, `expo-local-authentication`, `expo-font`, `expo-splash-screen`, `["freerasp-react-native", { "android": {} }]`.
+- `expo-screen-capture` **no** es un config plugin: FLAG_SECURE se aplica en runtime en `transfer`, `unlock` y `profile`.
+- `expo-build-properties` está registrado **sin opciones**. Es un pendiente de endurecimiento.
 
 #### Backend (`/services`)
 | Paquete / componente | Versión |
@@ -385,12 +403,12 @@ GEMINI.md
 
 | Campo | Valor |
 |---|---|
-| Última actualización | 03-oct-2026 (Sesión 1 autónoma) |
-| Fase actual | Entrega 1 — Selección y Planificación + Activos y Riesgos (andamiaje móvil completado) |
-| Versión de la app | Expo SDK 57 (React Native 0.86.3, TS strict), NativeWind 4.2.7, Tailwind 3.4.19, Reanimated 4, expo-router, 8 pantallas simuladas |
-| Completado | Script dev-env.ps1; app Expo SDK 57 inicializada; NativeWind 4 + Reanimated 4; app.json seguro (gt.qwallet.app, allowBackup: false); sistema de diseño y tokens (Inter, #0B1F3A, #00A86B); 9 componentes reutilizables; mocks GTQ en centavos; 8 pantallas con expo-router; FLAG_SECURE en transfer, unlock y profile; validaciones zod strict; cero console.log; ESLint 10.12.0 y tsc --noEmit limpios (0 errores); reporte SCA npm audit |
-| En curso | Elaboración documental de la Entrega 1 (sábado 17-oct) |
-| Siguiente paso | Instalación manual por el usuario (JDK 17, Terraform 1.16.5, Android Studio/adb y primer `npx expo run:android`); avance documental |
+| Última actualización | 05-oct-2026 (Manual Claude + PowerShell; cierre agy) |
+| Fase actual | Entrega 1 — Selección y Planificación + Activos y Riesgos (primer build nativo Android exitoso) |
+| Versión de la app | Expo SDK 57 (React Native 0.86.3, TS strict), NativeWind 4.2.7, Tailwind 3.4.19, Reanimated 4, expo-router, freeRASP 5.2.2, 8 pantallas simuladas |
+| Completado | Primer build nativo Android exitoso el 2026-10-05 (`npx expo run:android`), la app carga en el emulador (`Pixel_8_API_36`, pantalla Welcome). Evidencia generada: `EVD-1-05_app-emulador.png`. Script `dev-env.ps1` en UTF-8 con BOM. Correcciones de configuración: plugins en `app.json` (freeRASP con repositorio Maven de Talsec; retiro de `expo-screen-capture` de plugins manteniendo FLAG_SECURE en runtime), plugins duplicados de Reanimated/worklets eliminados de `babel.config.js`, `babel-preset-expo@57.0.13` como dependencia directa. |
+| En curso | Elaboración documental de la Entrega 1 (sábado 17-oct-2026) |
+| Siguiente paso / Pendientes | 1) Push y seguridad de GitHub; 2) Corregir los textos falsos de la UI (ver BITACORA / Paso 4); 3) Configurar `expo-build-properties`; 4) Cuenta AWS; 5) Entrega 1 (17-oct-2026) |
 | Bloqueos | Pendientes del §10 (nombres de integrantes, asignación de roles, fecha de entrega final, plantilla UMG) |
 | Recursos AWS desplegados | Ninguno |
 | Gasto AWS acumulado | US$0 |

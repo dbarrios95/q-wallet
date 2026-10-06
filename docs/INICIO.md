@@ -190,6 +190,31 @@ Commit al terminar: `chore(mobile): inicializa Expo SDK 57 con dependencias fija
 
 Seguir las instrucciones de `GEMINI.md`, sección "Al cerrar cada sesión": actualizar `CONTEXTO.md` §11 y `BITACORA.md`.
 
+### Arranque diario de la app
+
+**Ventana 1:**
+
+```powershell
+cd C:\dev\q-wallet
+. .\scripts\dev-env.ps1
+emulator -avd Pixel_8_API_36
+```
+
+**Ventana 2:**
+
+```powershell
+cd C:\dev\q-wallet
+. .\scripts\dev-env.ps1
+adb devices
+cd mobile
+npx expo start
+```
+
+Luego presionar `a`.
+
+- `npx expo run:android` solo se usa si cambian `app.json`, los plugins o las dependencias nativas.
+- Toda ventana nueva de PowerShell debe ejecutar primero `dev-env.ps1`.
+
 ---
 
 ## 3. Orden de construcción después del 17-oct
