@@ -19,6 +19,22 @@
 
 ---
 
+### 2026-10-10 — Manual — Claude (claude.ai + Claude Code)
+- Fase / sección del informe: Entrega 1 — planificación.
+- Qué se hizo:
+  - Registro tardío: modelo de amenazas T2 v1 (`99cc65a`, 40 amenazas) y v2 (`e0c8724`, PR #8, 09-oct): agrega AME-41 (flujo S3 → Wazuh, TB4–TB6) y 14 justificaciones N/A de STRIDE. Total 41 AME en DFD nivel 0, 1 y 2.
+  - Se crea `docs/entregas/ENTREGA_1.md`: alcance, estructura del Word, puntos de la presentación (objetivos, resultados, cómo llegamos, proyección, cronograma, implementación), resultados extraídos del threat model, estado por sección y cronograma 10–17 oct.
+  - Se crea `CLAUDE.md` en la raíz para que Claude Code cargue el mismo contexto.
+- Archivos creados o modificados: `CLAUDE.md`, `docs/entregas/ENTREGA_1.md`, `docs/CONTEXTO.md` (§10, §11), `docs/BITACORA.md`.
+- Decisiones tomadas: el repo es la fuente de verdad del contexto; el proyecto de claude.ai guarda una copia que se refresca al cerrar sesión.
+- Cambios de versión: ninguno.
+- Evidencias generadas (EVD-): ninguna.
+- IDs nuevos: AME-01 a AME-41 (threat model).
+- Problemas / bloqueos: plantilla UMG, integrantes, fecha final y formato de la presentación siguen pendientes.
+- Siguiente paso: sección 1 (1.1–1.4) según `ENTREGA_1.md` §5.
+
+---
+
 ### 2026-10-05 (2) — Manual — Claude + PowerShell + GitHub web
 - Fase / sección del informe: Preparación. Seguridad del repositorio (CTRL-10, CTRL-16, CTRL-21).
 - Qué se hizo:
