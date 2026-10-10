@@ -182,13 +182,13 @@ Commit al terminar: `chore(mobile): inicializa Expo SDK 57 con dependencias fija
 > **Reglas de seguridad:**
 > - Nada sensible en logs.
 > - Ningún secreto en el código.
-> - Pantallas sensibles con FLAG_SECURE: plugin o `expo-screen-capture` (si agregas una dependencia, dime cuál y su versión para anotarla en CONTEXTO §3.1).
+> - Pantallas sensibles con FLAG_SECURE: plugin o `expo-screen-capture` (si agregas una dependencia, dime cuál y su versión para anotarla en CONTEXTO sección 3.1).
 >
-> No instales otras versiones distintas a las de CONTEXTO §3.1.
+> No instales otras versiones distintas a las de CONTEXTO sección 3.1.
 
 ### Paso 7 — Cerrar la sesión
 
-Seguir las instrucciones de `GEMINI.md`, sección "Al cerrar cada sesión": actualizar `CONTEXTO.md` §11 y `BITACORA.md`.
+Seguir las instrucciones de `GEMINI.md`, sección "Al cerrar cada sesión": actualizar `CONTEXTO.md` sección 11 y `BITACORA.md`.
 
 ### Arranque diario de la app
 

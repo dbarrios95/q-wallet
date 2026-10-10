@@ -17,8 +17,8 @@ MODO AUTÓNOMO. El usuario no está presente. No hagas preguntas: decide según 
 - Ejecutar `npx expo run:android`.
 
 **Dependencias**
-- Usa solo las versiones de CONTEXTO §3.1.
-- Dependencias nuevas permitidas, con esta versión exacta (agrégalas a CONTEXTO §3.1):
+- Usa solo las versiones de CONTEXTO sección 3.1.
+- Dependencias nuevas permitidas, con esta versión exacta (agrégalas a CONTEXTO sección 3.1):
 
   | Paquete | Versión | Instalación |
   |---|---|---|
@@ -30,7 +30,7 @@ MODO AUTÓNOMO. El usuario no está presente. No hagas preguntas: decide según 
 - Cualquier otra: NO la instales; anótala como propuesta en la bitácora.
 
 **Seguridad**
-- Seguro desde el diseño: aplica `GEMINI.md` y CONTEXTO §5.
+- Seguro desde el diseño: aplica `GEMINI.md` y CONTEXTO sección 5.
 - Nada de secretos, nada de datos sensibles en logs.
 
 **Commits y errores**
@@ -64,7 +64,7 @@ Al ejecutarse, el script debe imprimir las versiones de java, node y adb.
 
 1. Ejecuta el Paso 5 de `docs/INICIO.md` exactamente como está, sin `npx expo run:android`.
 2. Ejecuta `npx expo install --check`.
-3. Confirma que cada versión del `package.json` coincide con CONTEXTO §3.1.
+3. Confirma que cada versión del `package.json` coincide con CONTEXTO sección 3.1.
 
 ## PASO 4 — Configuración base en `/mobile`
 
@@ -158,18 +158,18 @@ Crea `/mobile/src/mocks` con datos ficticios en GTQ:
 ## PASO 7 — Calidad
 
 1. Configura ESLint 10.12.0 (`--save-exact`) para TypeScript/React Native y corrige los errores.
-2. Ejecuta `npm audit` y registra el resultado. No fuerces actualizaciones fuera de §3.1.
+2. Ejecuta `npm audit` y registra el resultado. No fuerces actualizaciones fuera de sección 3.1.
 
 ## PASO 8 — Cierre (obligatorio, aunque los pasos anteriores hayan fallado)
 
-**1. Actualiza CONTEXTO §3.1**
+**1. Actualiza CONTEXTO sección 3.1**
 - Reemplaza la fila "Gemini CLI" por "Antigravity CLI (agy) 1.2.16".
 
 **2. Actualiza `docs/INICIO.md`**
 - Reemplaza los comandos de `gemini` por `agy --dangerously-skip-permissions`.
 - Elimina la instalación de `@google/gemini-cli`.
 
-**3. Reescribe CONTEXTO §11.**
+**3. Reescribe CONTEXTO sección 11.**
 
 **4. Agrega una entrada arriba en `docs/BITACORA.md`** con:
 - Pasos completados y fallidos.
