@@ -29,6 +29,36 @@
 
 Orden sugerido de diapositivas: portada → contexto Q-Wallet → objetivos → alcance → metodología → resultados → proyección → implementación → cronograma → cierre. ~12–15 diapositivas.
 
+### Identidad visual de la presentación
+
+No hay lineamientos del catedrático (formato, duración ni plantilla). Se usa la paleta de la app (`mobile/src/theme/colors.ts`) para que la presentación y Q-Wallet se vean como un mismo producto.
+
+| Uso | Color | Hex |
+|---|---|---|
+| Fondo de portada y diapositivas de sección | Azul profundo | `#0B1F3A` |
+| Fondo de diapositivas de contenido | Gris 50 | `#F8FAFC` |
+| Texto principal | Gris 900 | `#0F172A` |
+| Texto secundario | Gris 500 | `#64748B` |
+| Acento (títulos destacados, íconos, líneas) | Verde quetzal | `#00A86B` |
+| Acento sobre fondo oscuro | Verde claro | `#00D688` |
+| Bordes y tablas | Gris 200 | `#E2E8F0` |
+
+Heatmap y niveles de riesgo (semáforo de la app):
+
+| Nivel | Hex |
+|---|---|
+| Bajo (1–4) | `#10B981` |
+| Medio (5–9) | `#F59E0B` |
+| Alto (10–14) | `#F97316` (no está en la app; se agrega solo para el heatmap) |
+| Crítico (15–25) | `#EF4444` |
+
+Reglas:
+- Tipografía **Inter** (la misma de la app); si no está instalada, Arial.
+- Formato 16:9. Duración asumida ~15 min `[VERIFICAR]`.
+- **No poner texto blanco pequeño sobre el verde `#00A86B`**: el contraste es de aprox. 3:1 y no se lee (es el mismo problema del badge de la pantalla Welcome). El verde va en acentos o texto grande.
+- En el heatmap, cada celda lleva además el número de riesgos, para que no dependa solo del color.
+- Las capturas de la app se toman **después** de corregir los textos falsos de Welcome (§6), o no se usan.
+
 ---
 
 ## 2. Estructura del Word (secciones 0–2)
@@ -112,6 +142,7 @@ Pendiente de revisar: el 1 riesgo residual Alto (justificar o reforzar el contro
 - Todo cambio al repo por rama + PR (`main` protegida).
 - Ningún dato inventado: cifras del mercado y normas con fuente real; si no se puede verificar, marcar `[VERIFICAR]`.
 - No afirmar "cumplimiento" de JM-104-2021: usar "diseñado con referencia a".
+- La pantalla Welcome de la app todavía dice "cifrado de extremo a extremo" y "cumplimiento JM-104-2021": no usar capturas de esa pantalla hasta corregirla.
 - Las cifras de §3 salen del JSON, no se escriben a mano.
 
 ---
@@ -121,5 +152,5 @@ Pendiente de revisar: el 1 riesgo residual Alto (justificar o reforzar el contro
 - [ ] ¿Existe plantilla oficial UMG?
 - [ ] Nombres de integrantes y roles (portada y tabla de responsables).
 - [ ] Fecha de entrega final (necesaria para el cronograma P-5).
-- [ ] Formato de la presentación: ¿PowerPoint obligatorio? ¿Duración?
+- [x] Formato de la presentación: sin lineamientos; se usa la paleta de la app (§1). Duración `[VERIFICAR]`.
 - [ ] Registrar en BITÁCORA el threat model T2 v1/v2 (PR #8 no tiene entrada).
