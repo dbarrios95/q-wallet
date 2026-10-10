@@ -227,7 +227,7 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 ## 4. Arquitectura (alto nivel)
 
 ```
-[App Android] --TLS 1.3--> [AWS WAF] --> [API Gateway REST + Cognito Authorizer]
+[App Android] --TLS 1.2+--> [AWS WAF] --> [API Gateway REST + Cognito Authorizer]
       |                                         |
       +--OAuth2 PKCE--> [Cognito Managed Login]  +--> svc-profile    --+
                                                  +--> svc-accounts   --+--> [DynamoDB (KMS CMK)]
@@ -267,6 +267,7 @@ GitHub Actions --OIDC--> AWS (ECR, Lambda, Terraform)
   - **Después** = *riesgo residual*: el riesgo con los controles implementados **y verificados** por pruebas.
 - **El pentest demuestra que cada control funciona.** Cada caso de abuso se ejecuta y la evidencia es el bloqueo: 401, 403, 429, WAF block o alerta en el SIEM. Cualquier debilidad real que encuentren las herramientas (SCA, MobSF, ZAP, Checkov, Prowler) se registra como HAL y se corrige.
 - Toda amenaza identificada en la Entrega 1 debe terminar con: control (CTRL) → prueba → evidencia → riesgo residual.
+- **Límite de la política de pentest de AWS** (verificada 10-oct-2026): solo servicios autorizados (API Gateway, Lambda, WAF, entre otros). **Cognito no está en la lista**: no se ataca su login administrado. Prohibido DoS y **inundación de solicitudes** (login y API), incluso simulada: las pruebas de 429 y bloqueo del PIN se hacen con ráfagas cortas contra umbrales bajos.
 
 ### Controles de diseño obligatorios
 | CTRL | Control | Amenaza que mitiga | Referencia | Capa |
@@ -292,6 +293,9 @@ GitHub Actions --OIDC--> AWS (ECR, Lambda, Terraform)
 | CTRL-19 | DynamoDB, S3 y CloudWatch Logs cifrados con KMS CMK propia, con rotación anual | Divulgación en reposo | ISO 27001 A.8.24 | 1 |
 | CTRL-20 | CloudTrail multi-región + CloudWatch → Wazuh con reglas de alerta | Detección / repudio | ISO 27001 A.8.15–16 | 7 |
 | CTRL-21 | Despliegue por OIDC GitHub → AWS (sin llaves estáticas); ruleset `main-protegida` (PR obligatorio, sin force push ni borrado, bypass vacío) | Compromiso de CI/CD | SLSA / A08 | 7 |
+| CTRL-22 | FLAG_SECURE en pantallas sensibles (`transfer`, `unlock`, `profile`), aplicado en runtime con `expo-screen-capture` (no es config plugin) | Exposición de saldo/PII en capturas y vista de apps recientes | MASVS-PLATFORM | 1 |
+
+> Las referencias `A0x` de esta tabla usan la numeración del OWASP Top 10 **2021**. Vigente: **2025**. Equivalencias para el informe: A03:2021 Inyección → **A05:2025**; A06:2021 Componentes vulnerables → **A03:2025** (fallas en la cadena de suministro); A08 y A09 conservan número.
 
 ## 6. Escalas de valoración (fijas, no cambiar)
 
@@ -319,7 +323,7 @@ Aceptar · Eliminar · Evitar · Mitigar · Transferir.
 
 | # | Capa | Qué se evalúa aquí |
 |---|---|---|
-| 1 | Datos | Cifrado en reposo (KMS, Keystore) y en tránsito (TLS 1.3), enmascaramiento de DPI/teléfono, gestión de llaves |
+| 1 | Datos | Cifrado en reposo (KMS, Keystore) y en tránsito (TLS 1.2+; TLS 1.3 = riesgo residual aceptado, CTRL-08), enmascaramiento de DPI/teléfono, gestión de llaves |
 | 2a | Código | Sanitización, validación de entrada, secretos, prácticas seguras |
 | 2b | Aplicación | Lógica de negocio (transferencias, PIN, límites), autenticación y autorización |
 | 2c | Implementación | Dependencias npm, SDKs, frameworks |
@@ -335,19 +339,22 @@ Aceptar · Eliminar · Evitar · Mitigar · Transferir.
 ## 8. Normativas y estándares de referencia
 
 - ISO/IEC 27001:2022 (Anexo A) e ISO/IEC 27005:2022 (gestión de riesgos).
-- OWASP MASVS v2 / MASTG, OWASP API Security Top 10 2023, OWASP Top 10 (verificar versión vigente).
-- STRIDE (Microsoft), DREAD.
-- NIST CSF 2.0.
+- OWASP MASVS **v2.1.0** (incluye MASVS-PRIVACY) / MASTG, OWASP API Security Top 10 2023, OWASP Top 10 **2025** (versión vigente, verificada 10-oct-2026).
+- STRIDE (Shostack, 2014), DREAD (Howard y LeBlanc, 2003).
+- NIST CSF 2.0 (NIST CSWP 29, 2024).
 - PCI DSS v4.0.1 (referencial; no se procesan tarjetas).
-- **Guatemala:** Resolución JM-104-2021, Reglamento para la Administración del Riesgo Tecnológico (Junta Monetaria / SIB).
+- **Guatemala:** Resolución JM-104-2021, Reglamento para la Administración del Riesgo Tecnológico (Junta Monetaria / SIB). Obliga solo a entidades supervisadas: Q-Wallet está "diseñada con referencia a"; nunca "cumple".
 - **Guatemala:** Decreto 67-2001, Ley contra el Lavado de Dinero u Otros Activos (contexto KYC).
-- Guatemala no tiene una ley general de protección de datos personales; verificar el estado de iniciativas antes de afirmarlo en el informe.
+- **Guatemala:** sin ley general de protección de datos para el sector privado. Decreto 57-2008 (Acceso a la Información Pública) aplica sobre todo al Estado. Iniciativa 6464 (protección de datos y derechos digitales) en análisis en comisión del Congreso (julio 2026). Volver a verificar antes de la entrega final.
 
 **Regla:** toda cita APA 7 debe ser una fuente real y verificable. Nunca inventar referencias.
 
 ---
 
 ## 9. Convenciones
+
+### Escritura
+- **Prohibido el signo de sección (Unicode U+00A7)** en cualquier archivo, texto, código o respuesta, de personas o de IA. Para referirse a una parte de un documento se escribe "sección" (ej. "CONTEXTO, sección 11").
 
 ### Identificadores
 | Prefijo | Uso |
@@ -391,12 +398,14 @@ GEMINI.md
 ## 10. Pendientes
 
 - [ ] Nombres de integrantes y asignación de roles.
-- [ ] Fecha de entrega final y fechas de otras entregas parciales.
-- [ ] ¿La Entrega 1 incluye presentación?
+- [ ] Fecha de entrega final y fechas de otras entregas parciales (los plazos de OE2–OE5 dependen de ella).
+- [x] ¿La Entrega 1 incluye presentación? Sí: objetivos, resultados, cómo llegamos, proyección, cronograma e implementación (ver `docs/entregas/ENTREGA_1.md`).
 - [ ] ¿Existe plantilla oficial de portada UMG?
 - [ ] Verificar que el Free Plan de AWS permite WAF y ECR.
 - [ ] Revisar los 6 PR de Dependabot en `/mobile`: cerrar los de versión (Tailwind 4 y TypeScript 7 rompen sección 3.1).
 - [ ] Conciliar 5 alertas de Dependabot vs. 33 de `npm audit` (fase SCA).
+- [~] Ajustar los casos de abuso CA-xx a la política de pentest de AWS: **diseño revisado en la sección 1.5** (Tabla 11; rediseñar CA-02, CA-03, CA-12; matizar CA-06, CA-13; y los nuevos CA-14, CA-16). Falta aplicarlo al ejecutar en la fase de evaluación.
+- [ ] Verificar en fuente primaria: fecha/URL de JM-104-2021, cifras Global Findex 2025 (Guatemala 38 % / 23 %), URL oficial de Decretos 67-2001 y 57-2008.
 
 ---
 
@@ -406,13 +415,13 @@ GEMINI.md
 
 | Campo | Valor |
 |---|---|
-| Última actualización | 05-oct-2026 (2) (Manual Claude + PowerShell + GitHub web) |
-| Fase actual | Preparación del entorno, cerrando; luego Entrega 1 — Selección y Planificación + Activos y Riesgos |
+| Última actualización | 10-oct-2026 (Claude, sección 1.5 Scope técnico de la Entrega 1 y CTRL-22 oficializado) |
+| Fase actual | Entrega 1 — Selección y Planificación + Activos y Riesgos. Plan y estado en `docs/entregas/ENTREGA_1.md` |
 | Versión de la app | Expo SDK 57 (React Native 0.86.3, TS strict), NativeWind 4.2.7, Tailwind 3.4.19, Reanimated 4, expo-router, freeRASP 5.2.2, 8 pantallas simuladas |
-| Completado | Primer build nativo Android (`EVD-1-05`). Repo público con ruleset `main-protegida` verificado (`EVD-1-04c`, `EVD-1-06`), Secret Protection y push protection (`EVD-1-04a`), Dependabot alerts + security updates (`EVD-1-04b`), gitleaks del historial sin hallazgos (`EVD-1-07`). `dependabot.yml` con npm solo seguridad. |
-| En curso | — |
-| Siguiente paso / Pendientes | 1) Revisar y cerrar PR de Dependabot de versión; 2) Corregir textos falsos de la UI; 3) Configurar `expo-build-properties`; 4) Cuenta AWS; 5) Entrega 1 (17-oct-2026) |
+| Completado | Primer build nativo Android (`EVD-1-05`). Repo público con ruleset `main-protegida` (`EVD-1-04c`, `EVD-1-06`), Secret Protection y push protection (`EVD-1-04a`), Dependabot (`EVD-1-04b`), gitleaks sin hallazgos (`EVD-1-07`). Threat model T2 v2 (41 AME, DFD 0–2, PR #8). **Secciones 1.1–1.4 redactadas** (6 tablas, 17 referencias). **Sección 1.5 redactada** (`docs/entregas/Entrega1_Seccion_1-5_Scope_Tecnico.docx`): arquitectura + Figura 1 (diagrama con TB1–TB6 y 22 controles, `EVD-1-01` PNG+SVG), Tablas 7–11 (superficie API, fronteras, controles por componente, herramientas, revisión CA vs política AWS), reglas de enfrentamiento. **CTRL-22 (FLAG_SECURE) catalogado** en sección 5. |
+| En curso | Entrega 1: secciones 2.1–2.2 (inventario ISO 27001 + clasificación CIA) |
+| Siguiente paso / Pendientes | 0) Entrega 1 según `ENTREGA_1.md` sección 5: 2.1–2.2 el lun 12; 2.3–2.5 el mar 13; 1) Resolver `[VERIFICAR]` de 1.1–1.4 y el de OWASP Top 10:2025 en 1.5; 2) Confirmar nombres/roles de integrantes y catedrático (el Word T2 difiere de CONTEXTO: profesor Gallo Orozco vs. Rodríguez Minas); 3) **Sincronizar el repo de GitHub con el proyecto** (va 5 días atrás); 4) PR de Dependabot de versión; 5) Textos falsos de la UI; 6) Cuenta AWS |
 | Regla de trabajo | Sin commits directos a `main` (personas ni agy): rama → PR → merge. Cada cambio de la app se valida con build nativo |
-| Bloqueos | Pendientes del sección 10 |
+| Bloqueos | Pendientes de la sección 10 |
 | Recursos AWS desplegados | Ninguno |
 | Gasto AWS acumulado | US$0 |

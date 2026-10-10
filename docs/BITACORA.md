@@ -19,6 +19,82 @@
 
 ---
 
+### 2026-10-10 (4) — Manual — Claude (claude.ai)
+- Fase / sección del informe: Entrega 1 — sección 1.5 Scope técnico.
+- Qué se hizo:
+  - Redacción completa de 1.5: arquitectura con Figura 1 (diagrama de arquitectura de seguridad con las fronteras TB1–TB6 y los 22 controles ubicados donde actúan; SVG editable + PNG a 2x), Tabla 7 (superficie de la API: 5 servicios, endpoints, método, autenticación, rol, controles), Tabla 8 (fronteras TB1–TB6 con qué cruza, amenaza principal y control), Tabla 9 (controles por componente/frontera/capa), Tabla 10 (herramientas por fase con versión exacta), Tabla 11 (revisión de los casos de abuso vs. la política de pentest de AWS). Reglas de enfrentamiento. Referencias APA 7 reales.
+  - Se oficializa **CTRL-22** (FLAG_SECURE en pantallas sensibles; MASVS-PLATFORM; mitiga AME-09; capa 1) en CONTEXTO sección 5. Ya se usaba como propuesta en el Word T2 entregado.
+  - Revisión CA-01 a CA-13 vs. la política de AWS (Tabla 11): rediseñar CA-02, CA-03 y CA-12 (sin inundación); matizar CA-06 (ráfaga mínima) y CA-13 (se excluye forzar el login de Cognito). Los casos nuevos del T2 CA-14 (credential stuffing/phishing contra Cognito) y CA-16 (saturación de la API) también chocan y se tratan igual.
+  - Formato UMG (Arial 12, 1.5, sangría 1.27 cm, márgenes 2.54 cm, justificado) y estilo APA 7 calcado del Word T2 entregado (Figura/Tabla N con Nota).
+- Archivos creados o modificados: `docs/entregas/Entrega1_Seccion_1-5_Scope_Tecnico.docx` (nuevo), `docs/evidencias/EVD-1-01_arquitectura_controles.png` y `.svg` (nuevos), `docs/CONTEXTO.md` (sección 5: CTRL-22; sección 10 y 11), `docs/entregas/ENTREGA_1.md` (sección 2, 4, 5, 7), `docs/BITACORA.md`.
+- Decisiones tomadas (y por qué):
+  - En el diagrama los controles van como etiquetas de código (CTRL-xx) y el detalle en la Tabla 9, para no saturar la figura (21+ controles encima no se leen a 16 cm en Word).
+  - Numeración: Figura 1 (1.1–1.4 no tiene figuras) y Tablas 7–11 (continúan tras la Tabla 6).
+  - Redacción en primera persona plural (consigna de la tarea). El Word T2 es impersonal; unificar el registro al ensamblar el informe final.
+  - CTRL-22 se oficializa en lugar de dejarlo como nota al pie: ya está implementado y el T2 lo usa.
+- Cambios de versión: ninguno.
+- Evidencias generadas (EVD-): `EVD-1-01_arquitectura_controles` (PNG + SVG). Pendientes de 1.5: EVD-1-02 (estructura del repo) y EVD-1-03 (cuenta AWS).
+- IDs nuevos: **CTRL-22**.
+- Hallazgos para el informe:
+  - El repo de GitHub va 5 días atrasado respecto al proyecto: faltan subir las 3 entradas del 10-oct, los cambios de CONTEXTO, la limpieza del signo de sección, el `.docx` de 1.1–1.4 y lo de 1.5. Hay que commitear/pushear lo local.
+  - El Word T2 entregado trae datos que difieren de CONTEXTO: profesor "Gallo Orozco, Osberto Saúl" (CONTEXTO dice "César Rodríguez Minas") y los nombres de los 3 integrantes (Sandoval Monterroso, Barrios Monzón, Lolmet Calel). Confirmar cuál profesor corresponde a la Entrega 1 y mapear nombres a roles I1/I2/I3.
+  - El T2 amplió los casos de abuso a CA-01..CA-25 (13 originales + 12 propuestos). `REGISTRO_RIESGOS.md` solo tiene CA-01..CA-13; conviene sincronizarlo.
+- Problemas / bloqueos: integrantes/roles y catedrático por confirmar; `.docx` de 1.1–1.4 no está en el repo.
+- Siguiente paso: secciones 2.1–2.2 (inventario ISO 27001 + clasificación CIA), lun 12-oct.
+
+---
+
+### 2026-10-10 (3) — Manual — Claude (claude.ai)
+- Fase / sección del informe: Convenciones del proyecto.
+- Qué se hizo: se prohíbe el signo de sección (U+00A7) en todo el proyecto. Se reemplazó por la palabra "sección" en CONTEXTO, ENTREGA_1, BITACORA y TRASPASO_CHAT (copias del proyecto y repo), y en el resto de archivos `.md` del repo con un script de PowerShell.
+- Archivos creados o modificados: `docs/CONTEXTO.md` (regla nueva en Convenciones, apartado Escritura), `docs/entregas/ENTREGA_1.md`, `docs/BITACORA.md`, `docs/TRASPASO_CHAT.md`, `CLAUDE.md`, `GEMINI.md` y demás `.md` del repo.
+- Decisiones tomadas: preferencia del equipo; la regla también se agrega a las instrucciones del proyecto en claude.ai, a `CLAUDE.md` y a `GEMINI.md`.
+- Cambios de versión: ninguno.
+- Evidencias generadas (EVD-): ninguna.
+- IDs nuevos: ninguno.
+- Problemas / bloqueos: ninguno.
+- Siguiente paso: sección 1.5 de la Entrega 1.
+
+---
+
+### 2026-10-10 (2) — Manual — Claude (claude.ai)
+- Fase / sección del informe: Entrega 1 — secciones 1.1 a 1.4.
+- Qué se hizo:
+  - Redacción de 1.1 Contexto (fintech en LAC y Guatemala, inclusión financiera, riesgo de apps financieras, Q-Wallet y F1–F7), 1.2 Objetivos (general + OE1–OE5 SMART con Tabla 2), 1.3 Alcance (incluido, excluido, enfoque seguro desde el diseño, restricciones) y 1.4 Normativas (Tabla 6, 11 normas). Formato UMG: Arial 12, 1.5, sangría 1.27 cm, márgenes 2.54 cm, tablas APA 7. 17 referencias APA 7.
+  - Fuentes verificadas en web: IV Informe Fintech BID/Finnovista (2024), Global Findex 2025 (vía Estrategia & Negocios), OWASP Top 10:2025, MASVS v2.1.0, política de pentest de AWS, iniciativa 6464 de datos personales (Emisoras Unidas, jul-2026).
+- Archivos creados o modificados: `docs/entregas/Entrega1_Secciones_1-1_a_1-4.docx` (nuevo), `docs/entregas/ENTREGA_1.md` (sección 2, sección 4, sección 7), `docs/CONTEXTO.md` (sección 4, sección 5, sección 7, sección 8, sección 10, sección 11), `docs/BITACORA.md`.
+- Decisiones tomadas (y por qué):
+  - Objetivos alineados a los 5 componentes de la rúbrica (fases 1 y 2 en OE1), no a "6 fases": son 5 específicos y la rúbrica tiene 5 componentes.
+  - Plazos de OE2–OE5 quedan como `[FECHA PENDIENTE]`: sin fecha final no son SMART completos.
+  - Se corrige la inconsistencia "TLS 1.3" en sección 4 y sección 7 de CONTEXTO: CTRL-08 define TLS 1.2+ con TLS 1.3 como riesgo aceptado.
+  - OWASP Top 10 vigente es 2025; las referencias A0x de sección 5 siguen en numeración 2021 y se anotan sus equivalencias.
+  - JM-104-2021 solo como "diseñado con referencia a" (Q-Wallet, S.A. no es entidad supervisada).
+- Cambios de versión: ninguno.
+- Evidencias generadas (EVD-): ninguna.
+- IDs nuevos: OE1–OE5 (objetivos específicos).
+- Hallazgos para el informe:
+  - La política de pentest de AWS prohíbe la inundación de solicitudes (login y API) y **Cognito no está entre los servicios autorizados**. Afecta los casos de abuso de rate limiting (429) y fuerza bruta del PIN: deben diseñarse con ráfagas cortas contra umbrales bajos y sin atacar el login de Cognito.
+- Problemas / bloqueos: `[VERIFICAR]` pendientes (JM-104 fecha/URL, Findex en fuente primaria, URL de Decretos 67-2001 y 57-2008); título exacto de la sección 1 según el enunciado.
+- Siguiente paso: sección 1.5 (scope técnico + diagrama de arquitectura con controles), dom 11-oct.
+
+---
+
+### 2026-10-10 — Manual — Claude (claude.ai + Claude Code)
+- Fase / sección del informe: Entrega 1 — planificación.
+- Qué se hizo:
+  - Registro tardío: modelo de amenazas T2 v1 (`99cc65a`, 40 amenazas) y v2 (`e0c8724`, PR #8, 09-oct): agrega AME-41 (flujo S3 → Wazuh, TB4–TB6) y 14 justificaciones N/A de STRIDE. Total 41 AME en DFD nivel 0, 1 y 2.
+  - Se crea `docs/entregas/ENTREGA_1.md`: alcance, estructura del Word, puntos de la presentación (objetivos, resultados, cómo llegamos, proyección, cronograma, implementación), resultados extraídos del threat model, estado por sección y cronograma 10–17 oct.
+  - Se crea `CLAUDE.md` en la raíz para que Claude Code cargue el mismo contexto.
+- Archivos creados o modificados: `CLAUDE.md`, `docs/entregas/ENTREGA_1.md`, `docs/CONTEXTO.md` (sección 10, sección 11), `docs/BITACORA.md`.
+- Decisiones tomadas: el repo es la fuente de verdad del contexto; el proyecto de claude.ai guarda una copia que se refresca al cerrar sesión.
+- Cambios de versión: ninguno.
+- Evidencias generadas (EVD-): ninguna.
+- IDs nuevos: AME-01 a AME-41 (threat model).
+- Problemas / bloqueos: plantilla UMG, integrantes, fecha final y formato de la presentación siguen pendientes.
+- Siguiente paso: sección 1 (1.1–1.4) según `ENTREGA_1.md` sección 5.
+
+---
+
 ### 2026-10-05 (2) — Manual — Claude + PowerShell + GitHub web
 - Fase / sección del informe: Preparación. Seguridad del repositorio (CTRL-10, CTRL-16, CTRL-21).
 - Qué se hizo:
