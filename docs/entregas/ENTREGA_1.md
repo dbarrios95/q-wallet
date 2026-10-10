@@ -14,8 +14,8 @@
 | Fases de la hoja de ruta | **1. Selección y Planificación** (target, threat modeling, scope) y **2. Activos y Riesgos** (inventario, valor, riesgos ISO 27001, STRIDE/DREAD) |
 | Secciones del informe | 0, 1 y 2 (Opción A) |
 | Criterio de rúbrica | Análisis de Riesgos y Activos (4 pts) |
-| Productos | **Producto principal: presentación de avance** para revisión del catedrático (resumen explicativo de qué llevamos y cómo lo estamos haciendo). El Word de las secciones 0–2 es el respaldo `[VERIFICAR con el catedrático si también se entrega el 17-oct]` |
-| Enfoque | La presentación no es un informe en diapositivas: debe mostrar avance real, método y plan, para recibir retroalimentación antes de construir |
+| Productos | Contenido de las fases **1. Selección y Planificación** y **2. Activos y Riesgos** = secciones **0, 1 y 2** del informe. Se presenta al catedrático como **presentación de avance** (resumen explicativo para revisión); el Word de las secciones 0–2 es la base de la presentación |
+| Enfoque | Primero se produce el contenido de las secciones 0–2; la presentación lo resume al final. No se trabaja nada de las fases 3 en adelante hasta el 17 |
 
 ### Lo que la presentación debe cubrir (indicación del catedrático)
 
@@ -126,12 +126,12 @@ Pendiente de revisar: el 1 riesgo residual Alto (justificar o reforzar el contro
 
 | Día | Tarea (una por chat) |
 |---|---|
-| Sáb 10 | **Guion de la presentación**: contenido de cada diapositiva (P-1 a P-6) y lista de material que falta |
-| Dom 11 | Objetivos SMART, alcance y normativas (1.2–1.4), en versión breve para diapositivas y completa para el Word |
-| Lun 12 | Inventario con CIA (2.1–2.2): tabla resumen + top activos críticos |
-| Mar 13 | Datos del threat model: matriz, heatmap antes y proyectado, riesgos por capa + capturas de los 3 DFD + diagrama de arquitectura con controles |
-| Mié 14 | Armar las diapositivas con la paleta de la app |
-| Jue 15 | Word de respaldo (si se confirma que se entrega) + referencias APA |
+| Sáb 10 | Sección 1.1–1.4: contexto, objetivos SMART, alcance, normativas |
+| Dom 11 | Sección 1.5: scope técnico + diagrama de arquitectura con controles |
+| Lun 12 | Sección 2.1–2.2: inventario ISO 27001 con CIA y criticidad |
+| Mar 13 | Sección 2.3–2.5: tablas STRIDE/DREAD, matriz, heatmap antes y proyectado, riesgos por capa + capturas de los 3 DFD |
+| Mié 14 | Sección 0 (portada, resumen ejecutivo, índice) + referencias APA + ensamblar Word |
+| Jue 15 | Presentación de avance (P-1 a P-6) a partir del Word, con la paleta de la app |
 | Vie 16 | Revisión final contra la rúbrica y correcciones |
 | **Sáb 17** | **Entrega** |
 
