@@ -14,7 +14,8 @@
 | Fases de la hoja de ruta | **1. Selección y Planificación** (target, threat modeling, scope) y **2. Activos y Riesgos** (inventario, valor, riesgos ISO 27001, STRIDE/DREAD) |
 | Secciones del informe | 0, 1 y 2 (Opción A) |
 | Criterio de rúbrica | Análisis de Riesgos y Activos (4 pts) |
-| Productos | 1) Word formato UMG + APA 7. 2) **Presentación** (sin demo en vivo) |
+| Productos | **Producto principal: presentación de avance** para revisión del catedrático (resumen explicativo de qué llevamos y cómo lo estamos haciendo). El Word de las secciones 0–2 es el respaldo `[VERIFICAR con el catedrático si también se entrega el 17-oct]` |
+| Enfoque | La presentación no es un informe en diapositivas: debe mostrar avance real, método y plan, para recibir retroalimentación antes de construir |
 
 ### Lo que la presentación debe cubrir (indicación del catedrático)
 
@@ -125,12 +126,12 @@ Pendiente de revisar: el 1 riesgo residual Alto (justificar o reforzar el contro
 
 | Día | Tarea (una por chat) |
 |---|---|
-| Sáb 10 | Sección 1 completa (1.1–1.4) |
-| Dom 11 | 1.5 + diagrama de arquitectura con controles |
-| Lun 12 | 2.1 + 2.2 (inventario con CIA) |
-| Mar 13 | 2.4 + 2.5 (tablas DREAD, matriz, heatmap antes y proyectado, riesgos por capa) + capturas de los DFD |
-| Mié 14 | Ensamblar Word UMG + referencias APA |
-| Jue 15 | Presentación (P-1 a P-6) |
+| Sáb 10 | **Guion de la presentación**: contenido de cada diapositiva (P-1 a P-6) y lista de material que falta |
+| Dom 11 | Objetivos SMART, alcance y normativas (1.2–1.4), en versión breve para diapositivas y completa para el Word |
+| Lun 12 | Inventario con CIA (2.1–2.2): tabla resumen + top activos críticos |
+| Mar 13 | Datos del threat model: matriz, heatmap antes y proyectado, riesgos por capa + capturas de los 3 DFD + diagrama de arquitectura con controles |
+| Mié 14 | Armar las diapositivas con la paleta de la app |
+| Jue 15 | Word de respaldo (si se confirma que se entrega) + referencias APA |
 | Vie 16 | Revisión final contra la rúbrica y correcciones |
 | **Sáb 17** | **Entrega** |
 
