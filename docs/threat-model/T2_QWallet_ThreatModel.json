@@ -43,14 +43,23 @@
             },
             "visible": true,
             "shape": "trust-boundary-box",
-            "id": "0eeef7bd-c103-5900-9bab-d98252d0b773",
             "zIndex": -1,
+            "id": "0eeef7bd-c103-5900-9bab-d98252d0b773",
             "data": {
               "type": "tm.BoundaryBox",
               "name": "Nube AWS us-east-1",
               "description": "",
               "isTrustBoundary": true,
-              "hasOpenThreats": false
+              "hasOpenThreats": false,
+              "containedElements": [
+                "3fc64e53-8102-58e1-9be5-d91d2037c304"
+              ],
+              "crossingFlows": [
+                "3c830aa6-f70f-5542-8d68-3925ebc70d9e",
+                "083aefcc-a498-5069-bd11-15ba3d0933e4",
+                "81a9c997-9671-5d98-bbcf-f053709ce58c",
+                "112cf508-ba49-57e4-8463-e275cbec8623"
+              ]
             }
           },
           {
@@ -172,11 +181,11 @@
           },
           {
             "position": {
-              "x": 20,
-              "y": 330
+              "x": -30.00000000000017,
+              "y": 329.99999999999875
             },
             "size": {
-              "width": 150,
+              "width": 200,
               "height": 70
             },
             "attrs": {
@@ -427,7 +436,7 @@
               "y": 90
             },
             "size": {
-              "width": 180,
+              "width": 220,
               "height": 70
             },
             "attrs": {
@@ -544,7 +553,7 @@
               "y": 330
             },
             "size": {
-              "width": 180,
+              "width": 240,
               "height": 70
             },
             "attrs": {
@@ -660,7 +669,6 @@
             "attrs": {
               "line": {
                 "stroke": "#333333",
-                "strokeWidth": 1.5,
                 "targetMarker": {
                   "name": "block"
                 },
@@ -673,19 +681,30 @@
             "width": 200,
             "height": 100,
             "zIndex": 16,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Credenciales, consultas y transferencias",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": true,
+              "isEncrypted": true,
+              "isPublicNetwork": true,
+              "protocol": "HTTPS",
+              "threats": [],
+              "trustBoundaryIds": [
+                "0eeef7bd-c103-5900-9bab-d98252d0b773"
+              ]
+            },
             "labels": [
               {
-                "markup": [
-                  {
-                    "tagName": "ellipse",
-                    "selector": "labelBody"
-                  },
-                  {
-                    "tagName": "text",
-                    "selector": "labelText"
-                  }
-                ],
                 "attrs": {
+                  "label": {
+                    "text": "Data Flow"
+                  },
                   "labelText": {
                     "text": "Credenciales, consultas y transferencias",
                     "textAnchor": "middle",
@@ -699,24 +718,19 @@
                     "strokeWidth": 0
                   }
                 },
+                "markup": [
+                  {
+                    "tagName": "ellipse",
+                    "selector": "labelBody"
+                  },
+                  {
+                    "tagName": "text",
+                    "selector": "labelText"
+                  }
+                ],
                 "position": 0.5
               }
             ],
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Credenciales, consultas y transferencias",
-              "description": "",
-              "outOfScope": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": true,
-              "isEncrypted": true,
-              "isPublicNetwork": true,
-              "protocol": "HTTPS",
-              "threats": [],
-              "isTrustBoundary": false
-            },
             "id": "3c830aa6-f70f-5542-8d68-3925ebc70d9e",
             "source": {
               "cell": "bd639cbb-b923-534b-a75e-b85b72c72a9a"
@@ -730,7 +744,6 @@
             "attrs": {
               "line": {
                 "stroke": "#333333",
-                "strokeWidth": 1.5,
                 "targetMarker": {
                   "name": "block"
                 },
@@ -743,19 +756,30 @@
             "width": 200,
             "height": 100,
             "zIndex": 17,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Operaciones /admin/*",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": true,
+              "isPublicNetwork": true,
+              "protocol": "HTTPS",
+              "threats": [],
+              "trustBoundaryIds": [
+                "0eeef7bd-c103-5900-9bab-d98252d0b773"
+              ]
+            },
             "labels": [
               {
-                "markup": [
-                  {
-                    "tagName": "ellipse",
-                    "selector": "labelBody"
-                  },
-                  {
-                    "tagName": "text",
-                    "selector": "labelText"
-                  }
-                ],
                 "attrs": {
+                  "label": {
+                    "text": "Data Flow"
+                  },
                   "labelText": {
                     "text": "Operaciones /admin/*",
                     "textAnchor": "middle",
@@ -769,24 +793,19 @@
                     "strokeWidth": 0
                   }
                 },
+                "markup": [
+                  {
+                    "tagName": "ellipse",
+                    "selector": "labelBody"
+                  },
+                  {
+                    "tagName": "text",
+                    "selector": "labelText"
+                  }
+                ],
                 "position": 0.5
               }
             ],
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Operaciones /admin/*",
-              "description": "",
-              "outOfScope": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": true,
-              "isPublicNetwork": true,
-              "protocol": "HTTPS",
-              "threats": [],
-              "isTrustBoundary": false
-            },
             "id": "083aefcc-a498-5069-bd11-15ba3d0933e4",
             "source": {
               "cell": "bb1428a0-5d54-533d-a4b9-c93a7a5309b9"
@@ -800,7 +819,6 @@
             "attrs": {
               "line": {
                 "stroke": "#333333",
-                "strokeWidth": 1.5,
                 "targetMarker": {
                   "name": "block"
                 },
@@ -813,19 +831,30 @@
             "width": 200,
             "height": 100,
             "zIndex": 18,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Código, imágenes e IaC (OIDC)",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": true,
+              "isPublicNetwork": false,
+              "protocol": "HTTPS",
+              "threats": [],
+              "trustBoundaryIds": [
+                "0eeef7bd-c103-5900-9bab-d98252d0b773"
+              ]
+            },
             "labels": [
               {
-                "markup": [
-                  {
-                    "tagName": "ellipse",
-                    "selector": "labelBody"
-                  },
-                  {
-                    "tagName": "text",
-                    "selector": "labelText"
-                  }
-                ],
                 "attrs": {
+                  "label": {
+                    "text": "Data Flow"
+                  },
                   "labelText": {
                     "text": "Código, imágenes e IaC (OIDC)",
                     "textAnchor": "middle",
@@ -839,24 +868,19 @@
                     "strokeWidth": 0
                   }
                 },
+                "markup": [
+                  {
+                    "tagName": "ellipse",
+                    "selector": "labelBody"
+                  },
+                  {
+                    "tagName": "text",
+                    "selector": "labelText"
+                  }
+                ],
                 "position": 0.5
               }
             ],
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Código, imágenes e IaC (OIDC)",
-              "description": "",
-              "outOfScope": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": true,
-              "isPublicNetwork": false,
-              "protocol": "HTTPS",
-              "threats": [],
-              "isTrustBoundary": false
-            },
             "id": "81a9c997-9671-5d98-bbcf-f053709ce58c",
             "source": {
               "cell": "b2847c35-55f2-5d0c-a8cd-62ea1ece92a7"
@@ -870,7 +894,6 @@
             "attrs": {
               "line": {
                 "stroke": "#333333",
-                "strokeWidth": 1.5,
                 "targetMarker": {
                   "name": "block"
                 },
@@ -883,19 +906,30 @@
             "width": 200,
             "height": 100,
             "zIndex": 19,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Eventos y registros",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": true,
+              "isPublicNetwork": false,
+              "protocol": "HTTPS",
+              "threats": [],
+              "trustBoundaryIds": [
+                "0eeef7bd-c103-5900-9bab-d98252d0b773"
+              ]
+            },
             "labels": [
               {
-                "markup": [
-                  {
-                    "tagName": "ellipse",
-                    "selector": "labelBody"
-                  },
-                  {
-                    "tagName": "text",
-                    "selector": "labelText"
-                  }
-                ],
                 "attrs": {
+                  "label": {
+                    "text": "Data Flow"
+                  },
                   "labelText": {
                     "text": "Eventos y registros",
                     "textAnchor": "middle",
@@ -909,24 +943,19 @@
                     "strokeWidth": 0
                   }
                 },
+                "markup": [
+                  {
+                    "tagName": "ellipse",
+                    "selector": "labelBody"
+                  },
+                  {
+                    "tagName": "text",
+                    "selector": "labelText"
+                  }
+                ],
                 "position": 0.5
               }
             ],
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Eventos y registros",
-              "description": "",
-              "outOfScope": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": true,
-              "isPublicNetwork": false,
-              "protocol": "HTTPS",
-              "threats": [],
-              "isTrustBoundary": false
-            },
             "id": "112cf508-ba49-57e4-8463-e275cbec8623",
             "source": {
               "cell": "3fc64e53-8102-58e1-9be5-d91d2037c304"
@@ -937,7 +966,7 @@
           },
           {
             "position": {
-              "x": 380,
+              "x": 340,
               "y": 450
             },
             "size": {
@@ -1160,8 +1189,12 @@
               "description": "",
               "isTrustBoundary": true,
               "hasOpenThreats": false,
-              "containedElements": ["36e57d43-61cd-5ed0-a636-ec6c9bf7542e"],
-              "crossingFlows": ["e8b69045-6377-5958-864b-c19488501083"]
+              "containedElements": [
+                "36e57d43-61cd-5ed0-a636-ec6c9bf7542e"
+              ],
+              "crossingFlows": [
+                "e8b69045-6377-5958-864b-c19488501083"
+              ]
             }
           },
           {
@@ -1188,8 +1221,12 @@
               "description": "",
               "isTrustBoundary": true,
               "hasOpenThreats": false,
-              "containedElements": ["aeb75a2b-7dda-55ae-a99b-4c4d391c9431"],
-              "crossingFlows": ["55dbe6a6-4b95-5dec-9af3-5d38b7b39375"]
+              "containedElements": [
+                "aeb75a2b-7dda-55ae-a99b-4c4d391c9431"
+              ],
+              "crossingFlows": [
+                "55dbe6a6-4b95-5dec-9af3-5d38b7b39375"
+              ]
             }
           },
           {
@@ -2600,7 +2637,21 @@
               "isTrustBoundary": false,
               "outOfScope": false,
               "reasonOutOfScope": "",
-              "threats": [],
+              "threats": [
+                {
+                  "id": "1bcebd19-1d5c-4556-a8ee-3f5e594da5af",
+                  "title": "N/A Amenazas de svc-transfers detalladas en el Nivel 2",
+                  "status": "NotApplicable",
+                  "severity": "TBD",
+                  "type": "Tampering",
+                  "description": "Las amenazas de este proceso se registran sobre los pasos 2.1 a 2.6 del DFD Nivel 2 (AME-36 a AME-40) para no duplicarlas en el Nivel 1.",
+                  "mitigation": "Ver DFD Nivel 2.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 50,
+                  "score": ""
+                }
+              ],
               "hasOpenThreats": false,
               "privilegeLevel": "",
               "handlesCardPayment": false,
@@ -3902,8 +3953,24 @@
               "isEncrypted": true,
               "isPublicNetwork": false,
               "protocol": "Local",
-              "threats": [],
-              "trustBoundaryIds": ["7ecc5b6b-c81f-5dd9-8043-d6f9188db827"]
+              "threats": [
+                {
+                  "id": "a0cff4e8-8fe5-447d-a436-1e678d4e571f",
+                  "title": "N/A Captura de credenciales y PIN en la entrada local",
+                  "status": "NotApplicable",
+                  "severity": "TBD",
+                  "type": "Information disclosure",
+                  "description": "Flujo local entre el cliente y la app dentro de TB1. La captura de pantalla y la vista de apps recientes se tratan en AME-09, el uso de un dispositivo perdido o robado en AME-02 y la lectura del almacenamiento en AME-10. El malware que intente leer la entrada se aborda con la detección de root y hooking de freeRASP (AME-07, CTRL-15).",
+                  "mitigation": "No aplica como amenaza separada. Cubierto por AME-02, AME-07, AME-09 y AME-10.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 42,
+                  "score": ""
+                }
+              ],
+              "trustBoundaryIds": [
+                "7ecc5b6b-c81f-5dd9-8043-d6f9188db827"
+              ]
             },
             "labels": [
               {
@@ -4249,8 +4316,24 @@
               "isEncrypted": true,
               "isPublicNetwork": true,
               "protocol": "HTTPS",
-              "threats": [],
-              "trustBoundaryIds": ["34cb9eda-cad2-55ce-92dd-0902f3b73e01"]
+              "threats": [
+                {
+                  "id": "c6c40967-bb09-46c5-a80f-7c03eb87e04f",
+                  "title": "N/A Intercepción del token del administrador",
+                  "status": "NotApplicable",
+                  "severity": "TBD",
+                  "type": "Information disclosure",
+                  "description": "El flujo usa HTTPS sin pinning porque el administrador no usa la app. La suplantación del administrador se trata en AME-03, el acceso de un cliente a /admin/* en AME-23 y la saturación del borde en AME-11. Capturar el token en tránsito exigiría un certificado de confianza instalado en el equipo del administrador.",
+                  "mitigation": "No aplica como amenaza separada. MFA del grupo admins y tokens de corta vida (CTRL-18) limitan el uso de un token capturado.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 43,
+                  "score": ""
+                }
+              ],
+              "trustBoundaryIds": [
+                "34cb9eda-cad2-55ce-92dd-0902f3b73e01"
+              ]
             },
             "labels": [
               {
@@ -4478,7 +4561,21 @@
               "isEncrypted": true,
               "isPublicNetwork": false,
               "protocol": "Invocación AWS",
-              "threats": [],
+              "threats": [
+                {
+                  "id": "e2c1da1d-9da8-4fad-9208-d0577256f452",
+                  "title": "N/A Alteración de los claims entre API Gateway y la Lambda",
+                  "status": "NotApplicable",
+                  "severity": "TBD",
+                  "type": "Tampering",
+                  "description": "La invocación ocurre dentro de AWS y los claims provienen del Cognito Authorizer después de validar la firma del JWT. La falsificación del token se trata en AME-16 y una ruta sin authorizer en AME-13. Invocar la Lambda de forma directa exige credenciales de AWS con permiso de invocación, lo que controla CTRL-12 (AME-19).",
+                  "mitigation": "No aplica como amenaza separada. Cubierto por AME-13, AME-16 y AME-19.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 44,
+                  "score": ""
+                }
+              ],
               "trustBoundaryIds": [
                 "34cb9eda-cad2-55ce-92dd-0902f3b73e01",
                 "2816d5a6-5484-5db8-a471-9cfe1b5aa03b"
@@ -4554,7 +4651,21 @@
               "isEncrypted": true,
               "isPublicNetwork": false,
               "protocol": "Invocación AWS",
-              "threats": [],
+              "threats": [
+                {
+                  "id": "889d7089-195f-4fb8-a4c0-fc1a371c0f79",
+                  "title": "N/A Alteración de los claims entre API Gateway y la Lambda",
+                  "status": "NotApplicable",
+                  "severity": "TBD",
+                  "type": "Tampering",
+                  "description": "La invocación ocurre dentro de AWS y los claims provienen del Cognito Authorizer después de validar la firma del JWT. La falsificación del token se trata en AME-16 y una ruta sin authorizer en AME-13. Invocar la Lambda de forma directa exige credenciales de AWS con permiso de invocación, lo que controla CTRL-12 (AME-19).",
+                  "mitigation": "No aplica como amenaza separada. Cubierto por AME-13, AME-16 y AME-19.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 45,
+                  "score": ""
+                }
+              ],
               "trustBoundaryIds": [
                 "34cb9eda-cad2-55ce-92dd-0902f3b73e01",
                 "2816d5a6-5484-5db8-a471-9cfe1b5aa03b"
@@ -4630,7 +4741,21 @@
               "isEncrypted": true,
               "isPublicNetwork": false,
               "protocol": "Invocación AWS",
-              "threats": [],
+              "threats": [
+                {
+                  "id": "268c48b2-e205-4651-9fd0-9eb608814b1b",
+                  "title": "N/A Alteración de los claims entre API Gateway y la Lambda",
+                  "status": "NotApplicable",
+                  "severity": "TBD",
+                  "type": "Tampering",
+                  "description": "La invocación ocurre dentro de AWS y los claims provienen del Cognito Authorizer después de validar la firma del JWT. La falsificación del token se trata en AME-16 y una ruta sin authorizer en AME-13. Invocar la Lambda de forma directa exige credenciales de AWS con permiso de invocación, lo que controla CTRL-12 (AME-19).",
+                  "mitigation": "No aplica como amenaza separada. Cubierto por AME-13, AME-16 y AME-19.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 46,
+                  "score": ""
+                }
+              ],
               "trustBoundaryIds": [
                 "34cb9eda-cad2-55ce-92dd-0902f3b73e01",
                 "2816d5a6-5484-5db8-a471-9cfe1b5aa03b"
@@ -4706,7 +4831,21 @@
               "isEncrypted": true,
               "isPublicNetwork": false,
               "protocol": "Invocación AWS",
-              "threats": [],
+              "threats": [
+                {
+                  "id": "7139b80f-6d68-4985-a958-864c73deee67",
+                  "title": "N/A Alteración de los claims entre API Gateway y la Lambda",
+                  "status": "NotApplicable",
+                  "severity": "TBD",
+                  "type": "Tampering",
+                  "description": "La invocación ocurre dentro de AWS y los claims provienen del Cognito Authorizer después de validar la firma del JWT. La falsificación del token se trata en AME-16 y una ruta sin authorizer en AME-13. Invocar la Lambda de forma directa exige credenciales de AWS con permiso de invocación, lo que controla CTRL-12 (AME-19).",
+                  "mitigation": "No aplica como amenaza separada. Cubierto por AME-13, AME-16 y AME-19.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 47,
+                  "score": ""
+                }
+              ],
               "trustBoundaryIds": [
                 "34cb9eda-cad2-55ce-92dd-0902f3b73e01",
                 "2816d5a6-5484-5db8-a471-9cfe1b5aa03b"
@@ -4782,7 +4921,21 @@
               "isEncrypted": true,
               "isPublicNetwork": false,
               "protocol": "Invocación AWS",
-              "threats": [],
+              "threats": [
+                {
+                  "id": "36470ace-2c86-4159-a96e-7bfed81a5506",
+                  "title": "N/A Alteración de los claims entre API Gateway y la Lambda",
+                  "status": "NotApplicable",
+                  "severity": "TBD",
+                  "type": "Tampering",
+                  "description": "La invocación ocurre dentro de AWS y los claims provienen del Cognito Authorizer después de validar la firma del JWT. La falsificación del token se trata en AME-16 y una ruta sin authorizer en AME-13. Invocar la Lambda de forma directa exige credenciales de AWS con permiso de invocación, lo que controla CTRL-12 (AME-19).",
+                  "mitigation": "No aplica como amenaza separada. Cubierto por AME-13, AME-16 y AME-19.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 48,
+                  "score": ""
+                }
+              ],
               "trustBoundaryIds": [
                 "34cb9eda-cad2-55ce-92dd-0902f3b73e01",
                 "2816d5a6-5484-5db8-a471-9cfe1b5aa03b"
@@ -5253,7 +5406,21 @@
               "isEncrypted": true,
               "isPublicNetwork": false,
               "protocol": "API SSM",
-              "threats": [],
+              "threats": [
+                {
+                  "id": "58520ac3-f0ff-4d91-b0e7-c77267b39784",
+                  "title": "N/A Lectura de parámetros en tránsito hacia SSM",
+                  "status": "NotApplicable",
+                  "severity": "TBD",
+                  "type": "Information disclosure",
+                  "description": "El tráfico usa la API de SSM con TLS y los SecureString se descifran con KMS. La lectura indebida de secretos se trata en AME-27 sobre el almacén SSM, y la fuga de secretos fuera de SSM en AME-08 y AME-34.",
+                  "mitigation": "No aplica como amenaza separada. Cubierto por AME-27.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 49,
+                  "score": ""
+                }
+              ],
               "trustBoundaryIds": [
                 "2816d5a6-5484-5db8-a471-9cfe1b5aa03b",
                 "4ae8c84c-bec6-51c4-93a0-7028e5af7e97"
@@ -5570,14 +5737,15 @@
             "shape": "flow",
             "attrs": {
               "line": {
-                "stroke": "#333333",
+                "stroke": "red",
                 "targetMarker": {
                   "name": "block"
                 },
                 "sourceMarker": {
                   "name": ""
                 },
-                "strokeDasharray": null
+                "strokeDasharray": null,
+                "strokeWidth": 2.5
               }
             },
             "width": 200,
@@ -5591,12 +5759,26 @@
               "outOfScope": false,
               "isTrustBoundary": false,
               "reasonOutOfScope": "",
-              "hasOpenThreats": false,
+              "hasOpenThreats": true,
               "isBidirectional": false,
               "isEncrypted": true,
               "isPublicNetwork": true,
               "protocol": "HTTPS API AWS",
-              "threats": [],
+              "threats": [
+                {
+                  "id": "34b8192d-dee1-46c4-ba0e-5b26eb7fc2d0",
+                  "title": "AME-41 Lectura de los registros de AWS con las credenciales del SIEM local",
+                  "status": "Open",
+                  "severity": "Medium",
+                  "type": "Information disclosure",
+                  "description": "Wazuh lee los registros de S3 con un usuario IAM propio cuyas llaves de acceso se guardan en la estación local. Quien comprometa esa estación puede usarlas para leer los registros de toda la cuenta AWS. Frontera TB4, TB6. Activos ACT-05, ACT-28, ACT-19. DREAD D5 R4 E4 A4 Di5 = 4.4. Riesgo inherente P3 x I3 = 9 (Medio). Capa 3 Host.",
+                  "mitigation": "CTRL-12, CTRL-16, CTRL-20. Tratamiento Mitigar. Usuario IAM de solo lectura sobre el bucket de registros, llaves rotadas cada 90 días y alerta de CloudTrail ante uso desde un origen no habitual. Residual esperado P2 x I3 = 6 (Medio), pendiente de verificación. Migración a credenciales temporales en RM-11.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 41,
+                  "score": "9"
+                }
+              ],
               "trustBoundaryIds": [
                 "4ae8c84c-bec6-51c4-93a0-7028e5af7e97",
                 "9b260455-95b0-5196-bfd2-ac06606c6813"
@@ -5745,8 +5927,8 @@
         "cells": [
           {
             "position": {
-              "x": 20,
-              "y": 140
+              "x": -305,
+              "y": 230
             },
             "size": {
               "width": 220,
@@ -5759,14 +5941,21 @@
             },
             "visible": true,
             "shape": "trust-boundary-box",
-            "id": "9d2d00f4-6365-5cb5-81c7-b505c7f61b65",
             "zIndex": -1,
+            "id": "9d2d00f4-6365-5cb5-81c7-b505c7f61b65",
             "data": {
               "type": "tm.BoundaryBox",
               "name": "TB1 Dispositivo",
               "description": "",
               "isTrustBoundary": true,
-              "hasOpenThreats": false
+              "hasOpenThreats": false,
+              "containedElements": [
+                "996fc678-d37b-5a53-a858-373dde8923ab"
+              ],
+              "crossingFlows": [
+                "26018721-8a27-5951-a4a8-bbd5a3fb0584",
+                "1e04a329-5885-5064-934f-81772f57e607"
+              ]
             }
           },
           {
@@ -5785,14 +5974,21 @@
             },
             "visible": true,
             "shape": "trust-boundary-box",
-            "id": "a70f5381-3d68-5cfd-90a8-2724094241bd",
             "zIndex": -1,
+            "id": "a70f5381-3d68-5cfd-90a8-2724094241bd",
             "data": {
               "type": "tm.BoundaryBox",
               "name": "TB2 Borde AWS",
               "description": "",
               "isTrustBoundary": true,
-              "hasOpenThreats": false
+              "hasOpenThreats": false,
+              "containedElements": [
+                "cb831b95-fbd4-5745-be66-562184db9f5f"
+              ],
+              "crossingFlows": [
+                "1e04a329-5885-5064-934f-81772f57e607",
+                "d3f8b7e0-b529-552c-b9de-0504b695cacd"
+              ]
             }
           },
           {
@@ -5811,14 +6007,29 @@
             },
             "visible": true,
             "shape": "trust-boundary-box",
-            "id": "1b31848c-d247-5975-9a8a-5b225e438619",
             "zIndex": -1,
+            "id": "1b31848c-d247-5975-9a8a-5b225e438619",
             "data": {
               "type": "tm.BoundaryBox",
               "name": "TB3 svc-transfers",
               "description": "",
               "isTrustBoundary": true,
-              "hasOpenThreats": false
+              "hasOpenThreats": false,
+              "containedElements": [
+                "b549cd14-f070-5973-8daf-3331ddd77927",
+                "b02876c4-d6d6-51c8-864e-625fba84fade",
+                "be5fdfa5-e7e8-516d-bdcf-54db91f84c1f",
+                "f37135e3-754b-51b7-b4d5-59e9623f76db",
+                "a46b4d29-3ed7-5ebe-be7f-88d2aa8d9753",
+                "5f137f0d-10b6-5e7b-b8d8-ab8f06c692c7"
+              ],
+              "crossingFlows": [
+                "d3f8b7e0-b529-552c-b9de-0504b695cacd",
+                "c7b039e7-7e76-567c-9676-920814c0222e",
+                "f4d34d8a-eda0-5f14-a8b7-04e5feb13f51",
+                "ff91fcc0-1898-58f6-932c-034dc7fcaeb4",
+                "27ce8133-fdeb-5a8d-865c-6b45f247f7eb"
+              ]
             }
           },
           {
@@ -5837,20 +6048,32 @@
             },
             "visible": true,
             "shape": "trust-boundary-box",
-            "id": "219cd871-9e21-5c28-b4b8-21db9ba476f1",
             "zIndex": -1,
+            "id": "219cd871-9e21-5c28-b4b8-21db9ba476f1",
             "data": {
               "type": "tm.BoundaryBox",
               "name": "TB4 Datos AWS",
               "description": "",
               "isTrustBoundary": true,
-              "hasOpenThreats": false
+              "hasOpenThreats": false,
+              "containedElements": [
+                "cedd30b3-e3d7-505c-a305-144a0c140e9f",
+                "e1a81ba6-64dc-5eb4-a987-a00c29583307",
+                "010fa053-0818-5f3d-81cf-ae3d3f2cb0ef",
+                "d573ebb3-fc26-5bc5-b56e-e7c7a02f1921"
+              ],
+              "crossingFlows": [
+                "c7b039e7-7e76-567c-9676-920814c0222e",
+                "f4d34d8a-eda0-5f14-a8b7-04e5feb13f51",
+                "ff91fcc0-1898-58f6-932c-034dc7fcaeb4",
+                "27ce8133-fdeb-5a8d-865c-6b45f247f7eb"
+              ]
             }
           },
           {
             "position": {
-              "x": 50,
-              "y": 30
+              "x": -270,
+              "y": 20
             },
             "size": {
               "width": 150,
@@ -5966,8 +6189,8 @@
           },
           {
             "position": {
-              "x": 70,
-              "y": 230
+              "x": -250,
+              "y": 320
             },
             "size": {
               "width": 120,
@@ -6718,7 +6941,21 @@
               "isTrustBoundary": false,
               "outOfScope": false,
               "reasonOutOfScope": "",
-              "threats": [],
+              "threats": [
+                {
+                  "id": "565b7083-56f3-4148-aeb9-017c745401ee",
+                  "title": "N/A Repetición de solicitudes en el control de idempotencia",
+                  "status": "NotApplicable",
+                  "severity": "TBD",
+                  "type": "Tampering",
+                  "description": "El doble gasto por solicitudes repetidas o concurrentes se registró como AME-39 en la escritura transaccional (2.5), porque la condición sobre el saldo es la que impide el daño. La Idempotency-Key y la escritura condicionada forman un solo control (CTRL-06).",
+                  "mitigation": "No aplica como amenaza separada. Cubierto por AME-39.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 51,
+                  "score": ""
+                }
+              ],
               "hasOpenThreats": false,
               "privilegeLevel": "",
               "handlesCardPayment": false,
@@ -7008,12 +7245,10 @@
                 "text": "Datos lógicos:\nperfil y PIN (hash, intentos)"
               },
               "topLine": {
-                "stroke": "#333333",
                 "strokeWidth": 1.5,
                 "strokeDasharray": null
               },
               "bottomLine": {
-                "stroke": "#333333",
                 "strokeWidth": 1.5,
                 "strokeDasharray": null
               }
@@ -7111,7 +7346,21 @@
               "isTrustBoundary": false,
               "outOfScope": false,
               "reasonOutOfScope": "",
-              "threats": [],
+              "threats": [
+                {
+                  "id": "91ec9d40-f5de-45e0-b755-1857d51a24a2",
+                  "title": "N/A Exposición del hash del PIN o alteración del contador de intentos",
+                  "status": "NotApplicable",
+                  "severity": "TBD",
+                  "type": "Information disclosure",
+                  "description": "Partición lógica de DynamoDB. El acceso a datos en reposo se trata en AME-26 y el acceso por un rol con permisos excesivos en AME-19. El hash usa scrypt con sal y el bloqueo por intentos forma parte de CTRL-02 (AME-38).",
+                  "mitigation": "No aplica como amenaza separada. Cubierto por AME-19, AME-26 y AME-38.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 52,
+                  "score": ""
+                }
+              ],
               "hasOpenThreats": false,
               "isALog": false,
               "storesCredentials": true,
@@ -7133,12 +7382,10 @@
                 "text": "Datos lógicos:\nclaves de idempotencia"
               },
               "topLine": {
-                "stroke": "#333333",
                 "strokeWidth": 1.5,
                 "strokeDasharray": null
               },
               "bottomLine": {
-                "stroke": "#333333",
                 "strokeWidth": 1.5,
                 "strokeDasharray": null
               }
@@ -7236,7 +7483,21 @@
               "isTrustBoundary": false,
               "outOfScope": false,
               "reasonOutOfScope": "",
-              "threats": [],
+              "threats": [
+                {
+                  "id": "e113315a-c095-43d3-a466-448c7677af6c",
+                  "title": "N/A Llenado masivo de claves de idempotencia",
+                  "status": "NotApplicable",
+                  "severity": "TBD",
+                  "type": "Denial of service",
+                  "description": "Cada solicitud de transferencia válida crea una clave. Un volumen alto de solicitudes se limita en el borde con throttling y WAF (AME-11, CTRL-05 y CTRL-17). Conviene confirmar en el diseño de la tabla que las claves expiran por TTL.",
+                  "mitigation": "No aplica como amenaza separada. Cubierto por AME-11.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 53,
+                  "score": ""
+                }
+              ],
               "hasOpenThreats": false,
               "isALog": false,
               "storesCredentials": false,
@@ -7258,12 +7519,10 @@
                 "text": "Datos lógicos:\ncuentas, saldos y transferencias"
               },
               "topLine": {
-                "stroke": "#333333",
                 "strokeWidth": 1.5,
                 "strokeDasharray": null
               },
               "bottomLine": {
-                "stroke": "#333333",
                 "strokeWidth": 1.5,
                 "strokeDasharray": null
               }
@@ -7361,7 +7620,21 @@
               "isTrustBoundary": false,
               "outOfScope": false,
               "reasonOutOfScope": "",
-              "threats": [],
+              "threats": [
+                {
+                  "id": "b2e85dd0-8fe6-402e-a1c0-4fd47920606e",
+                  "title": "N/A Alteración directa de saldos en la tabla",
+                  "status": "NotApplicable",
+                  "severity": "TBD",
+                  "type": "Tampering",
+                  "description": "Partición lógica de DynamoDB. La alteración de saldos por la API se trata en AME-36, AME-37 y AME-39. Escribir directo en la tabla exige permisos IAM (AME-19) y la exposición en reposo se trata en AME-26.",
+                  "mitigation": "No aplica como amenaza separada. Cubierto por AME-19, AME-26, AME-36, AME-37 y AME-39.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 54,
+                  "score": ""
+                }
+              ],
               "hasOpenThreats": false,
               "isALog": false,
               "storesCredentials": false,
@@ -7383,12 +7656,10 @@
                 "text": "CloudWatch Logs"
               },
               "topLine": {
-                "stroke": "#333333",
                 "strokeWidth": 1.5,
                 "strokeDasharray": null
               },
               "bottomLine": {
-                "stroke": "#333333",
                 "strokeWidth": 1.5,
                 "strokeDasharray": null
               }
@@ -7486,12 +7757,33 @@
               "isTrustBoundary": false,
               "outOfScope": false,
               "reasonOutOfScope": "",
-              "threats": [],
+              "threats": [
+                {
+                  "id": "623bbdef-4100-4ba3-88f4-446fb200d3c1",
+                  "title": "N/A Alteración del registro de auditoría",
+                  "status": "NotApplicable",
+                  "severity": "TBD",
+                  "type": "Repudiation",
+                  "description": "Es el mismo almacén de registros del Nivel 1. El borrado o la alteración de registros se trata en AME-29 y la escritura de tokens o datos personales en AME-25.",
+                  "mitigation": "No aplica como amenaza separada. Cubierto por AME-25 y AME-29.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 55,
+                  "score": ""
+                }
+              ],
               "hasOpenThreats": false,
               "isALog": true,
               "storesCredentials": false,
               "isEncrypted": true,
               "isSigned": false
+            },
+            "tools": {
+              "items": [
+                "boundary",
+                "button-remove"
+              ],
+              "name": null
             }
           },
           {
@@ -7499,7 +7791,6 @@
             "attrs": {
               "line": {
                 "stroke": "#333333",
-                "strokeWidth": 1.5,
                 "targetMarker": {
                   "name": "block"
                 },
@@ -7512,19 +7803,30 @@
             "width": 200,
             "height": 100,
             "zIndex": 24,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Destino, monto, PIN",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": true,
+              "isPublicNetwork": false,
+              "protocol": "Local",
+              "threats": [],
+              "trustBoundaryIds": [
+                "9d2d00f4-6365-5cb5-81c7-b505c7f61b65"
+              ]
+            },
             "labels": [
               {
-                "markup": [
-                  {
-                    "tagName": "ellipse",
-                    "selector": "labelBody"
-                  },
-                  {
-                    "tagName": "text",
-                    "selector": "labelText"
-                  }
-                ],
                 "attrs": {
+                  "label": {
+                    "text": "Data Flow"
+                  },
                   "labelText": {
                     "text": "Destino, monto, PIN",
                     "textAnchor": "middle",
@@ -7538,24 +7840,19 @@
                     "strokeWidth": 0
                   }
                 },
+                "markup": [
+                  {
+                    "tagName": "ellipse",
+                    "selector": "labelBody"
+                  },
+                  {
+                    "tagName": "text",
+                    "selector": "labelText"
+                  }
+                ],
                 "position": 0.5
               }
             ],
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Destino, monto, PIN",
-              "description": "",
-              "outOfScope": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": true,
-              "isPublicNetwork": false,
-              "protocol": "Local",
-              "threats": [],
-              "isTrustBoundary": false
-            },
             "id": "26018721-8a27-5951-a4a8-bbd5a3fb0584",
             "source": {
               "cell": "520c1d95-c1d2-5267-975e-53b5587c4d6d"
@@ -7569,7 +7866,6 @@
             "attrs": {
               "line": {
                 "stroke": "#333333",
-                "strokeWidth": 1.5,
                 "targetMarker": {
                   "name": "block"
                 },
@@ -7582,19 +7878,31 @@
             "width": 200,
             "height": 100,
             "zIndex": 25,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "POST /transfers + JWT + Idempotency-Key",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": true,
+              "isPublicNetwork": true,
+              "protocol": "HTTPS",
+              "threats": [],
+              "trustBoundaryIds": [
+                "9d2d00f4-6365-5cb5-81c7-b505c7f61b65",
+                "a70f5381-3d68-5cfd-90a8-2724094241bd"
+              ]
+            },
             "labels": [
               {
-                "markup": [
-                  {
-                    "tagName": "ellipse",
-                    "selector": "labelBody"
-                  },
-                  {
-                    "tagName": "text",
-                    "selector": "labelText"
-                  }
-                ],
                 "attrs": {
+                  "label": {
+                    "text": "Data Flow"
+                  },
                   "labelText": {
                     "text": "POST /transfers + JWT + Idempotency-Key",
                     "textAnchor": "middle",
@@ -7608,24 +7916,19 @@
                     "strokeWidth": 0
                   }
                 },
+                "markup": [
+                  {
+                    "tagName": "ellipse",
+                    "selector": "labelBody"
+                  },
+                  {
+                    "tagName": "text",
+                    "selector": "labelText"
+                  }
+                ],
                 "position": 0.5
               }
             ],
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "POST /transfers + JWT + Idempotency-Key",
-              "description": "",
-              "outOfScope": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": true,
-              "isPublicNetwork": true,
-              "protocol": "HTTPS",
-              "threats": [],
-              "isTrustBoundary": false
-            },
             "id": "1e04a329-5885-5064-934f-81772f57e607",
             "source": {
               "cell": "996fc678-d37b-5a53-a858-373dde8923ab"
@@ -7639,7 +7942,6 @@
             "attrs": {
               "line": {
                 "stroke": "#333333",
-                "strokeWidth": 1.5,
                 "targetMarker": {
                   "name": "block"
                 },
@@ -7652,19 +7954,31 @@
             "width": 200,
             "height": 100,
             "zIndex": 26,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Evento + claims",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": true,
+              "isPublicNetwork": false,
+              "protocol": "HTTPS",
+              "threats": [],
+              "trustBoundaryIds": [
+                "a70f5381-3d68-5cfd-90a8-2724094241bd",
+                "1b31848c-d247-5975-9a8a-5b225e438619"
+              ]
+            },
             "labels": [
               {
-                "markup": [
-                  {
-                    "tagName": "ellipse",
-                    "selector": "labelBody"
-                  },
-                  {
-                    "tagName": "text",
-                    "selector": "labelText"
-                  }
-                ],
                 "attrs": {
+                  "label": {
+                    "text": "Data Flow"
+                  },
                   "labelText": {
                     "text": "Evento + claims",
                     "textAnchor": "middle",
@@ -7678,24 +7992,19 @@
                     "strokeWidth": 0
                   }
                 },
+                "markup": [
+                  {
+                    "tagName": "ellipse",
+                    "selector": "labelBody"
+                  },
+                  {
+                    "tagName": "text",
+                    "selector": "labelText"
+                  }
+                ],
                 "position": 0.35
               }
             ],
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Evento + claims",
-              "description": "",
-              "outOfScope": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": true,
-              "isPublicNetwork": false,
-              "protocol": "HTTPS",
-              "threats": [],
-              "isTrustBoundary": false
-            },
             "id": "d3f8b7e0-b529-552c-b9de-0504b695cacd",
             "source": {
               "cell": "cb831b95-fbd4-5745-be66-562184db9f5f"
@@ -7709,7 +8018,6 @@
             "attrs": {
               "line": {
                 "stroke": "#333333",
-                "strokeWidth": 1.5,
                 "targetMarker": {
                   "name": "block"
                 },
@@ -7722,19 +8030,28 @@
             "width": 200,
             "height": 100,
             "zIndex": 27,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Solicitud válida",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": true,
+              "isPublicNetwork": false,
+              "protocol": "HTTPS",
+              "threats": [],
+              "trustBoundaryIds": []
+            },
             "labels": [
               {
-                "markup": [
-                  {
-                    "tagName": "ellipse",
-                    "selector": "labelBody"
-                  },
-                  {
-                    "tagName": "text",
-                    "selector": "labelText"
-                  }
-                ],
                 "attrs": {
+                  "label": {
+                    "text": "Data Flow"
+                  },
                   "labelText": {
                     "text": "Solicitud válida",
                     "textAnchor": "middle",
@@ -7748,24 +8065,19 @@
                     "strokeWidth": 0
                   }
                 },
+                "markup": [
+                  {
+                    "tagName": "ellipse",
+                    "selector": "labelBody"
+                  },
+                  {
+                    "tagName": "text",
+                    "selector": "labelText"
+                  }
+                ],
                 "position": 0.5
               }
             ],
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Solicitud válida",
-              "description": "",
-              "outOfScope": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": true,
-              "isPublicNetwork": false,
-              "protocol": "HTTPS",
-              "threats": [],
-              "isTrustBoundary": false
-            },
             "id": "09df4d61-3251-5595-bb18-5dc21bfcb6d3",
             "source": {
               "cell": "b549cd14-f070-5973-8daf-3331ddd77927"
@@ -7779,7 +8091,6 @@
             "attrs": {
               "line": {
                 "stroke": "#333333",
-                "strokeWidth": 1.5,
                 "targetMarker": {
                   "name": "block"
                 },
@@ -7792,19 +8103,28 @@
             "width": 200,
             "height": 100,
             "zIndex": 28,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Solicitud autorizada",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": true,
+              "isPublicNetwork": false,
+              "protocol": "HTTPS",
+              "threats": [],
+              "trustBoundaryIds": []
+            },
             "labels": [
               {
-                "markup": [
-                  {
-                    "tagName": "ellipse",
-                    "selector": "labelBody"
-                  },
-                  {
-                    "tagName": "text",
-                    "selector": "labelText"
-                  }
-                ],
                 "attrs": {
+                  "label": {
+                    "text": "Data Flow"
+                  },
                   "labelText": {
                     "text": "Solicitud autorizada",
                     "textAnchor": "middle",
@@ -7818,24 +8138,19 @@
                     "strokeWidth": 0
                   }
                 },
+                "markup": [
+                  {
+                    "tagName": "ellipse",
+                    "selector": "labelBody"
+                  },
+                  {
+                    "tagName": "text",
+                    "selector": "labelText"
+                  }
+                ],
                 "position": 0.5
               }
             ],
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Solicitud autorizada",
-              "description": "",
-              "outOfScope": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": true,
-              "isPublicNetwork": false,
-              "protocol": "HTTPS",
-              "threats": [],
-              "isTrustBoundary": false
-            },
             "id": "ef31b2da-3b3a-5ea1-9d42-c25daae40144",
             "source": {
               "cell": "b02876c4-d6d6-51c8-864e-625fba84fade"
@@ -7849,7 +8164,6 @@
             "attrs": {
               "line": {
                 "stroke": "#333333",
-                "strokeWidth": 1.5,
                 "targetMarker": {
                   "name": "block"
                 },
@@ -7862,19 +8176,31 @@
             "width": 200,
             "height": 100,
             "zIndex": 29,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Hash y contador",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": true,
+              "isEncrypted": true,
+              "isPublicNetwork": false,
+              "protocol": "HTTPS",
+              "threats": [],
+              "trustBoundaryIds": [
+                "1b31848c-d247-5975-9a8a-5b225e438619",
+                "219cd871-9e21-5c28-b4b8-21db9ba476f1"
+              ]
+            },
             "labels": [
               {
-                "markup": [
-                  {
-                    "tagName": "ellipse",
-                    "selector": "labelBody"
-                  },
-                  {
-                    "tagName": "text",
-                    "selector": "labelText"
-                  }
-                ],
                 "attrs": {
+                  "label": {
+                    "text": "Data Flow"
+                  },
                   "labelText": {
                     "text": "Hash y contador",
                     "textAnchor": "middle",
@@ -7888,24 +8214,19 @@
                     "strokeWidth": 0
                   }
                 },
+                "markup": [
+                  {
+                    "tagName": "ellipse",
+                    "selector": "labelBody"
+                  },
+                  {
+                    "tagName": "text",
+                    "selector": "labelText"
+                  }
+                ],
                 "position": 0.5
               }
             ],
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Hash y contador",
-              "description": "",
-              "outOfScope": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": true,
-              "isEncrypted": true,
-              "isPublicNetwork": false,
-              "protocol": "HTTPS",
-              "threats": [],
-              "isTrustBoundary": false
-            },
             "id": "c7b039e7-7e76-567c-9676-920814c0222e",
             "source": {
               "cell": "be5fdfa5-e7e8-516d-bdcf-54db91f84c1f"
@@ -7915,7 +8236,7 @@
             },
             "vertices": [
               {
-                "x": 1270,
+                "x": 1350,
                 "y": 420
               }
             ]
@@ -7925,7 +8246,6 @@
             "attrs": {
               "line": {
                 "stroke": "#333333",
-                "strokeWidth": 1.5,
                 "targetMarker": {
                   "name": "block"
                 },
@@ -7938,19 +8258,28 @@
             "width": 200,
             "height": 100,
             "zIndex": 30,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "PIN válido",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": true,
+              "isPublicNetwork": false,
+              "protocol": "HTTPS",
+              "threats": [],
+              "trustBoundaryIds": []
+            },
             "labels": [
               {
-                "markup": [
-                  {
-                    "tagName": "ellipse",
-                    "selector": "labelBody"
-                  },
-                  {
-                    "tagName": "text",
-                    "selector": "labelText"
-                  }
-                ],
                 "attrs": {
+                  "label": {
+                    "text": "Data Flow"
+                  },
                   "labelText": {
                     "text": "PIN válido",
                     "textAnchor": "middle",
@@ -7964,24 +8293,19 @@
                     "strokeWidth": 0
                   }
                 },
+                "markup": [
+                  {
+                    "tagName": "ellipse",
+                    "selector": "labelBody"
+                  },
+                  {
+                    "tagName": "text",
+                    "selector": "labelText"
+                  }
+                ],
                 "position": 0.5
               }
             ],
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "PIN válido",
-              "description": "",
-              "outOfScope": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": true,
-              "isPublicNetwork": false,
-              "protocol": "HTTPS",
-              "threats": [],
-              "isTrustBoundary": false
-            },
             "id": "a80900a1-efd3-54a4-8f75-b39169968596",
             "source": {
               "cell": "be5fdfa5-e7e8-516d-bdcf-54db91f84c1f"
@@ -7995,7 +8319,6 @@
             "attrs": {
               "line": {
                 "stroke": "#333333",
-                "strokeWidth": 1.5,
                 "targetMarker": {
                   "name": "block"
                 },
@@ -8008,19 +8331,31 @@
             "width": 200,
             "height": 100,
             "zIndex": 31,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Clave única",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": true,
+              "isEncrypted": true,
+              "isPublicNetwork": false,
+              "protocol": "HTTPS",
+              "threats": [],
+              "trustBoundaryIds": [
+                "1b31848c-d247-5975-9a8a-5b225e438619",
+                "219cd871-9e21-5c28-b4b8-21db9ba476f1"
+              ]
+            },
             "labels": [
               {
-                "markup": [
-                  {
-                    "tagName": "ellipse",
-                    "selector": "labelBody"
-                  },
-                  {
-                    "tagName": "text",
-                    "selector": "labelText"
-                  }
-                ],
                 "attrs": {
+                  "label": {
+                    "text": "Data Flow"
+                  },
                   "labelText": {
                     "text": "Clave única",
                     "textAnchor": "middle",
@@ -8034,24 +8369,19 @@
                     "strokeWidth": 0
                   }
                 },
+                "markup": [
+                  {
+                    "tagName": "ellipse",
+                    "selector": "labelBody"
+                  },
+                  {
+                    "tagName": "text",
+                    "selector": "labelText"
+                  }
+                ],
                 "position": 0.5
               }
             ],
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Clave única",
-              "description": "",
-              "outOfScope": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": true,
-              "isEncrypted": true,
-              "isPublicNetwork": false,
-              "protocol": "HTTPS",
-              "threats": [],
-              "isTrustBoundary": false
-            },
             "id": "f4d34d8a-eda0-5f14-a8b7-04e5feb13f51",
             "source": {
               "cell": "f37135e3-754b-51b7-b4d5-59e9623f76db"
@@ -8065,7 +8395,6 @@
             "attrs": {
               "line": {
                 "stroke": "#333333",
-                "strokeWidth": 1.5,
                 "targetMarker": {
                   "name": "block"
                 },
@@ -8078,19 +8407,28 @@
             "width": 200,
             "height": 100,
             "zIndex": 32,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Operación nueva",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": true,
+              "isPublicNetwork": false,
+              "protocol": "HTTPS",
+              "threats": [],
+              "trustBoundaryIds": []
+            },
             "labels": [
               {
-                "markup": [
-                  {
-                    "tagName": "ellipse",
-                    "selector": "labelBody"
-                  },
-                  {
-                    "tagName": "text",
-                    "selector": "labelText"
-                  }
-                ],
                 "attrs": {
+                  "label": {
+                    "text": "Data Flow"
+                  },
                   "labelText": {
                     "text": "Operación nueva",
                     "textAnchor": "middle",
@@ -8104,24 +8442,19 @@
                     "strokeWidth": 0
                   }
                 },
+                "markup": [
+                  {
+                    "tagName": "ellipse",
+                    "selector": "labelBody"
+                  },
+                  {
+                    "tagName": "text",
+                    "selector": "labelText"
+                  }
+                ],
                 "position": 0.5
               }
             ],
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Operación nueva",
-              "description": "",
-              "outOfScope": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": true,
-              "isPublicNetwork": false,
-              "protocol": "HTTPS",
-              "threats": [],
-              "isTrustBoundary": false
-            },
             "id": "10d71bb1-5255-5163-9953-1df5ce8af611",
             "source": {
               "cell": "f37135e3-754b-51b7-b4d5-59e9623f76db"
@@ -8135,7 +8468,6 @@
             "attrs": {
               "line": {
                 "stroke": "#333333",
-                "strokeWidth": 1.5,
                 "targetMarker": {
                   "name": "block"
                 },
@@ -8148,19 +8480,31 @@
             "width": 200,
             "height": 100,
             "zIndex": 33,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Débito y crédito atómicos",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": true,
+              "isEncrypted": true,
+              "isPublicNetwork": false,
+              "protocol": "HTTPS",
+              "threats": [],
+              "trustBoundaryIds": [
+                "1b31848c-d247-5975-9a8a-5b225e438619",
+                "219cd871-9e21-5c28-b4b8-21db9ba476f1"
+              ]
+            },
             "labels": [
               {
-                "markup": [
-                  {
-                    "tagName": "ellipse",
-                    "selector": "labelBody"
-                  },
-                  {
-                    "tagName": "text",
-                    "selector": "labelText"
-                  }
-                ],
                 "attrs": {
+                  "label": {
+                    "text": "Data Flow"
+                  },
                   "labelText": {
                     "text": "Débito y crédito atómicos",
                     "textAnchor": "middle",
@@ -8174,24 +8518,19 @@
                     "strokeWidth": 0
                   }
                 },
+                "markup": [
+                  {
+                    "tagName": "ellipse",
+                    "selector": "labelBody"
+                  },
+                  {
+                    "tagName": "text",
+                    "selector": "labelText"
+                  }
+                ],
                 "position": 0.5
               }
             ],
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Débito y crédito atómicos",
-              "description": "",
-              "outOfScope": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": true,
-              "isEncrypted": true,
-              "isPublicNetwork": false,
-              "protocol": "HTTPS",
-              "threats": [],
-              "isTrustBoundary": false
-            },
             "id": "ff91fcc0-1898-58f6-932c-034dc7fcaeb4",
             "source": {
               "cell": "a46b4d29-3ed7-5ebe-be7f-88d2aa8d9753"
@@ -8205,7 +8544,6 @@
             "attrs": {
               "line": {
                 "stroke": "#333333",
-                "strokeWidth": 1.5,
                 "targetMarker": {
                   "name": "block"
                 },
@@ -8218,19 +8556,28 @@
             "width": 200,
             "height": 100,
             "zIndex": 34,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Resultado",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": true,
+              "isPublicNetwork": false,
+              "protocol": "HTTPS",
+              "threats": [],
+              "trustBoundaryIds": []
+            },
             "labels": [
               {
-                "markup": [
-                  {
-                    "tagName": "ellipse",
-                    "selector": "labelBody"
-                  },
-                  {
-                    "tagName": "text",
-                    "selector": "labelText"
-                  }
-                ],
                 "attrs": {
+                  "label": {
+                    "text": "Data Flow"
+                  },
                   "labelText": {
                     "text": "Resultado",
                     "textAnchor": "middle",
@@ -8244,24 +8591,19 @@
                     "strokeWidth": 0
                   }
                 },
+                "markup": [
+                  {
+                    "tagName": "ellipse",
+                    "selector": "labelBody"
+                  },
+                  {
+                    "tagName": "text",
+                    "selector": "labelText"
+                  }
+                ],
                 "position": 0.5
               }
             ],
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Resultado",
-              "description": "",
-              "outOfScope": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": true,
-              "isPublicNetwork": false,
-              "protocol": "HTTPS",
-              "threats": [],
-              "isTrustBoundary": false
-            },
             "id": "942d451b-3ba6-5d49-a6f9-c19b21a96733",
             "source": {
               "cell": "a46b4d29-3ed7-5ebe-be7f-88d2aa8d9753"
@@ -8275,7 +8617,6 @@
             "attrs": {
               "line": {
                 "stroke": "#333333",
-                "strokeWidth": 1.5,
                 "targetMarker": {
                   "name": "block"
                 },
@@ -8288,19 +8629,31 @@
             "width": 200,
             "height": 100,
             "zIndex": 35,
+            "connector": "smooth",
+            "data": {
+              "type": "tm.Flow",
+              "name": "Evento de auditoría",
+              "description": "",
+              "outOfScope": false,
+              "isTrustBoundary": false,
+              "reasonOutOfScope": "",
+              "hasOpenThreats": false,
+              "isBidirectional": false,
+              "isEncrypted": true,
+              "isPublicNetwork": false,
+              "protocol": "HTTPS",
+              "threats": [],
+              "trustBoundaryIds": [
+                "1b31848c-d247-5975-9a8a-5b225e438619",
+                "219cd871-9e21-5c28-b4b8-21db9ba476f1"
+              ]
+            },
             "labels": [
               {
-                "markup": [
-                  {
-                    "tagName": "ellipse",
-                    "selector": "labelBody"
-                  },
-                  {
-                    "tagName": "text",
-                    "selector": "labelText"
-                  }
-                ],
                 "attrs": {
+                  "label": {
+                    "text": "Data Flow"
+                  },
                   "labelText": {
                     "text": "Evento de auditoría",
                     "textAnchor": "middle",
@@ -8314,24 +8667,19 @@
                     "strokeWidth": 0
                   }
                 },
+                "markup": [
+                  {
+                    "tagName": "ellipse",
+                    "selector": "labelBody"
+                  },
+                  {
+                    "tagName": "text",
+                    "selector": "labelText"
+                  }
+                ],
                 "position": 0.5
               }
             ],
-            "connector": "smooth",
-            "data": {
-              "type": "tm.Flow",
-              "name": "Evento de auditoría",
-              "description": "",
-              "outOfScope": false,
-              "reasonOutOfScope": "",
-              "hasOpenThreats": false,
-              "isBidirectional": false,
-              "isEncrypted": true,
-              "isPublicNetwork": false,
-              "protocol": "HTTPS",
-              "threats": [],
-              "isTrustBoundary": false
-            },
             "id": "27ce8133-fdeb-5a8d-865c-6b45f247f7eb",
             "source": {
               "cell": "5f137f0d-10b6-5e7b-b8d8-ab8f06c692c7"
@@ -8369,6 +8717,6 @@
     ],
     "diagramTop": 3,
     "reviewer": "Lead Security Architect",
-    "threatTop": 40
+    "threatTop": 55
   }
 }
