@@ -392,7 +392,7 @@ GEMINI.md
 
 - [ ] Nombres de integrantes y asignación de roles.
 - [ ] Fecha de entrega final y fechas de otras entregas parciales.
-- [ ] ¿La Entrega 1 incluye presentación?
+- [x] ¿La Entrega 1 incluye presentación? Sí: objetivos, resultados, cómo llegamos, proyección, cronograma e implementación (ver `docs/entregas/ENTREGA_1.md`).
 - [ ] ¿Existe plantilla oficial de portada UMG?
 - [ ] Verificar que el Free Plan de AWS permite WAF y ECR.
 - [ ] Revisar los 6 PR de Dependabot en `/mobile`: cerrar los de versión (Tailwind 4 y TypeScript 7 rompen §3.1).
@@ -406,12 +406,12 @@ GEMINI.md
 
 | Campo | Valor |
 |---|---|
-| Última actualización | 05-oct-2026 (2) (Manual Claude + PowerShell + GitHub web) |
-| Fase actual | Preparación del entorno, cerrando; luego Entrega 1 — Selección y Planificación + Activos y Riesgos |
+| Última actualización | 10-oct-2026 (Claude, planificación Entrega 1) |
+| Fase actual | Entrega 1 — Selección y Planificación + Activos y Riesgos. Plan y estado en `docs/entregas/ENTREGA_1.md` |
 | Versión de la app | Expo SDK 57 (React Native 0.86.3, TS strict), NativeWind 4.2.7, Tailwind 3.4.19, Reanimated 4, expo-router, freeRASP 5.2.2, 8 pantallas simuladas |
-| Completado | Primer build nativo Android (`EVD-1-05`). Repo público con ruleset `main-protegida` verificado (`EVD-1-04c`, `EVD-1-06`), Secret Protection y push protection (`EVD-1-04a`), Dependabot alerts + security updates (`EVD-1-04b`), gitleaks del historial sin hallazgos (`EVD-1-07`). `dependabot.yml` con npm solo seguridad. |
-| En curso | — |
-| Siguiente paso / Pendientes | 1) Revisar y cerrar PR de Dependabot de versión; 2) Corregir textos falsos de la UI; 3) Configurar `expo-build-properties`; 4) Cuenta AWS; 5) Entrega 1 (17-oct-2026) |
+| Completado | Primer build nativo Android (`EVD-1-05`). Repo público con ruleset `main-protegida` verificado (`EVD-1-04c`, `EVD-1-06`), Secret Protection y push protection (`EVD-1-04a`), Dependabot alerts + security updates (`EVD-1-04b`), gitleaks del historial sin hallazgos (`EVD-1-07`). `dependabot.yml` con npm solo seguridad. Threat model T2 v2 (41 AME, DFD niveles 0–2, PR #8). |
+| En curso | Entrega 1: sección 1 (1.1–1.4) |
+| Siguiente paso / Pendientes | 0) Entrega 1 según `ENTREGA_1.md` §5 (prioridad); 1) Revisar y cerrar PR de Dependabot de versión; 2) Corregir textos falsos de la UI; 3) Configurar `expo-build-properties`; 4) Cuenta AWS; 5) Entrega 1 (17-oct-2026) |
 | Regla de trabajo | Sin commits directos a `main` (personas ni agy): rama → PR → merge. Cada cambio de la app se valida con build nativo |
 | Bloqueos | Pendientes del §10 |
 | Recursos AWS desplegados | Ninguno |
