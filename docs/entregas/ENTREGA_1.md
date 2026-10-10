@@ -2,7 +2,7 @@
 
 > Archivo de trabajo de la Entrega 1. Lo leen el chat de Claude (proyecto en claude.ai) y Claude Code.
 > Fuente de verdad: `docs/CONTEXTO.md`. Si algo aquí contradice CONTEXTO, manda CONTEXTO.
-> Se actualiza al cerrar cada sesión (tabla §4 y §7).
+> Se actualiza al cerrar cada sesión (tabla sección 4 y sección 7).
 
 ---
 
@@ -22,10 +22,10 @@
 |---|---|---|
 | P-1 | **Objetivos** | Sección 1.2 (general + específicos SMART) |
 | P-2 | **Resultados** | Secciones 2.1–2.5: inventario, amenazas STRIDE, DREAD, matriz y heatmap inherente, riesgos por capa |
-| P-3 | **Cómo llegamos a ese resultado** | Metodología: ISO/IEC 27005 → inventario ISO 27001 → DFD (Threat Dragon) → STRIDE por elemento y frontera → DREAD → P×I. Escalas de CONTEXTO §6 |
+| P-3 | **Cómo llegamos a ese resultado** | Metodología: ISO/IEC 27005 → inventario ISO 27001 → DFD (Threat Dragon) → STRIDE por elemento y frontera → DREAD → P×I. Escalas de CONTEXTO sección 6 |
 | P-4 | **Proyección** | Riesgo residual esperado por amenaza (campo *mitigation* del threat model) → heatmap "después" proyectado. Qué riesgos quedan aceptados (ej. TLS 1.3) |
 | P-5 | **Cronograma** | Fases A–F de `PLAN_FASES.md` con fechas (la entrega final está PENDIENTE) |
-| P-6 | **Cómo lo vamos a implementar** | Arquitectura AWS (CONTEXTO §4), controles CTRL-01 a CTRL-21, pipeline DevSecOps, verificación con casos de abuso CA-01 a CA-13 |
+| P-6 | **Cómo lo vamos a implementar** | Arquitectura AWS (CONTEXTO sección 4), controles CTRL-01 a CTRL-21, pipeline DevSecOps, verificación con casos de abuso CA-01 a CA-13 |
 
 Orden sugerido de diapositivas: portada → contexto Q-Wallet → objetivos → alcance → metodología → resultados → proyección → implementación → cronograma → cierre. ~12–15 diapositivas.
 
@@ -57,7 +57,7 @@ Reglas:
 - Formato 16:9. Duración asumida ~15 min `[VERIFICAR]`.
 - **No poner texto blanco pequeño sobre el verde `#00A86B`**: el contraste es de aprox. 3:1 y no se lee (es el mismo problema del badge de la pantalla Welcome). El verde va en acentos o texto grande.
 - En el heatmap, cada celda lleva además el número de riesgos, para que no dependa solo del color.
-- Las capturas de la app se toman **después** de corregir los textos falsos de Welcome (§6), o no se usan.
+- Las capturas de la app se toman **después** de corregir los textos falsos de Welcome (sección 6), o no se usan.
 
 ---
 
@@ -66,13 +66,13 @@ Reglas:
 | Sección | Contenido | Fuente / insumo |
 |---|---|---|
 | 0 | Portada UMG, resumen ejecutivo (parcial), índice | Plantilla UMG (PENDIENTE confirmar si existe) |
-| 1.1 | Contexto: Q-Wallet, fintech en Guatemala, funciones F1–F7 | CONTEXTO §2 + fuentes reales |
+| 1.1 | Contexto: Q-Wallet, fintech en Guatemala, funciones F1–F7 | CONTEXTO sección 2 + fuentes reales |
 | 1.2 | Objetivo general + 5 específicos SMART | Alineados a las 6 fases |
-| 1.3 | Alcance incluido/excluido, enfoque seguro desde el diseño, restricciones | CONTEXTO §2, §5 |
-| 1.4 | Normativas: tabla Norma / Qué regula / Cómo se aplica | CONTEXTO §8 |
-| 1.5 | Scope técnico: arquitectura, endpoints, TB1–TB6, herramientas, reglas de enfrentamiento | CONTEXTO §3–4 |
-| 2.1 | Inventario ISO 27001 (≥25 activos, 6 tipos, todos los campos) | `REGISTRO_RIESGOS.md` §A (semilla ACT-01–25) |
-| 2.2 | Clasificación CIA y criticidad con cálculo | CONTEXTO §6 |
+| 1.3 | Alcance incluido/excluido, enfoque seguro desde el diseño, restricciones | CONTEXTO sección 2, sección 5 |
+| 1.4 | Normativas: tabla Norma / Qué regula / Cómo se aplica | CONTEXTO sección 8 |
+| 1.5 | Scope técnico: arquitectura, endpoints, TB1–TB6, herramientas, reglas de enfrentamiento | CONTEXTO sección 3–4 |
+| 2.1 | Inventario ISO 27001 (≥25 activos, 6 tipos, todos los campos) | `REGISTRO_RIESGOS.md` sección A (semilla ACT-01–25) |
+| 2.2 | Clasificación CIA y criticidad con cálculo | CONTEXTO sección 6 |
 | 2.3 | STRIDE sobre el DFD, por elemento y frontera | `docs/threat-model/T2_QWallet_ThreatModel.json` |
 | 2.4 | DREAD por amenaza con cálculo | Threat model (D R E A Di en cada AME) |
 | 2.5 | Matriz P×I, capa 1–7, tipo, impacto de negocio, tratamiento + heatmap "antes" + tabla riesgos por capa | Threat model |
@@ -138,12 +138,12 @@ Pendiente de revisar: el 1 riesgo residual Alto (justificar o reforzar el contro
 
 ## 6. Reglas de trabajo para esta entrega
 
-- **Una tarea por chat.** Al cerrar: actualizar §4 de este archivo, §11 de CONTEXTO y una entrada en BITÁCORA.
+- **Una tarea por chat.** Al cerrar: actualizar sección 4 de este archivo, sección 11 de CONTEXTO y una entrada en BITÁCORA.
 - Todo cambio al repo por rama + PR (`main` protegida).
 - Ningún dato inventado: cifras del mercado y normas con fuente real; si no se puede verificar, marcar `[VERIFICAR]`.
 - No afirmar "cumplimiento" de JM-104-2021: usar "diseñado con referencia a".
 - La pantalla Welcome de la app todavía dice "cifrado de extremo a extremo" y "cumplimiento JM-104-2021": no usar capturas de esa pantalla hasta corregirla.
-- Las cifras de §3 salen del JSON, no se escriben a mano.
+- Las cifras de sección 3 salen del JSON, no se escriben a mano.
 
 ---
 
@@ -152,5 +152,5 @@ Pendiente de revisar: el 1 riesgo residual Alto (justificar o reforzar el contro
 - [ ] ¿Existe plantilla oficial UMG?
 - [ ] Nombres de integrantes y roles (portada y tabla de responsables).
 - [ ] Fecha de entrega final (necesaria para el cronograma P-5).
-- [x] Formato de la presentación: sin lineamientos; se usa la paleta de la app (§1). Duración `[VERIFICAR]`.
+- [x] Formato de la presentación: sin lineamientos; se usa la paleta de la app (sección 1). Duración `[VERIFICAR]`.
 - [ ] Registrar en BITÁCORA el threat model T2 v1/v2 (PR #8 no tiene entrada).

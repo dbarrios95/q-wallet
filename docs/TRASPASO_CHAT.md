@@ -143,7 +143,7 @@ npx expo run:android
 
 ### 3.8 Cierre de cada sesión
 
-- Actualizar `CONTEXTO.md` §11 y `BITACORA.md`, luego hacer commit y push.
+- Actualizar `CONTEXTO.md` sección 11 y `BITACORA.md`, luego hacer commit y push.
 - Volver a subir ambos archivos al proyecto de Claude y a la Gem.
 
 ---

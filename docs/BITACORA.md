@@ -1,7 +1,7 @@
 # BITÁCORA DEL PROYECTO — Q-Wallet
 
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
-> El resumen vigente está en `CONTEXTO.md` §11; aquí queda el historial.
+> El resumen vigente está en `CONTEXTO.md` sección 11; aquí queda el historial.
 
 ## Plantilla
 ```
@@ -19,28 +19,12 @@
 
 ---
 
-### 2026-10-10 — Manual — Claude (claude.ai + Claude Code)
-- Fase / sección del informe: Entrega 1 — planificación.
-- Qué se hizo:
-  - Registro tardío: modelo de amenazas T2 v1 (`99cc65a`, 40 amenazas) y v2 (`e0c8724`, PR #8, 09-oct): agrega AME-41 (flujo S3 → Wazuh, TB4–TB6) y 14 justificaciones N/A de STRIDE. Total 41 AME en DFD nivel 0, 1 y 2.
-  - Se crea `docs/entregas/ENTREGA_1.md`: alcance, estructura del Word, puntos de la presentación (objetivos, resultados, cómo llegamos, proyección, cronograma, implementación), resultados extraídos del threat model, estado por sección y cronograma 10–17 oct.
-  - Se crea `CLAUDE.md` en la raíz para que Claude Code cargue el mismo contexto.
-- Archivos creados o modificados: `CLAUDE.md`, `docs/entregas/ENTREGA_1.md`, `docs/CONTEXTO.md` (§10, §11), `docs/BITACORA.md`.
-- Decisiones tomadas: el repo es la fuente de verdad del contexto; el proyecto de claude.ai guarda una copia que se refresca al cerrar sesión.
-- Cambios de versión: ninguno.
-- Evidencias generadas (EVD-): ninguna.
-- IDs nuevos: AME-01 a AME-41 (threat model).
-- Problemas / bloqueos: plantilla UMG, integrantes, fecha final y formato de la presentación siguen pendientes.
-- Siguiente paso: sección 1 (1.1–1.4) según `ENTREGA_1.md` §5.
-
----
-
 ### 2026-10-05 (2) — Manual — Claude + PowerShell + GitHub web
 - Fase / sección del informe: Preparación. Seguridad del repositorio (CTRL-10, CTRL-16, CTRL-21).
 - Qué se hizo:
-  - `.github/dependabot.yml` (ya existía con npm `/mobile`, npm `/services`, terraform `/infra` y github-actions `/`): se agregó `open-pull-requests-limit: 0` a las dos entradas npm. Solo PR de seguridad; sin PR de versión que rompan SDK 57 ni las versiones fijadas de §3.1. Terraform y github-actions siguen con PR de versión semanales (revisión manual).
+  - `.github/dependabot.yml` (ya existía con npm `/mobile`, npm `/services`, terraform `/infra` y github-actions `/`): se agregó `open-pull-requests-limit: 0` a las dos entradas npm. Solo PR de seguridad; sin PR de versión que rompan SDK 57 ni las versiones fijadas de sección 3.1. Terraform y github-actions siguen con PR de versión semanales (revisión manual).
   - Referencias al audit actualizadas a `EVD-3-00_npm-audit-mobile.txt` en esta bitácora. El ID `EVD-3-01` queda reservado para el pipeline de GitHub Actions (CHECKLIST_EVIDENCIAS).
-  - Hallazgo: el repo era **privado**, en contra de §3. En GitHub Free los rulesets no se aplican en repos privados: el primer push de prueba (`f91caf0`, commit vacío) pasó a `main`.
+  - Hallazgo: el repo era **privado**, en contra de sección 3. En GitHub Free los rulesets no se aplican en repos privados: el primer push de prueba (`f91caf0`, commit vacío) pasó a `main`.
   - gitleaks 8.30.1 (Docker `zricethezav/gitleaks:v8.30.1`) sobre el historial completo (16 commits): `no leaks found`. Después se hizo **público** el repo.
   - Ruleset `main-protegida`: Active, target default branch, bypass vacío, reglas Restrict deletions, Block force pushes, Require pull request (0 approvals). Verificado: push directo rechazado con `GH013`.
   - Advanced Security: Dependency graph, Dependabot alerts, Dependabot security updates, Secret Protection y Push protection activos. CodeQL Default setup **no** activado (se usará workflow avanzado fijado por SHA).
@@ -58,7 +42,7 @@
 - IDs nuevos: ninguno.
 - Hallazgos para el informe:
   - Dependabot reporta 5 vulnerabilidades (2 altas, 3 moderadas) en `main`; `npm audit` reportó 33. Conciliar en la fase de SCA (probable deduplicación por advisory).
-  - Dependabot abrió 6 ramas/PR en `/mobile` (reanimated 4.7.0, react-native-svg 15.15.5, tailwindcss 4.3.3, typescript 7.0.2 y dos grupos `multi-*`). Tailwind 4 rompe NativeWind 4 y TypeScript 7 sale de §3.1: **no se mergean**. Revisar si alguno es de seguridad y cerrar los de versión.
+  - Dependabot abrió 6 ramas/PR en `/mobile` (reanimated 4.7.0, react-native-svg 15.15.5, tailwindcss 4.3.3, typescript 7.0.2 y dos grupos `multi-*`). Tailwind 4 rompe NativeWind 4 y TypeScript 7 sale de sección 3.1: **no se mergean**. Revisar si alguno es de seguridad y cerrar los de versión.
 - Problemas / bloqueos: ninguno.
 - Siguiente paso: revisar y cerrar los PR de Dependabot; corregir textos falsos de la UI.
 
@@ -101,17 +85,17 @@
 - Qué se hizo:
   - **Paso 1:** Verificación de Node.js v24.21.0 exitosa.
   - **Paso 2:** Creación de `scripts/dev-env.ps1` para configurar variables de entorno por sesión de PowerShell sin alterar el sistema, documentado en `docs/INICIO.md`.
-  - **Paso 3:** Instalación y alineación completa de dependencias de Expo SDK 57 y externas fijadas exactamente según `docs/CONTEXTO.md` §3.1.
+  - **Paso 3:** Instalación y alineación completa de dependencias de Expo SDK 57 y externas fijadas exactamente según `docs/CONTEXTO.md` sección 3.1.
   - **Paso 4:** Configuración base de `/mobile`: NativeWind 4.2.7 + tailwindcss 3.4.19, expo-router con entrada `expo-router/entry`, Reanimated 4 con worklets, `tsconfig.json` en strict (`ignoreDeprecations: "6.0"`), `app.json` configurado (`gt.qwallet.app`, `allowBackup: false`, plugins de seguridad).
   - **Paso 5:** Sistema de diseño completo en `/mobile/src/theme`: colores (azul profundo `#0B1F3A`, verde quetzal `#00A86B`, semáforo de estados), soporte claro/oscuro automático con hook `useTheme`, tipografía Inter, tokens de espaciado y radios. Construcción de los 9 componentes reutilizables en `/mobile/src/components`: `Button`, `Input` (con variante PIN), `Card`, `BalanceCard` (degradado y montos en GTQ centavos), `TransactionItem`, `ProgressBar` (con alertas), `Header`, `EmptyState`, `Skeleton`.
   - **Paso 6:** Datos simulados en `/mobile/src/mocks` en GTQ con centavos enteros. Construcción de 8 pantallas con expo-router: `(auth)/welcome`, `(auth)/login`, `(auth)/unlock`, `(tabs)/home`, `(tabs)/transfer`, `(tabs)/activity`, `(tabs)/budgets`, `(tabs)/profile`. Se implementó `FLAG_SECURE` con `expo-screen-capture` en `transfer`, `unlock` y `profile`. Validación estricta con esquemas Zod (`.strict()`). Cero console.log de datos sensibles.
   - **Paso 7:** Configuración de ESLint 10.12.0 (`mobile/eslint.config.js`) y verificación con `npx eslint .` (0 errores) y `npx tsc --noEmit` (0 errores). Ejecución de `npm audit` y generación de evidencia `EVD-3-00_npm-audit-mobile.txt`.
-  - **Paso 8:** Cierre obligatorio: actualización de `CONTEXTO.md` §3.1 y §11, actualización de `docs/INICIO.md` y bitácora.
+  - **Paso 8:** Cierre obligatorio: actualización de `CONTEXTO.md` sección 3.1 y sección 11, actualización de `docs/INICIO.md` y bitácora.
 - Pasos completados: Pasos 1, 2, 3, 4, 5, 6, 7 y 8 (100 % completados).
 - Pasos fallidos: Ninguno.
 - Errores exactos encontrados y resueltos durante el proceso:
   - `create-expo-app` interactivo: Resuelto por intervención manual del usuario previo al inicio autónomo.
-  - `npm error ERESOLVE could not resolve react-dom@19.3.0 / react@19.2.3`: Resuelto ejecutando `npm install --legacy-peer-deps --save-exact` para respetar las versiones fijadas en CONTEXTO §3.1 sin alterar el árbol de Expo SDK 57.
+  - `npm error ERESOLVE could not resolve react-dom@19.3.0 / react@19.2.3`: Resuelto ejecutando `npm install --legacy-peer-deps --save-exact` para respetar las versiones fijadas en CONTEXTO sección 3.1 sin alterar el árbol de Expo SDK 57.
   - `TS5101: Option 'baseUrl' is deprecated in TypeScript 6.0`: Resuelto agregando `"ignoreDeprecations": "6.0"` a `compilerOptions` en `mobile/tsconfig.json`.
   - `TS2882: Cannot find module or type declarations for side-effect import of '../global.css'`: Resuelto declarando `declare module "*.css"` en `mobile/nativewind-env.d.ts`.
   - Inferencia literal de colores en `Button.tsx` y `ProgressBar.tsx`: Resuelto tipando explícitamente `let bg: string`, `let textColor: string`, `let barColor: string`.
@@ -126,7 +110,7 @@
   - `@typescript-eslint/parser` y `typescript-eslint` para integración nativa de ESLint con TypeScript en `/mobile`.
 - Archivos creados o modificados:
   - Creados: `scripts/dev-env.ps1`, `mobile/metro.config.js`, `mobile/babel.config.js`, `mobile/tailwind.config.js`, `mobile/global.css`, `mobile/nativewind-env.d.ts`, `mobile/eslint.config.js`, `docs/evidencias/EVD-3-00_npm-audit-mobile.txt`, `mobile/src/theme/*` (5 archivos), `mobile/src/components/*` (10 archivos), `mobile/src/mocks/index.ts`, `mobile/app/*` (12 archivos de rutas y layouts).
-  - Modificados: `mobile/package.json`, `mobile/app.json`, `mobile/tsconfig.json`, `docs/CONTEXTO.md` (§3.1 y §11), `docs/INICIO.md` (Paso 0, 3 y 6), `docs/BITACORA.md`.
+  - Modificados: `mobile/package.json`, `mobile/app.json`, `mobile/tsconfig.json`, `docs/CONTEXTO.md` (sección 3.1 y sección 11), `docs/INICIO.md` (Paso 0, 3 y 6), `docs/BITACORA.md`.
   - Eliminados: `mobile/App.tsx`, `mobile/index.ts` (reemplazados por Expo Router).
 - `TODO(CTRL-xx)` pendientes registrados en código:
   - `TODO(CTRL-02)` en `mobile/app/(tabs)/transfer.tsx`: Verificación de hash scrypt del PIN en backend y política de bloqueo tras 5 intentos fallidos.
@@ -135,7 +119,7 @@
   - `TODO(CTRL-07)` en `mobile/app/(auth)/unlock.tsx`: Almacenamiento y recuperación de tokens en `expo-secure-store` con `requireAuthentication` biométrico.
   - `TODO(CTRL-18)` en `mobile/app/(auth)/login.tsx`: Flujo OAuth2 Authorization Code con PKCE vía Cognito Hosted UI con MFA TOTP obligatorio.
 - Resultado de `npm audit`:
-  - 33 vulnerabilidades reportadas (11 moderadas, 22 altas) en dependencias transitivas del ecosistema Expo CLI/Metro/Tailwind 3 (`braces`, `decode-uri-component`, `node-forge`, `uuid`). Evidencia guardada en `docs/evidencias/EVD-3-00_npm-audit-mobile.txt`. Ninguna vulnerabilidad directa en el código de Q-Wallet; no se forzaron actualizaciones que rompieran las versiones fijadas de CONTEXTO §3.1 ni se ejecutó `npm audit fix` conforme a las reglas.
+  - 33 vulnerabilidades reportadas (11 moderadas, 22 altas) en dependencias transitivas del ecosistema Expo CLI/Metro/Tailwind 3 (`braces`, `decode-uri-component`, `node-forge`, `uuid`). Evidencia guardada en `docs/evidencias/EVD-3-00_npm-audit-mobile.txt`. Ninguna vulnerabilidad directa en el código de Q-Wallet; no se forzaron actualizaciones que rompieran las versiones fijadas de CONTEXTO sección 3.1 ni se ejecutó `npm audit fix` conforme a las reglas.
 - Pendientes manuales del usuario:
   - Instalar Temurin 17 JDK (`C:\Program Files\Eclipse Adoptium\jdk-17*`).
   - Instalar Terraform CLI 1.16.5.
@@ -148,7 +132,7 @@
 ### 2026-10-03 (3) — Grupo — Claude
 - Fase / sección del informe: Preparación.
 - Qué se hizo: se cierran dos pendientes.
-- Archivos creados o modificados: `CONTEXTO.md` (§3, CTRL-08, §10, §11), `INICIO.md` (comandos para Windows/PowerShell).
+- Archivos creados o modificados: `CONTEXTO.md` (sección 3, CTRL-08, sección 10, sección 11), `INICIO.md` (comandos para Windows/PowerShell).
 - Decisiones tomadas:
   - Sin dominio propio: se usa el endpoint de AWS con TLS 1.2+.
   - TLS 1.3 queda como riesgo residual aceptado y como recomendación del roadmap.
@@ -162,7 +146,7 @@
 ### 2026-10-03 (2) — Grupo — Claude
 - Fase / sección del informe: Preparación.
 - Qué se hizo: por indicación del catedrático se elimina la estrategia v1 vulnerable / v2 endurecida. La app se construye segura desde el diseño.
-- Archivos creados o modificados: `CONTEXTO.md` §3.1 y §5, `INSTRUCCIONES.md`, `GEMINI.md`, `PLAN_FASES.md`, `REGISTRO_RIESGOS.md`, `CHECKLIST_EVIDENCIAS.md`, `INICIO.md` (nuevo).
+- Archivos creados o modificados: `CONTEXTO.md` sección 3.1 y sección 5, `INSTRUCCIONES.md`, `GEMINI.md`, `PLAN_FASES.md`, `REGISTRO_RIESGOS.md`, `CHECKLIST_EVIDENCIAS.md`, `INICIO.md` (nuevo).
 - Decisiones tomadas:
   - Matriz antes/después = riesgo inherente vs. residual (ISO/IEC 27005).
   - El pentest verifica controles mediante casos de abuso CA-01 a CA-13.
@@ -184,7 +168,7 @@
   - AWS en Free Plan.
   - API Gateway REST, porque permite asociar AWS WAF.
   - Ponderación 4×5.
-- Cambios de versión: versiones iniciales fijadas en `CONTEXTO.md` §3.1.
+- Cambios de versión: versiones iniciales fijadas en `CONTEXTO.md` sección 3.1.
 - Evidencias generadas: ninguna.
 - IDs nuevos: ACT-01 a ACT-27 (semilla), VULN-01 a VULN-16.
 - Problemas / bloqueos: faltan fecha de entrega final, nombres de integrantes y plantilla UMG.

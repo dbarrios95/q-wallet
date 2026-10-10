@@ -41,7 +41,7 @@ Si `mobile/.gitignore` no contiene las líneas `/android` y `/ios`, agrégalas b
 
 ## Paso 3 — `docs/CONTEXTO.md`
 
-- **§3.1 (versiones):**
+- **sección 3.1 (versiones):**
   - Agrega `babel-preset-expo` `~57.0.13`, instalado con `npx expo install babel-preset-expo -- --legacy-peer-deps`.
   - Agrega o actualiza la sección del entorno Android:
     - Android SDK en `%LOCALAPPDATA%\Android\Sdk`.
@@ -58,7 +58,7 @@ Si `mobile/.gitignore` no contiene las líneas `/android` y `/ios`, agrégalas b
   - Lista de plugins vigente: `expo-router`, `expo-build-properties`, `expo-secure-store`, `expo-local-authentication`, `expo-font`, `expo-splash-screen`, `["freerasp-react-native", { "android": {} }]`.
   - Aclara que `expo-screen-capture` **no** es un config plugin: FLAG_SECURE se aplica en runtime en `transfer`, `unlock` y `profile`.
   - Aclara que `expo-build-properties` está registrado **sin opciones**. Es un pendiente de endurecimiento.
-- **§11 (estado vigente):**
+- **sección 11 (estado vigente):**
   - Primer build nativo Android exitoso el 2026-10-05. La app carga en el emulador.
   - Pendientes:
     - push y seguridad de GitHub;

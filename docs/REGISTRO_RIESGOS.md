@@ -1,6 +1,6 @@
 # REGISTRO DE ACTIVOS, AMENAZAS, RIESGOS Y HALLAZGOS
 
-Las escalas están en `CONTEXTO.md` §6. No se cambian.
+Las escalas están en `CONTEXTO.md` sección 6. No se cambian.
 
 ---
 
