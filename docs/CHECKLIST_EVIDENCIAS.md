@@ -21,6 +21,7 @@ Como no hay demo en vivo, toda afirmación técnica del informe necesita una evi
 | ☐ | EVD-2-04 | Reporte PDF exportado de Threat Dragon | Threat Dragon | Anexo |
 | ☑ | EVD-2-05 | Heatmap de riesgo inicial ("antes") (Figura 5) | Script desde el JSON del threat model | 2.5 |
 | ☐ | EVD-2-06 | (Opcional) Árbol de ataque | draw.io | Anexo |
+| ☑ | EVD-2-07 | Heatmap de riesgo residual proyectado ("después" esperado) (Figura 6). Proyección desde el campo mitigation del threat model; no reemplaza a EVD-5-09 | Script `scripts/heatmap_riesgo.py` | 2.5 |
 
 ## Entrega final
 
@@ -67,4 +68,4 @@ Como no hay demo en vivo, toda afirmación técnica del informe necesita una evi
 | ☐ | EVD-5-06 | Wazuh: alerta por fuerza bruta / BOLA |
 | ☐ | EVD-5-07 | Dashboard de seguridad |
 | ☐ | EVD-5-08 | Re-test de cada HAL real (una por hallazgo) |
-| ☐ | EVD-5-09 | Heatmap residual ("después") |
+| ☐ | EVD-5-09 | Heatmap residual ("después") verificado con pruebas; se compara con la proyección EVD-2-07 |

@@ -96,9 +96,9 @@ Extraídos del JSON de Threat Dragon. Volver a calcular si el modelo cambia.
 | Por STRIDE | Information disclosure 13 · Tampering 9 · Spoofing 6 · DoS 5 · Elevation 5 · Repudiation 3 |
 | Riesgo inherente | Crítico 18 · Alto 12 · Medio 11 · Bajo 0 |
 | Residual esperado | Alto 1 · Medio 26 · Bajo 14 |
-| Por capa | 1: 8 · 2a: 5 · 2b: 11 · 2c: 1 · 2d: 3 · 3: 3 · 4: 2 · 5: 2 · 6: 2 · 7: 4 → **las 7 capas cubiertas** |
+| Por capa | 1: 8 · 2a: 5 · 2b: 11 · 2c: 1 · 2d: 3 · 3: 3 · 4: 2 · 5: 2 · 6: 2 · 7: 4 → **las 7 capas cubiertas** (10 con la capa 2 dividida en 2a–2d) |
 
-Pendiente de revisar: el 1 riesgo residual Alto (justificar o reforzar el control) y que ninguno sea Bajo inherente (¿está bien calibrado?).
+Revisado el 12-oct (sección 2.5.5 del Word): el residual Alto es RSK-32 (pipeline); no se acepta y tiene plan de refuerzo de CTRL-21 (entorno protegido con aprobación de un segundo integrante, OIDC limitado a ese entorno y a `main`, rol de despliegue mínimo) → esperado P1×I5 = 5. Ningún inherente Bajo no es efecto del redondeo: con redondeo al más cercano solo AME-41 sería Bajo. Residual calculado con `scripts/heatmap_riesgo.py` (EVD-2-07).
 
 ---
 
@@ -118,9 +118,9 @@ Pendiente de revisar: el 1 riesgo residual Alto (justificar o reforzar el contro
 | 2.2 CIA y criticidad | ☑ | Tablas 13–15: criterios, cálculo C+I+D por activo y distribución. Crítica 11 · Alta 13 · Media 4 · Baja 0 |
 | 2.3 STRIDE | ☑ | Tablas 16–18 (distribución STRIDE, catálogo de 41 AME, 14 N/A justificadas). Figuras 2–4 con las capturas EVD-2-01/02/03 (Threat Dragon 2.6.2); Figuras 3 y 4 en página horizontal por legibilidad |
 | 2.4 DREAD | ☑ | Tablas 19–20 (criterios por factor y DREAD de 41 AME con justificación). Alta 15 · Media 26 · Baja 0 |
-| 2.5 Matriz + heatmap + capas | ☑ | Tabla 21 (RSK-01..41 con P, I, nivel, capa, tipo, impacto, tratamiento), Figura 5 (EVD-2-05), Tabla 22 (riesgos por capa, las 10 capas cubiertas). Mitigar 39 · Transferir 1 · Aceptar 1 |
-| Referencias APA | ◐ | 17 referencias de 1.1–1.4 + referencias nuevas de 1.5 (reales). 3 con `[VERIFICAR]` (JM-104, Decretos) y 1 en 1.5 (OWASP Top 10:2025). Sección 2: 9 referencias reales, sin `[VERIFICAR]` |
-| Presentación P-1 a P-6 | ☑ | Presentación de avance en Claude Slides (14 diapositivas, exportable a PDF). Cubre P-1 a P-6 con la figura de arquitectura y el heatmap |
+| 2.5 Matriz + heatmap + capas | ☑ | Tabla 21 (RSK-01..41 con P, I, nivel, capa, tipo, impacto, tratamiento), Figura 5 (EVD-2-05), Tabla 22 (riesgos por capa, las 10 capas cubiertas). Mitigar 39 · Transferir 1 · Aceptar 1. **2.5.5 nueva:** Figura 6 (EVD-2-07, residual proyectado: Alto 1 · Medio 26 · Bajo 14), Tabla 23 (inherente vs. residual por RSK, suma 580 → 207), criterio de aceptación del riesgo, plan para RSK-32 y defensa de "ningún inherente Bajo" |
+| Referencias APA | ◐ | 17 referencias de 1.1–1.4 + referencias nuevas de 1.5 (reales). 3 con `[VERIFICAR]` (JM-104, Decretos). OWASP Top 10:2025 en 1.5 confirmada el 12-oct. Sección 2: 9 referencias reales, sin `[VERIFICAR]` |
+| Presentación P-1 a P-6 | ◐ | Presentación de avance en Claude Slides (14 diapositivas, exportable a PDF). Cubre P-1 a P-6. Falta poner EVD-2-07 en la diapositiva de proyección (P-4) junto a EVD-2-05 |
 
 ---
 
@@ -160,5 +160,5 @@ Pendiente de revisar: el 1 riesgo residual Alto (justificar o reforzar el contro
 - [x] Registrar en BITÁCORA el threat model T2 v1/v2 (entrada 2026-10-10).
 - [x] Revisar los casos de abuso CA-xx vs. la política de pentest de AWS: **hecho en 1.5 (Tabla 11)**. Rediseñar CA-02, CA-03, CA-12; matizar CA-06, CA-13; los nuevos CA-14 y CA-16 también chocan. Falta aplicarlo al ejecutar.
 - [ ] **Sincronizar el repo de GitHub con el proyecto:** el repo va en 05-oct; faltan subir las entradas del 10-oct, los cambios de CONTEXTO, el `.docx` de 1.1–1.4 y los de 1.5.
-- [ ] Verificar en fuente primaria: fecha y URL de JM-104-2021 (SIB), cifras Global Findex 2025 de Guatemala (38 % / 23 %), URL oficial de los Decretos 67-2001 y 57-2008. En 1.5: confirmar URL/edición de OWASP Top 10:2025.
+- [ ] Verificar en fuente primaria: fecha y URL de JM-104-2021 (SIB), cifras Global Findex 2025 de Guatemala (38 % / 23 %), URL oficial de los Decretos 67-2001 y 57-2008. (OWASP Top 10:2025 en 1.5: confirmada el 12-oct.)
 - [ ] Confirmar el título exacto de la sección 1 en el enunciado (se usó "1. Selección y Planificación").
