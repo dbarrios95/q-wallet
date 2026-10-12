@@ -116,7 +116,7 @@ Pendiente de revisar: el 1 riesgo residual Alto (justificar o reforzar el contro
 | 1.5 Scope técnico | ☑ | `docs/entregas/Entrega1_Seccion_1-5_Scope_Tecnico.docx`. Figura 1 (diagrama con TB1–TB6 y 22 controles, `EVD-1-01` PNG+SVG), Tablas 7–11, reglas de enfrentamiento y revisión CA vs política AWS. Falta EVD-1-02 (estructura del repo) y EVD-1-03 (cuenta AWS) |
 | 2.1 Inventario | ☑ | `docs/entregas/Entrega1_Seccion_2_Activos_Riesgos.docx`. Tabla 12: 28 activos (semilla 27 + ACT-28 SIEM Wazuh), 6 tipos, 15 campos. ACT-27 renombrado "Alineación regulatoria (referencia JM-104-2021)". ACT-09 con `[VERIFICAR]` (backend de Terraform no definido) |
 | 2.2 CIA y criticidad | ☑ | Tablas 13–15: criterios, cálculo C+I+D por activo y distribución. Crítica 11 · Alta 13 · Media 4 · Baja 0 |
-| 2.3 STRIDE | ☑ | Tablas 16–18 (distribución STRIDE, catálogo de 41 AME, 14 N/A justificadas). Figuras 2–4 con marcador: **faltan las capturas EVD-2-01/02/03** |
+| 2.3 STRIDE | ☑ | Tablas 16–18 (distribución STRIDE, catálogo de 41 AME, 14 N/A justificadas). Figuras 2–4 con las capturas EVD-2-01/02/03 (Threat Dragon 2.6.2); Figuras 3 y 4 en página horizontal por legibilidad |
 | 2.4 DREAD | ☑ | Tablas 19–20 (criterios por factor y DREAD de 41 AME con justificación). Alta 15 · Media 26 · Baja 0 |
 | 2.5 Matriz + heatmap + capas | ☑ | Tabla 21 (RSK-01..41 con P, I, nivel, capa, tipo, impacto, tratamiento), Figura 5 (EVD-2-05), Tabla 22 (riesgos por capa, las 10 capas cubiertas). Mitigar 39 · Transferir 1 · Aceptar 1 |
 | Referencias APA | ◐ | 17 referencias de 1.1–1.4 + referencias nuevas de 1.5 (reales). 3 con `[VERIFICAR]` (JM-104, Decretos) y 1 en 1.5 (OWASP Top 10:2025). Sección 2: 9 referencias reales, sin `[VERIFICAR]` |

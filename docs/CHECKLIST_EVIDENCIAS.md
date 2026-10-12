@@ -12,14 +12,14 @@ Como no hay demo en vivo, toda afirmación técnica del informe necesita una evi
 
 | ✔ | EVD | Qué debe verse | Herramienta | Sección |
 |---|---|---|---|---|
-| ☐ | EVD-1-01 | Diagrama de arquitectura con controles y fronteras de confianza | draw.io | 1.5 |
+| ☑ | EVD-1-01 | Diagrama de arquitectura con controles y fronteras de confianza (Figura 1) | SVG por script | 1.5 |
 | ☐ | EVD-1-02 | Repositorio con estructura de carpetas | GitHub | 1.5 |
 | ☐ | EVD-1-03 | Cuenta AWS: MFA en root + presupuesto con alerta | AWS Console | 1.5 / capa 7 |
-| ☐ | EVD-2-01 | DFD nivel 0 | Threat Dragon | 2.3 |
-| ☐ | EVD-2-02 | DFD nivel 1 con fronteras TB1–TB6 | Threat Dragon | 2.3 |
-| ☐ | EVD-2-03 | Amenazas STRIDE sobre elementos del DFD | Threat Dragon | 2.3 |
+| ☑ | EVD-2-01 | DFD nivel 0, contexto (Figura 2) | Threat Dragon 2.6.2 | 2.3 |
+| ☑ | EVD-2-02 | DFD nivel 1 con fronteras TB1–TB6 (Figura 3) | Threat Dragon 2.6.2 | 2.3 |
+| ☑ | EVD-2-03 | DFD nivel 2 de la transferencia P2P con los elementos que tienen amenazas STRIDE abiertas marcados en rojo (Figura 4). El detalle de cada amenaza está en la Tabla 17 | Threat Dragon 2.6.2 | 2.3 |
 | ☐ | EVD-2-04 | Reporte PDF exportado de Threat Dragon | Threat Dragon | Anexo |
-| ☐ | EVD-2-05 | Heatmap de riesgo inicial ("antes") | Excel | 2.5 |
+| ☑ | EVD-2-05 | Heatmap de riesgo inicial ("antes") (Figura 5) | Script desde el JSON del threat model | 2.5 |
 | ☐ | EVD-2-06 | (Opcional) Árbol de ataque | draw.io | Anexo |
 
 ## Entrega final
