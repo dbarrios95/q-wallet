@@ -19,6 +19,35 @@
 
 ---
 
+### 2026-10-12 (2) — Manual — Claude (claude.ai)
+- Fase / sección del informe: Entrega 1 — sección 2 Activos y Riesgos (2.1 a 2.5).
+- Qué se hizo:
+  - Word de la sección 2 con formato UMG y APA 7, numeración continua (Tablas 12–22, Figuras 2–5), primera persona plural. Todas las cifras de amenazas se generan por script desde el JSON del threat model; se verificó que cada DREAD, P, I y P×I coincide con las fórmulas de CONTEXTO sección 6 (0 diferencias).
+  - 2.1: inventario de 28 activos con los 15 campos (Tabla 12). Tipos: Información 9, Software 9, Físico 3, Personal 2, Servicios 3, Empresa 2.
+  - 2.2: criterios CIA (Tabla 13), cálculo C+I+D por activo (Tabla 14) y distribución (Tabla 15): Crítica 11, Alta 13, Media 4, Baja 0.
+  - 2.3: STRIDE con marcadores para los 3 DFD (Figuras 2–4), distribución (Tabla 16: I 13, T 9, S 6, D 5, E 5, R 3), catálogo de 41 AME con elemento, frontera, activos y CTRL (Tabla 17) y 14 casos N/A justificados (Tabla 18).
+  - 2.4: criterios DREAD por factor (Tabla 19) y DREAD de las 41 AME con justificación (Tabla 20): Alta 15, Media 26, Baja 0.
+  - 2.5: conversión DREAD → P×I con ejemplos, matriz RSK-01..41 con capa, tipo, impacto de negocio y tratamiento (Tabla 21), heatmap EVD-2-05 como Figura 5 y riesgos por capa (Tabla 22). Inherente: Crítico 18, Alto 12, Medio 11, Bajo 0. Tratamiento: Mitigar 39, Transferir 1 (RSK-01), Aceptar 1 (RSK-31).
+- Archivos creados o modificados: `docs/entregas/Entrega1_Seccion_2_Activos_Riesgos.docx` (nuevo), `docs/REGISTRO_RIESGOS.md` (ACT-27 renombrado, ACT-28), `docs/entregas/ENTREGA_1.md` (sección 4), `docs/CONTEXTO.md` (sección 11), `docs/BITACORA.md`.
+- Decisiones tomadas (y por qué):
+  - **ACT-28 SIEM Wazuh** se agrega: AME-31 y AME-41 lo citan y no estaba en la semilla.
+  - **ACT-27** pasa a "Alineación regulatoria (referencia JM-104-2021)": el nombre anterior afirmaba cumplimiento.
+  - RSK-xx usa el mismo número que su AME para trazar sin tabla de cruce.
+  - Tipo de riesgo e impacto de negocio no estaban en el JSON: se asignaron con criterio explícito en el texto (financiero = mueve dinero; operacional = detiene o compromete la plataforma; reputacional = expone datos; legal = debilita evidencia ante disputas).
+  - Las justificaciones DREAD se redactaron a partir de la descripción de cada AME; los valores no se tocaron.
+  - Tablas anchas (12, 17) en páginas horizontales.
+- Cambios de versión: ninguno.
+- Evidencias generadas (EVD-): ninguna nueva (se usa EVD-2-05). Pendientes: EVD-2-01, EVD-2-02, EVD-2-03 (Figuras 2–4).
+- IDs nuevos: ACT-28; RSK-01 a RSK-41.
+- Hallazgos para el informe:
+  - `CHECKLIST_EVIDENCIAS.md` define EVD-2-03 como "amenazas STRIDE sobre elementos del DFD"; en el Word se usa para el DFD nivel 2 con sus amenazas visibles. Unificar.
+  - Ningún riesgo inherente queda Bajo: el redondeo hacia arriba de la conversión DREAD → P×I sube los valores; es coherente con la escala fija, pero conviene defenderlo en la presentación.
+  - ACT-09: el backend remoto de Terraform no está definido en `/infra` (vacío) → `[VERIFICAR]`.
+- Problemas / bloqueos: ninguno.
+- Siguiente paso: capturas de los 3 DFD; mar 13 heatmap "después" proyectado y revisión de 2.x.
+
+---
+
 ### 2026-10-12 — Manual — Claude (claude.ai)
 - Fase / sección del informe: Entrega 1 — apoyos de la sección 2 y presentación de avance.
 - Qué se hizo:
