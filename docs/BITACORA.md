@@ -19,6 +19,32 @@
 
 ---
 
+### 2026-10-12 (4) — Manual — Claude (claude.ai)
+- Fase / sección del informe: Entrega 1 — sección 2.5 (riesgo residual proyectado) y revisión de la sección 2 contra la rúbrica.
+- Qué se hizo:
+  - Script `scripts/heatmap_riesgo.py`: lee `T2_QWallet_ThreatModel.json`, recalcula P e I inherentes desde DREAD (0 diferencias con el modelo) y toma el residual de la frase "Residual esperado P x I" del campo `mitigation` de cada amenaza (0 diferencias entre P×I y el puntaje escrito). Con `inh` reproduce EVD-2-05 byte a byte; con `res` genera EVD-2-07.
+  - Resultado: inherente Crítico 18 · Alto 12 · Medio 11 · Bajo 0 → residual proyectado Crítico 0 · Alto 1 · Medio 26 · Bajo 14. Suma de P×I: 580 → 207 (−64 %). 32 amenazas bajan solo P, 7 bajan P e I, 2 no cambian (AME-01 Transferir, AME-31 Aceptar). 15 quedan en P1×I5 = 5.
+  - Word de la sección 2: nueva 2.5.5 "Riesgo residual proyectado y tratamiento" antes de las referencias, con Figura 6 (EVD-2-07) y Tabla 23 (inherente vs. residual por RSK). Incluye criterio de aceptación del riesgo, coherencia del tratamiento, plan para RSK-32 y defensa de "ningún inherente Bajo". Sin cambios en el texto, numeración ni Notas existentes. Validado y renderizado (29 páginas).
+  - ENTREGA_1: sección 3 (pendientes revisados), sección 4 (2.5, Referencias, Presentación), sección 7 (OWASP Top 10:2025 confirmada). CHECKLIST: EVD-2-07 nuevo.
+- Archivos creados o modificados: `scripts/heatmap_riesgo.py` (nuevo), `docs/evidencias/EVD-2-07_heatmap_residual_proyectado.png` y `.svg` (nuevos), `docs/entregas/Entrega1_Seccion_2_Activos_Riesgos.docx`, `docs/CHECKLIST_EVIDENCIAS.md`, `docs/entregas/ENTREGA_1.md`, `docs/CONTEXTO.md` (sección 11), `docs/BITACORA.md`.
+- Decisiones tomadas (y por qué):
+  - **EVD-2-07 para la proyección; EVD-5-09 queda para el residual verificado.** Son cosas distintas: una es lo esperado, la otra lo medido tras las pruebas.
+  - **Criterio de aceptación del riesgo:** Bajo se acepta; Medio con aprobación del propietario y seguimiento en el SIEM; Alto solo con plan con fecha; Crítico no se acepta. ISO/IEC 27005 lo exige y el informe no lo tenía.
+  - **RSK-32 (residual Alto) no se acepta:** plan de refuerzo de CTRL-21 en la fase de arquitectura (entorno protegido con aprobación de un segundo integrante, OIDC limitado a ese entorno y a `main`, rol de despliegue mínimo) → esperado P1×I5 = 5. No se cambió el JSON ni CONTEXTO sección 5 hasta implementarlo.
+  - Tabla 23 en página vertical, después de la Tabla 22, para no renumerar.
+- Cambios de versión: ninguno (cairosvg solo en el entorno de Claude para el PNG).
+- Evidencias generadas (EVD-): EVD-2-07.
+- IDs nuevos: ninguno.
+- Hallazgos de la revisión de la sección 2 (propuestas, no aplicadas):
+  - 8 amenazas sobre activos de criticidad Crítica tienen impacto ≤ 3 (AME-02, 09, 10, 14, 18, 22, 38, 40). Es defendible (el impacto mide lo que la amenaza le hace al activo, no el valor total del activo), pero falta decirlo en 2.5.1.
+  - La Tabla 21 no tiene dueño del riesgo (ISO/IEC 27005 lo pide). Propuesta: columna con el propietario del activo principal.
+  - AME-03 (ingeniería social a soporte) no tiene control en el catálogo; capa 7 floja. Propuesta: CTRL-23 (procedimiento de verificación de identidad en soporte + capacitación).
+  - Ningún límite de monto por transferencia: es lo que bajaría el impacto de los 15 riesgos en P1×I5.
+- Problemas / bloqueos: ninguno.
+- Siguiente paso: decidir las propuestas; EVD-2-07 en la diapositiva P-4; mié 14 sección 0 y ensamblaje.
+
+---
+
 ### 2026-10-12 (3) — Manual — Claude (claude.ai) + Threat Dragon 2.6.2
 - Fase / sección del informe: Entrega 1 — sección 2.3 (Figuras 2–4).
 - Qué se hizo:
