@@ -19,6 +19,24 @@
 
 ---
 
+### 2026-10-12 — Manual — Claude (claude.ai)
+- Fase / sección del informe: Entrega 1 — apoyos de la sección 2 y presentación de avance.
+- Qué se hizo:
+  - Heatmap de riesgo inherente ("antes") calculado desde el threat model (41 AME): Crítico 18, Alto 12, Medio 11, Bajo 0. Imagen EVD-2-05 (PNG + SVG) con conteo por celda en la matriz 5x5, escala de CONTEXTO sección 6.
+  - Presentación de avance de la Entrega 1: 14 diapositivas en Claude Slides, identidad Q-Wallet, exportable a PDF, animaciones mínimas (solo transición fade). Cubre portada, contexto, objetivos, alcance, metodología, arquitectura (figura EVD-1-01), activos, STRIDE, heatmap, 7 capas, proyección antes/después, controles, cronograma y cierre.
+  - Referencia OWASP Top 10:2025 confirmada (URL oficial https://owasp.org/Top10/2025/); se quitó su [VERIFICAR] del Word de 1.5.
+  - Catedrático confirmado: Osberto Saúl Gallo Orozco. Integrantes y roles: I1 Lead Security Architect = Barrios Monzón; I2 DevSecOps = Sandoval Monterroso; I3 Pentester = Lolmet Calel.
+  - Regla de sincronización nueva: GitHub es la fuente de verdad. Al iniciar una tarea se clona el repo y se lee el estado real; al cerrar se entregan los .md y los comandos git y el usuario crea el PR. Se agregó a las instrucciones del proyecto, a CLAUDE.md y a GEMINI.md.
+- Archivos creados o modificados: `docs/evidencias/EVD-2-05_heatmap_inherente.png` y `.svg` (nuevos), `docs/entregas/Entrega1_Seccion_1-5_Scope_Tecnico.docx` (referencia OWASP), `docs/CONTEXTO.md` (sección 1, 9, 11), `docs/entregas/ENTREGA_1.md` (sección 4, 7), `docs/BITACORA.md`, `CLAUDE.md`, `GEMINI.md`. La presentación es un artefacto en claude.ai, no un archivo del repo.
+- Decisiones tomadas: la presentación se hace en Claude Slides (no Claude Design) por exportar a PDF y permitir edición.
+- Cambios de versión: ninguno.
+- Evidencias generadas (EVD-): EVD-2-05 (heatmap). Pendientes: EVD-2-01/02/03 (capturas de los 3 DFD en Threat Dragon), EVD-1-02 (estructura del repo), EVD-1-03 (cuenta AWS).
+- IDs nuevos: ninguno (CTRL-22 se agregó el 10-oct).
+- Problemas / bloqueos: el repo de GitHub va atrás; hay que subir el backlog local. Falta la sección 2 completa en Word (2.1–2.5), la sección 0 y el ensamblaje del informe.
+- Siguiente paso: sección 2 (Activos y Riesgos) en Word.
+
+---
+
 ### 2026-10-10 (4) — Manual — Claude (claude.ai)
 - Fase / sección del informe: Entrega 1 — sección 1.5 Scope técnico.
 - Qué se hizo:

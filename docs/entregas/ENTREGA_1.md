@@ -2,7 +2,7 @@
 
 > Archivo de trabajo de la Entrega 1. Lo leen el chat de Claude (proyecto en claude.ai) y Claude Code.
 > Fuente de verdad: `docs/CONTEXTO.md`. Si algo aquí contradice CONTEXTO, manda CONTEXTO.
-> Se actualiza al cerrar cada sesión (tabla sección 4 y sección 7).
+> Se actualiza al cerrar cada sesión (tabla de la sección 4 y la sección 7).
 
 ---
 
@@ -14,7 +14,8 @@
 | Fases de la hoja de ruta | **1. Selección y Planificación** (target, threat modeling, scope) y **2. Activos y Riesgos** (inventario, valor, riesgos ISO 27001, STRIDE/DREAD) |
 | Secciones del informe | 0, 1 y 2 (Opción A) |
 | Criterio de rúbrica | Análisis de Riesgos y Activos (4 pts) |
-| Productos | 1) Word formato UMG + APA 7. 2) **Presentación** (sin demo en vivo) |
+| Productos | Contenido de las fases **1. Selección y Planificación** y **2. Activos y Riesgos** = secciones **0, 1 y 2** del informe. Se presenta al catedrático como **presentación de avance** (resumen explicativo para revisión); el Word de las secciones 0–2 es la base de la presentación |
+| Enfoque | Primero se produce el contenido de las secciones 0–2; la presentación lo resume al final. No se trabaja nada de las fases 3 en adelante hasta el 17 |
 
 ### Lo que la presentación debe cubrir (indicación del catedrático)
 
@@ -25,7 +26,7 @@
 | P-3 | **Cómo llegamos a ese resultado** | Metodología: ISO/IEC 27005 → inventario ISO 27001 → DFD (Threat Dragon) → STRIDE por elemento y frontera → DREAD → P×I. Escalas de CONTEXTO sección 6 |
 | P-4 | **Proyección** | Riesgo residual esperado por amenaza (campo *mitigation* del threat model) → heatmap "después" proyectado. Qué riesgos quedan aceptados (ej. TLS 1.3) |
 | P-5 | **Cronograma** | Fases A–F de `PLAN_FASES.md` con fechas (la entrega final está PENDIENTE) |
-| P-6 | **Cómo lo vamos a implementar** | Arquitectura AWS (CONTEXTO sección 4), controles CTRL-01 a CTRL-21, pipeline DevSecOps, verificación con casos de abuso CA-01 a CA-13 |
+| P-6 | **Cómo lo vamos a implementar** | Arquitectura AWS (CONTEXTO sección 4), controles CTRL-01 a CTRL-22, pipeline DevSecOps, verificación con casos de abuso CA-01 a CA-13 |
 
 Orden sugerido de diapositivas: portada → contexto Q-Wallet → objetivos → alcance → metodología → resultados → proyección → implementación → cronograma → cierre. ~12–15 diapositivas.
 
@@ -67,10 +68,10 @@ Reglas:
 |---|---|---|
 | 0 | Portada UMG, resumen ejecutivo (parcial), índice | Plantilla UMG (PENDIENTE confirmar si existe) |
 | 1.1 | Contexto: Q-Wallet, fintech en Guatemala, funciones F1–F7 | CONTEXTO sección 2 + fuentes reales |
-| 1.2 | Objetivo general + 5 específicos SMART | Alineados a las 6 fases |
+| 1.2 | Objetivo general + 5 específicos SMART | Alineados a los 5 componentes de la rúbrica (fases 1 y 2 juntas en OE1) |
 | 1.3 | Alcance incluido/excluido, enfoque seguro desde el diseño, restricciones | CONTEXTO sección 2, sección 5 |
 | 1.4 | Normativas: tabla Norma / Qué regula / Cómo se aplica | CONTEXTO sección 8 |
-| 1.5 | Scope técnico: arquitectura, endpoints, TB1–TB6, herramientas, reglas de enfrentamiento | CONTEXTO sección 3–4 |
+| 1.5 | Scope técnico: arquitectura (Figura 1), superficie API (Tabla 7), fronteras TB1–TB6 (Tabla 8), controles por componente (Tabla 9), herramientas (Tabla 10), reglas de enfrentamiento y revisión CA (Tabla 11) | `docs/entregas/Entrega1_Seccion_1-5_Scope_Tecnico.docx` |
 | 2.1 | Inventario ISO 27001 (≥25 activos, 6 tipos, todos los campos) | `REGISTRO_RIESGOS.md` sección A (semilla ACT-01–25) |
 | 2.2 | Clasificación CIA y criticidad con cálculo | CONTEXTO sección 6 |
 | 2.3 | STRIDE sobre el DFD, por elemento y frontera | `docs/threat-model/T2_QWallet_ThreatModel.json` |
@@ -79,6 +80,8 @@ Reglas:
 | — | Referencias APA 7 (solo fuentes reales y verificables) | |
 
 Formato: Arial 12, interlineado 1.5, sangría 1.27 cm, márgenes 2.54 cm, justificado. Tablas y figuras numeradas APA 7.
+
+Numeración en curso: 1.1–1.4 usa Tablas 1–6 (sin figuras). **1.5 usa Figura 1 y Tablas 7–11.** La numeración de 2.x continúa desde Tabla 11 / Figura 1.
 
 ---
 
@@ -106,18 +109,18 @@ Pendiente de revisar: el 1 riesgo residual Alto (justificar o reforzar el contro
 | Sección | Estado | Archivo / nota |
 |---|---|---|
 | 0 Portada / resumen / índice | ☐ | |
-| 1.1 Contexto | ☐ | |
-| 1.2 Objetivos | ☐ | |
-| 1.3 Alcance | ☐ | |
-| 1.4 Normativas | ☐ | |
-| 1.5 Scope técnico | ☐ | Falta diagrama de arquitectura con controles |
+| 1.1 Contexto | ☑ | `docs/entregas/Entrega1_Secciones_1-1_a_1-4.docx`. Cifras Findex por fuente secundaria `[VERIFICAR]` |
+| 1.2 Objetivos | ☑ | OE1–OE5 + Tabla 2 SMART. Plazos OE2–OE5 = fecha final PENDIENTE |
+| 1.3 Alcance | ☑ | Incluye restricciones de la política de pentest de AWS (sin DoS ni inundación; Cognito no autorizado) |
+| 1.4 Normativas | ☑ | Tabla 6 (11 normas). JM-104 "con referencia a". OWASP Top 10:2025 |
+| 1.5 Scope técnico | ☑ | `docs/entregas/Entrega1_Seccion_1-5_Scope_Tecnico.docx`. Figura 1 (diagrama con TB1–TB6 y 22 controles, `EVD-1-01` PNG+SVG), Tablas 7–11, reglas de enfrentamiento y revisión CA vs política AWS. Falta EVD-1-02 (estructura del repo) y EVD-1-03 (cuenta AWS) |
 | 2.1 Inventario | ◐ | Semilla de 25 activos sin CIA ni campos completos |
 | 2.2 CIA y criticidad | ☐ | |
 | 2.3 STRIDE | ☑ | Threat model v2 (41 AME). Faltan capturas EVD de los 3 DFD |
 | 2.4 DREAD | ◐ | Valores en el JSON; falta pasarlos a tabla con justificación |
-| 2.5 Matriz + heatmap + capas | ◐ | Datos en el JSON; falta tabla y heatmap |
-| Referencias APA | ☐ | |
-| Presentación P-1 a P-6 | ☐ | |
+| 2.5 Matriz + heatmap + capas | ◐ | Datos en el JSON; falta la tabla en Word. **Heatmap "antes" listo** (`docs/evidencias/EVD-2-05_heatmap_inherente.png` + `.svg`) |
+| Referencias APA | ◐ | 17 referencias de 1.1–1.4 + referencias nuevas de 1.5 (reales). 3 con `[VERIFICAR]` (JM-104, Decretos) y 1 en 1.5 (OWASP Top 10:2025) |
+| Presentación P-1 a P-6 | ☑ | Presentación de avance en Claude Slides (14 diapositivas, exportable a PDF). Cubre P-1 a P-6 con la figura de arquitectura y el heatmap |
 
 ---
 
@@ -125,12 +128,12 @@ Pendiente de revisar: el 1 riesgo residual Alto (justificar o reforzar el contro
 
 | Día | Tarea (una por chat) |
 |---|---|
-| Sáb 10 | Sección 1 completa (1.1–1.4) |
-| Dom 11 | 1.5 + diagrama de arquitectura con controles |
-| Lun 12 | 2.1 + 2.2 (inventario con CIA) |
-| Mar 13 | 2.4 + 2.5 (tablas DREAD, matriz, heatmap antes y proyectado, riesgos por capa) + capturas de los DFD |
-| Mié 14 | Ensamblar Word UMG + referencias APA |
-| Jue 15 | Presentación (P-1 a P-6) |
+| Sáb 10 | Sección 1.1–1.4: contexto, objetivos SMART, alcance, normativas. **1.5 scope técnico + diagrama (hecho el 10)** |
+| Dom 11 | Holgura / revisión de 1.x |
+| Lun 12 | Sección 2.1–2.2: inventario ISO 27001 con CIA y criticidad |
+| Mar 13 | Sección 2.3–2.5: tablas STRIDE/DREAD, matriz, heatmap antes y proyectado, riesgos por capa + capturas de los 3 DFD |
+| Mié 14 | Sección 0 (portada, resumen ejecutivo, índice) + referencias APA + ensamblar Word |
+| Jue 15 | Presentación de avance (P-1 a P-6) a partir del Word, con la paleta de la app |
 | Vie 16 | Revisión final contra la rúbrica y correcciones |
 | **Sáb 17** | **Entrega** |
 
@@ -150,7 +153,12 @@ Pendiente de revisar: el 1 riesgo residual Alto (justificar o reforzar el contro
 ## 7. Pendientes que afectan esta entrega
 
 - [ ] ¿Existe plantilla oficial UMG?
-- [ ] Nombres de integrantes y roles (portada y tabla de responsables).
+- [x] Nombres de integrantes y roles: asignados en CONTEXTO sección 1 y 9 (I1 Lead Security Architect = Barrios Monzón; I2 DevSecOps = Sandoval Monterroso; I3 Pentester = Lolmet Calel).
+- [x] Catedrático: Osberto Saúl Gallo Orozco (confirmado).
 - [ ] Fecha de entrega final (necesaria para el cronograma P-5).
 - [x] Formato de la presentación: sin lineamientos; se usa la paleta de la app (sección 1). Duración `[VERIFICAR]`.
-- [ ] Registrar en BITÁCORA el threat model T2 v1/v2 (PR #8 no tiene entrada).
+- [x] Registrar en BITÁCORA el threat model T2 v1/v2 (entrada 2026-10-10).
+- [x] Revisar los casos de abuso CA-xx vs. la política de pentest de AWS: **hecho en 1.5 (Tabla 11)**. Rediseñar CA-02, CA-03, CA-12; matizar CA-06, CA-13; los nuevos CA-14 y CA-16 también chocan. Falta aplicarlo al ejecutar.
+- [ ] **Sincronizar el repo de GitHub con el proyecto:** el repo va en 05-oct; faltan subir las entradas del 10-oct, los cambios de CONTEXTO, el `.docx` de 1.1–1.4 y los de 1.5.
+- [ ] Verificar en fuente primaria: fecha y URL de JM-104-2021 (SIB), cifras Global Findex 2025 de Guatemala (38 % / 23 %), URL oficial de los Decretos 67-2001 y 57-2008. En 1.5: confirmar URL/edición de OWASP Top 10:2025.
+- [ ] Confirmar el título exacto de la sección 1 en el enunciado (se usó "1. Selección y Planificación").

@@ -13,8 +13,8 @@
 | Universidad | Universidad Mariano Gálvez de Guatemala — Facultad de Ingeniería en Sistemas, Programa de Postgrados |
 | Programa | Maestría en Seguridad Informática |
 | Curso | Seguridad en Aplicaciones |
-| Catedrático | Msc. Ing. César Rodríguez Minas |
-| Grupo | 3 integrantes — nombres: **PENDIENTE** |
+| Catedrático | Osberto Saúl Gallo Orozco |
+| Grupo | 3 integrantes: Katherine Johana Sandoval Monterroso (1493-21-16747), Daniel Edivin Barrios Monzón (1493-19-3305), Aroldo Francisco Lolmet Calel (1493-23-20110) |
 | Opción | **A — Aplicación Móvil Banking / Fintech Cloud (Android)** |
 | Ponderación oficial | Enunciado: 5 componentes × 4 pts = 20 pts |
 | Entrega 1 | **Sábado 17-oct-2026** — Fase "Selección y Planificación" + Fase "Activos y Riesgos" |
@@ -372,9 +372,9 @@ Aceptar · Eliminar · Evitar · Mitigar · Transferir.
 | Rol | Persona |
 |---|---|
 | Gerente de Producto (propietario de activos de negocio) | — |
-| Lead Security Architect | Integrante 1 — PENDIENTE |
-| DevSecOps Engineer (custodio de infraestructura) | Integrante 2 — PENDIENTE |
-| Pentester / Analista de Riesgos | Integrante 3 — PENDIENTE |
+| Lead Security Architect | Integrante 1 — Daniel Edivin Barrios Monzón |
+| DevSecOps Engineer (custodio de infraestructura) | Integrante 2 — Katherine Johana Sandoval Monterroso |
+| Pentester / Analista de Riesgos | Integrante 3 — Aroldo Francisco Lolmet Calel |
 
 ### Repo
 ```
@@ -388,6 +388,8 @@ Aceptar · Eliminar · Evitar · Mitigar · Transferir.
 GEMINI.md
 ```
 
+**Sincronización (fuente de verdad = GitHub):** al iniciar una tarea se clona el repo y se lee el estado real desde ahí; al cerrar se actualizan los docs, se entregan los comandos git (rama → commit → push, sin `gh`) y el usuario crea el PR en el navegador (`main` protegida). El proyecto de claude.ai es un espejo de conveniencia, no la verdad.
+
 ### Formato del informe (UMG)
 - Arial 12, interlineado 1.5, sangría de primera línea 1.27 cm, márgenes 2.54 cm, texto justificado.
 - Tablas y figuras numeradas en estilo APA 7. Referencias en APA 7 con sangría francesa.
@@ -397,7 +399,7 @@ GEMINI.md
 
 ## 10. Pendientes
 
-- [ ] Nombres de integrantes y asignación de roles.
+- [x] Nombres de integrantes y asignación de roles (sección 1 y sección 9).
 - [ ] Fecha de entrega final y fechas de otras entregas parciales (los plazos de OE2–OE5 dependen de ella).
 - [x] ¿La Entrega 1 incluye presentación? Sí: objetivos, resultados, cómo llegamos, proyección, cronograma e implementación (ver `docs/entregas/ENTREGA_1.md`).
 - [ ] ¿Existe plantilla oficial de portada UMG?
@@ -415,12 +417,12 @@ GEMINI.md
 
 | Campo | Valor |
 |---|---|
-| Última actualización | 10-oct-2026 (Claude, sección 1.5 Scope técnico de la Entrega 1 y CTRL-22 oficializado) |
+| Última actualización | 12-oct-2026 (Claude, heatmap inherente EVD-2-05, presentación de avance y regla de sincronización con GitHub) |
 | Fase actual | Entrega 1 — Selección y Planificación + Activos y Riesgos. Plan y estado en `docs/entregas/ENTREGA_1.md` |
 | Versión de la app | Expo SDK 57 (React Native 0.86.3, TS strict), NativeWind 4.2.7, Tailwind 3.4.19, Reanimated 4, expo-router, freeRASP 5.2.2, 8 pantallas simuladas |
-| Completado | Primer build nativo Android (`EVD-1-05`). Repo público con ruleset `main-protegida` (`EVD-1-04c`, `EVD-1-06`), Secret Protection y push protection (`EVD-1-04a`), Dependabot (`EVD-1-04b`), gitleaks sin hallazgos (`EVD-1-07`). Threat model T2 v2 (41 AME, DFD 0–2, PR #8). **Secciones 1.1–1.4 redactadas** (6 tablas, 17 referencias). **Sección 1.5 redactada** (`docs/entregas/Entrega1_Seccion_1-5_Scope_Tecnico.docx`): arquitectura + Figura 1 (diagrama con TB1–TB6 y 22 controles, `EVD-1-01` PNG+SVG), Tablas 7–11 (superficie API, fronteras, controles por componente, herramientas, revisión CA vs política AWS), reglas de enfrentamiento. **CTRL-22 (FLAG_SECURE) catalogado** en sección 5. |
-| En curso | Entrega 1: secciones 2.1–2.2 (inventario ISO 27001 + clasificación CIA) |
-| Siguiente paso / Pendientes | 0) Entrega 1 según `ENTREGA_1.md` sección 5: 2.1–2.2 el lun 12; 2.3–2.5 el mar 13; 1) Resolver `[VERIFICAR]` de 1.1–1.4 y el de OWASP Top 10:2025 en 1.5; 2) Confirmar nombres/roles de integrantes y catedrático (el Word T2 difiere de CONTEXTO: profesor Gallo Orozco vs. Rodríguez Minas); 3) **Sincronizar el repo de GitHub con el proyecto** (va 5 días atrás); 4) PR de Dependabot de versión; 5) Textos falsos de la UI; 6) Cuenta AWS |
+| Completado | Primer build nativo Android (`EVD-1-05`). Repo público con ruleset `main-protegida` (`EVD-1-04c`, `EVD-1-06`), Secret Protection y push protection (`EVD-1-04a`), Dependabot (`EVD-1-04b`), gitleaks sin hallazgos (`EVD-1-07`). Threat model T2 v2 (41 AME, DFD 0–2, PR #8). **Secciones 1.1–1.4 redactadas** (6 tablas, 17 referencias). **Sección 1.5 redactada** (`docs/entregas/Entrega1_Seccion_1-5_Scope_Tecnico.docx`): arquitectura + Figura 1 (diagrama con TB1–TB6 y 22 controles, `EVD-1-01` PNG+SVG), Tablas 7–11 (superficie API, fronteras, controles por componente, herramientas, revisión CA vs política AWS), reglas de enfrentamiento. **CTRL-22 (FLAG_SECURE) catalogado** en sección 5. **Heatmap inherente EVD-2-05** (PNG+SVG) calculado del threat model. **Presentación de avance** en Claude Slides (14 diapositivas, exportable a PDF). Referencia OWASP Top 10:2025 confirmada. |
+| En curso | Entrega 1: sección 2 completa (2.1–2.5, Activos y Riesgos) en Word |
+| Siguiente paso / Pendientes | 0) Entrega 1 según `ENTREGA_1.md` sección 5: 2.1–2.2 el lun 12; 2.3–2.5 el mar 13; 1) Resolver `[VERIFICAR]` de 1.1–1.4 y el de OWASP Top 10:2025 en 1.5; 2) **Sincronizar el repo de GitHub con el proyecto** (va 5 días atrás); 3) PR de Dependabot de versión; 4) Textos falsos de la UI; 5) Cuenta AWS |
 | Regla de trabajo | Sin commits directos a `main` (personas ni agy): rama → PR → merge. Cada cambio de la app se valida con build nativo |
 | Bloqueos | Pendientes de la sección 10 |
 | Recursos AWS desplegados | Ninguno |
