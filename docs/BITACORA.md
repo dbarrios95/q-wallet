@@ -19,6 +19,30 @@
 
 ---
 
+### 2026-10-12 (3) — Manual — Claude (claude.ai) + Threat Dragon 2.6.2
+- Fase / sección del informe: Entrega 1 — sección 2.3 (Figuras 2–4).
+- Qué se hizo:
+  - Capturas de los 3 DFD en OWASP Threat Dragon 2.6.2 (escritorio) a partir de `T2_QWallet_ThreatModel.json`, sin modificar el modelo. Se recortaron los márgenes en blanco y se aplanó la transparencia sobre fondo blanco.
+  - Se reemplazaron los 3 marcadores punteados del Word de la sección 2 por las imágenes. Títulos, numeración y Notas sin cambios.
+  - Figura 2 (nivel 0) a 16 cm en página vertical. Figuras 3 y 4 (nivel 1 y nivel 2) a 22.9 cm en una sección horizontal: a 16 cm su texto quedaba en unos 3 puntos y no se leía.
+  - Revisión visual de las capturas: la primera del nivel 2 traía el almacén CloudWatch Logs seleccionado (recuadro y botón de borrar visibles) y se repitió.
+  - CHECKLIST_EVIDENCIAS: EVD-2-01/02/03 marcados y EVD-2-03 unificado con el uso del Word. Se marcaron también EVD-1-01 y EVD-2-05, que ya existían, y se corrigió su herramienta (script, no draw.io/Excel).
+- Archivos creados o modificados: `docs/evidencias/EVD-2-01_dfd-nivel0.png`, `EVD-2-02_dfd-nivel1.png`, `EVD-2-03_dfd-nivel2.png` (nuevos), `docs/entregas/Entrega1_Seccion_2_Activos_Riesgos.docx`, `docs/CHECKLIST_EVIDENCIAS.md`, `docs/entregas/ENTREGA_1.md` (sección 4), `docs/CONTEXTO.md` (sección 11), `docs/BITACORA.md`.
+- Decisiones tomadas (y por qué):
+  - **EVD-2-03 = DFD nivel 2 con los elementos con amenazas marcados en rojo.** Threat Dragon no dibuja el texto de las amenazas en el lienzo, solo el borde rojo; el detalle va en la Tabla 17. Así la evidencia no promete lo que la imagen no muestra.
+  - Fecha/hora fuera de la figura (se ve mal en un informe): queda en esta bitácora y en el historial de git.
+  - No se reacomodó el diagrama de nivel 1 (cruces de líneas y etiquetas encimadas): hacerlo cambia el JSON del threat model y no aporta al análisis.
+- Cambios de versión: ninguno.
+- Evidencias generadas (EVD-): EVD-2-01, EVD-2-02, EVD-2-03.
+- IDs nuevos: ninguno.
+- Hallazgos para el informe:
+  - Distribución de entradas del modelo por diagrama: nivel 0: 1; nivel 1: 44 (35 abiertas, 9 N/A); nivel 2: 10 (5 abiertas, 5 N/A). En nivel 2 están en rojo 2.1, 2.2, 2.3, 2.5 y 2.6; 2.4 (idempotencia) no tiene amenaza abierta propia.
+  - La Figura 3 impresa queda con letra de unos 4 puntos: legible, pero conviene que la presentación use la versión digital con zoom.
+- Problemas / bloqueos: ninguno.
+- Siguiente paso: mar 13, heatmap "después" proyectado (P-4) y revisión de 2.x.
+
+---
+
 ### 2026-10-12 (2) — Manual — Claude (claude.ai)
 - Fase / sección del informe: Entrega 1 — sección 2 Activos y Riesgos (2.1 a 2.5).
 - Qué se hizo:
