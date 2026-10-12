@@ -11,7 +11,7 @@ Lee antes de cualquier tarea:
 - Una carpeta por microservicio en `/services/svc-*`, cada una con su `Dockerfile`.
 - Infraestructura solo en Terraform (`/infra`), región `us-east-1`, todos los recursos con tags `Project=qwallet` y `Env`.
 - Nunca subir secretos. Usar `.env.example` y SSM Parameter Store.
-- **Seguro desde el diseño.** Todo código implementa los controles CTRL-01 a CTRL-21 de `docs/CONTEXTO.md` sección 5 desde el primer commit. No se permite código inseguro "temporal": si falta un control, deja `TODO(CTRL-xx)` y repórtalo.
+- **Seguro desde el diseño.** Todo código implementa los controles CTRL-01 a CTRL-22 de `docs/CONTEXTO.md` sección 5 desde el primer commit. No se permite código inseguro "temporal": si falta un control, deja `TODO(CTRL-xx)` y repórtalo.
 - Commits: `feat(CTRL-xx): ...` si implementan un control; `fix(HAL-xx): ...` si corrigen un hallazgo de pruebas.
 - Cada endpoint nuevo requiere:
   - Esquema `zod` `.strict()`.
@@ -20,9 +20,13 @@ Lee antes de cualquier tarea:
   - Pruebas `vitest`, incluido el caso de acceso a un recurso ajeno, que debe responder 403/404.
 - No usar servicios AWS fuera de CONTEXTO sección 3.
 
+## Al iniciar cada sesión
+- **Fuente de verdad = GitHub** (`github.com/dbarrios95/q-wallet`). Clona el repo y lee el estado real desde ahí antes de trabajar; el proyecto de claude.ai es un espejo, no la verdad.
+
 ## Al cerrar cada sesión (obligatorio)
 1. Reescribir `docs/CONTEXTO.md` sección 11 (Estado actual).
 2. Agregar una entrada al inicio de `docs/BITACORA.md`.
+3b. Entregar los comandos git (rama → commit → push, sin `gh`); el usuario crea el PR en el navegador (`main` protegida).
 3. Si cambió una decisión o versión: actualizar la sección correspondiente de CONTEXTO y anotarla en la bitácora.
 4. Commit: `docs: actualiza estado y bitácora (AAAA-MM-DD)`.
 

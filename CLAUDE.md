@@ -14,6 +14,7 @@ Proyecto final de Seguridad en Aplicaciones (UMG). Lee antes de cualquier tarea:
 - Versiones exactas de CONTEXTO sección 3.1. Las reglas de código están en `GEMINI.md` y aplican igual.
 - Nunca inventar fuentes ni cifras. Lo no verificable se marca `[VERIFICAR]`.
 - **Una tarea por sesión.** Al cerrar: actualizar `ENTREGA_1.md` sección 4, CONTEXTO sección 11 y una entrada en BITÁCORA.
+- **Fuente de verdad = GitHub** (`github.com/dbarrios95/q-wallet`). Al iniciar una tarea, clona el repo y lee el estado real desde ahí, no solo el espejo del proyecto de claude.ai. Al cerrar, entrega los `.md` actualizados y los comandos git (rama → commit → push, sin `gh`); el usuario crea el PR en el navegador.
 
 
 ## Regla de escritura
