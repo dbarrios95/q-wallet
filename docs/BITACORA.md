@@ -19,6 +19,39 @@
 
 ---
 
+### 2026-10-13 — Manual — Claude (claude.ai)
+- Fase / sección del informe: Entrega 1 — sección 0, referencias unificadas y pendientes cortos (ACT-09, RSK-02).
+- Qué se hizo:
+  - Se verificó que el PR #16 (correcciones de la sección 2) estaba en `main`. Se detectó que el Word de 1.1–1.4 nunca se había subido al repo; el usuario lo adjuntó y se incluye en este PR.
+  - Sección 0 (`Entrega1_Seccion_0_Portada_Resumen_Indice.docx`, 3 páginas): portada APA 7 de estudiante (no hay plantilla UMG en el repo), resumen ejecutivo de 1 página y índice. Cifras del resumen recalculadas por script desde el JSON y la Tabla 12: 28 activos (Crítica 11 · Alta 13 · Media 4), 41 AME + 14 N/A, 23 controles, inherente 18/12/11/0, residual proyectado 0/1/26/14, suma 580 → 207 (−64 %), Mitigar 39 · Transferir 1 · Aceptar 1.
+  - El índice es un campo TOC de Word con páginas medidas al renderizar cada Word (cuerpo sin sus referencias), en el orden 0 → 1.1–1.4 → 1.5 → 2 → Referencias. Al ensamblar se actualiza con clic derecho → Actualizar campo.
+  - Referencias (`Entrega1_Referencias.docx`): las 3 listas unificadas en 24 entradas APA 7, sin duplicados, en orden alfabético, con "y" y "s. f.". Duplicados resueltos: AWS Penetration testing (2026 / s. f.-a), MASVS (OWASP Foundation s. f. → OWASP Mobile Application Security Project 2024, v2.1.0), OWASP API Top 10 (dos URL), ISO/IEC 27001 y 27005.
+  - Verificación web de los `[VERIFICAR]`:
+    - JM-104-2021: PDF oficial en Banguat (`banguat.gob.gt/.../Res_JM/2021/Res_JM-104-2021.pdf`); publicada en el Diario de Centro América el 1-dic-2021 (vLex). El PDF es imagen y no se pudo leer la fecha de emisión; la referencia usa el año.
+    - **Hallazgo: la Resolución JM-98-2025 (emitida 22-oct-2025, publicada y vigente desde el 30-oct-2025) emitió un nuevo Reglamento para la Administración del Riesgo Tecnológico y derogó el de 2021** (Carrillo & Asociados, Bitso, White Jaguars). No se pudo abrir el texto oficial. No se cambió nada del informe: decisión del equipo.
+    - Decreto 67-2001: texto oficial en Banguat (emitido el 28-nov-2001; reformado por el Decreto 55-2010).
+    - Decreto 57-2008: texto en SVET (emitido el 23-sep-2008). El sitio del Congreso no permitió la consulta.
+    - Global Findex 2025: 38 % de adultos con cuenta coincide con el indicador FX.OWN.TOTL.ZS del Banco Mundial (38.28 %, 2024, leído en un agregador). El 23 % de pagos digitales y las cifras de Costa Rica no se confirmaron en fuente primaria; la cita secundaria de 1.1 (Estrategia & Negocios) se mantiene con su `[VERIFICAR]`. Informe original: Klapper et al. (2025), hdl.handle.net/10986/43438; no se agregó a la lista porque el texto no lo cita.
+  - ACT-09 (decisión del usuario: S3 con bloqueo): Tabla 12 "Cloud: bucket S3 de estado con bloqueo nativo (use_lockfile), cifrado SSE-KMS, versionado y Block Public Access". También en CONTEXTO sección 3 y `REGISTRO_RIESGOS.md`.
+  - RSK-02: dueño "Cliente" → "Gerente de Producto" en la Tabla 21 y frase en 2.5.2. Conteo: Lead Security Architect 28 · Gerente de Producto 13.
+  - Los 5 Word renderizados y revisados; los 2 nuevos validados con el validador del skill de docx.
+- Archivos creados o modificados: `docs/entregas/Entrega1_Seccion_0_Portada_Resumen_Indice.docx` (nuevo), `docs/entregas/Entrega1_Referencias.docx` (nuevo), `docs/entregas/Entrega1_Secciones_1-1_a_1-4.docx` (nuevo en el repo, sin cambios), `docs/entregas/Entrega1_Seccion_2_Activos_Riesgos.docx`, `scripts/entrega1_seccion0_referencias.js` y `scripts/docx_toc_campo.py` (nuevos), `docs/REGISTRO_RIESGOS.md`, `docs/CONTEXTO.md` (secciones 3, 8, 10 y 11), `docs/entregas/ENTREGA_1.md` (secciones 4 y 7), `docs/BITACORA.md`.
+- Decisiones tomadas (y por qué):
+  - **ACT-09 en S3 con bloqueo nativo (sin DynamoDB):** el estado guarda atributos sensibles y lo usan 3 integrantes y el pipeline por OIDC; S3 permite cifrado, historial y CTRL-12. Terraform lo soporta desde 1.10.
+  - Referencias en archivo aparte para facilitar el ensamblaje. Las listas por sección de los 3 Word no se tocaron: se quitan al ensamblar.
+  - Portada APA 7 de estudiante mientras no exista plantilla UMG.
+- Cambios de versión: ninguno.
+- Evidencias generadas (EVD-): ninguna.
+- IDs nuevos: ninguno.
+- Hallazgos para el informe:
+  - JM-104-2021 derogada por JM-98-2025: afecta 1.4 (texto y Tabla 6), ACT-27, CONTEXTO sección 8, la presentación y el texto falso de la pantalla Welcome.
+  - 1.2: OE3 dice "13 casos de abuso" y OE4 "21 controles (CTRL-01 a CTRL-21)"; hoy son 23 controles.
+  - Al ensamblar hay que ajustar citas en el texto: AWS (s. f.-a/b/c), MASVS como OWASP Mobile Application Security Project (2024), ISO "e" en lugar de "&". La sección 1.5 no cita en el texto ninguna de sus referencias.
+- Problemas / bloqueos: ninguno.
+- Siguiente paso: decidir la norma de riesgo tecnológico y corregir OE3/OE4; ensamblar el Word final.
+
+---
+
 ### 2026-10-12 (5) — Manual — Claude (claude.ai)
 - Fase / sección del informe: Entrega 1 — correcciones de la sección 2 decididas en la revisión (entrada 2026-10-12 (4)) y su efecto en 1.5.
 - Qué se hizo:
