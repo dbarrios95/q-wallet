@@ -21,7 +21,7 @@ Las escalas están en `CONTEXTO.md` sección 6. No se cambian.
 | ACT-06 | Llaves KMS | Información | Cloud |
 | ACT-07 | Secretos de configuración (SSM) | Información | Cloud |
 | ACT-08 | Código fuente | Información | Repositorio |
-| ACT-09 | Estado de Terraform | Información | Repositorio / Cloud |
+| ACT-09 | Estado de Terraform | Información | Cloud: S3 con bloqueo nativo (`use_lockfile`), SSE-KMS, versionado y Block Public Access |
 | ACT-10 | App Android Q-Wallet | Software | Dispositivo |
 | ACT-11 | Microservicios Lambda (5) | Software | Cloud |
 | ACT-12 | API Gateway | Software | Cloud |
