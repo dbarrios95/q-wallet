@@ -19,6 +19,28 @@
 
 ---
 
+### 2026-10-12 (5) — Manual — Claude (claude.ai)
+- Fase / sección del informe: Entrega 1 — correcciones de la sección 2 decididas en la revisión (entrada 2026-10-12 (4)) y su efecto en 1.5.
+- Qué se hizo:
+  - 2.5.1: oración que aclara que el impacto mide lo que la amenaza le hace al activo, no el valor total del activo; por eso AME-02, 09, 10, 14, 18, 22, 38 y 40 (sobre activos Críticos) tienen impacto de 3 o menos. Ejemplo AME-14. Verificado por script: son exactamente esas 8.
+  - Tabla 21: columna "Dueño del riesgo" = propietario (Tabla 12) del primer ACT citado en la descripción de cada AME en el JSON, calculado por script: Lead Security Architect (I1) 28, Gerente de Producto 12, Cliente 1 (AME-02, activo ACT-18 dispositivo). Pasa a página horizontal (mismo patrón de las Tablas 12 y 17). Frase del criterio en 2.5.2 con cita a ISO/IEC 27005:2022.
+  - La Tabla 21 no tenía rótulo APA ("Tabla 21" + título) desde que se creó la sección 2; se agregó "Matriz de riesgos inherentes de Q-Wallet". Sin cambio de numeración.
+  - CTRL-23 (procedimiento, capa 7): verificación de identidad del cliente por un canal distinto antes de que soporte bloquee, desbloquee o cambie datos, más capacitación anual contra ingeniería social. Mitiga AME-03. Agregado en CONTEXTO sección 5, en el campo mitigation de AME-03 del JSON, en la Tabla 17 (fila AME-03) y su Nota, y en la Tabla 9 de 1.5 (fila "Personal de soporte (TB2)"). Nota de la Figura 1: CTRL-23 es de procedimiento y no se dibuja; EVD-1-01 sin cambios.
+  - Coherencia: "CTRL-01 a CTRL-22" pasa a "CTRL-01 a CTRL-23" en el texto de 2.4 y en la Nota de la Tabla 17; "veintidós controles" pasa a "veintitrés" en 1.5.4.
+  - `scripts/heatmap_riesgo.py`: inherente 18/12/11/0 y residual 0/1/26/14 sin cambio; EVD-2-05 y EVD-2-07 se regeneran idénticos byte a byte. El residual de AME-03 sigue en P2×I3 = 6.
+  - Ambos Word validados y renderizados (sección 2: 31 páginas).
+- Archivos creados o modificados: `docs/entregas/Entrega1_Seccion_2_Activos_Riesgos.docx`, `docs/entregas/Entrega1_Seccion_1-5_Scope_Tecnico.docx`, `docs/threat-model/T2_QWallet_ThreatModel.json`, `docs/CONTEXTO.md` (sección 5 y 11), `docs/entregas/ENTREGA_1.md` (sección 4), `docs/BITACORA.md`.
+- Decisiones tomadas (y por qué):
+  - Referencia de CTRL-23: ISO/IEC 27001:2022 A.5.16 (gestión de identidades) y A.6.3 (concientización y capacitación).
+  - El dueño del riesgo sigue la regla mecánica (primer ACT). Queda RSK-02 con dueño "Cliente": revisar si se prefiere Gerente de Producto, porque ISO/IEC 27005 espera un responsable dentro de la organización.
+- Cambios de versión: ninguno.
+- Evidencias generadas (EVD-): ninguna.
+- IDs nuevos: CTRL-23.
+- Problemas / bloqueos: el subtítulo de EVD-2-07 (Figura 6) dice "CTRL-01 a CTRL-22"; no se tocó para no alterar la figura. CTRL-23 no cambia el residual.
+- Siguiente paso: CTRL-23 en la diapositiva de controles y EVD-2-07 en P-4; decidir el límite de monto por transferencia; mié 14 sección 0 y ensamblaje.
+
+---
+
 ### 2026-10-12 (4) — Manual — Claude (claude.ai)
 - Fase / sección del informe: Entrega 1 — sección 2.5 (riesgo residual proyectado) y revisión de la sección 2 contra la rúbrica.
 - Qué se hizo:

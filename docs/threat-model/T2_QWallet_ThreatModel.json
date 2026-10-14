@@ -1779,7 +1779,7 @@
                   "severity": "Medium",
                   "type": "Spoofing",
                   "description": "Un atacante convence a un administrador de bloquear o desbloquear cuentas haciéndose pasar por el cliente o por la gerencia. Frontera TB2. Activos ACT-22, ACT-01. DREAD D6 R5 E6 A4 Di5 = 5.2. Riesgo inherente P3 x I3 = 9 (Medio). Capa 7 Políticas.",
-                  "mitigation": "CTRL-18, CTRL-20 (sin control de capacitación en el catálogo). Tratamiento Mitigar. Residual esperado P2 x I3 = 6 (Medio), pendiente de verificación. Ningún control técnico cubre la decisión humana; se propone capacitación en el roadmap.",
+                  "mitigation": "CTRL-18, CTRL-20, CTRL-23. Tratamiento Mitigar. Residual esperado P2 x I3 = 6 (Medio), pendiente de verificación. CTRL-23 es un control de procedimiento: verificación de identidad del cliente por un canal distinto antes de bloquear, desbloquear o cambiar datos de una cuenta, y capacitación anual contra ingeniería social.",
                   "modelType": "STRIDE",
                   "new": false,
                   "number": 3,
