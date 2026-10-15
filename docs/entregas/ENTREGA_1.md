@@ -110,9 +110,9 @@ Revisado el 12-oct (sección 2.5.5 del Word): el residual Alto es RSK-32 (pipeli
 |---|---|---|
 | 0 Portada / resumen / índice | ☑ | `docs/entregas/Entrega1_Seccion_0_Portada_Resumen_Indice.docx` (3 págs.). Portada APA 7 de estudiante (no hay plantilla UMG). Resumen ejecutivo de 1 página con cifras verificadas por script. Índice como campo TOC con páginas medidas: se actualiza al ensamblar |
 | 1.1 Contexto | ☑ | `docs/entregas/Entrega1_Secciones_1-1_a_1-4.docx`. Cifras Findex por fuente secundaria `[VERIFICAR]` |
-| 1.2 Objetivos | ☑ | OE1–OE5 + Tabla 2 SMART. Plazos OE2–OE5 = fecha final PENDIENTE |
+| 1.2 Objetivos | ☑ | OE1–OE5 + Tabla 2 SMART. Plazos OE2–OE5 = fecha final PENDIENTE. **14-oct:** OE4 = 23 controles (CTRL-01 a CTRL-23); OE3 = 13 casos del catálogo (CA-01 a CA-13) con el diseño ajustado de la Tabla 11 |
 | 1.3 Alcance | ☑ | Incluye restricciones de la política de pentest de AWS (sin DoS ni inundación; Cognito no autorizado) |
-| 1.4 Normativas | ☑ | Tabla 6 (11 normas). JM-104 "con referencia a". OWASP Top 10:2025 |
+| 1.4 Normativas | ☑ | Tabla 6 (11 normas). **14-oct: JM-98-2025** "con referencia a" (derogó la JM-104-2021; citada como se citó en Carrillo & Asociados, 2025, porque el texto oficial no se pudo abrir). OWASP Top 10:2025 |
 | 1.5 Scope técnico | ☑ | `docs/entregas/Entrega1_Seccion_1-5_Scope_Tecnico.docx`. Figura 1 (diagrama con TB1–TB6 y 22 controles, `EVD-1-01` PNG+SVG), Tablas 7–11, reglas de enfrentamiento y revisión CA vs política AWS. Falta EVD-1-02 (estructura del repo) y EVD-1-03 (cuenta AWS). **12-oct (revisión):** Tabla 9 con fila CTRL-23 (personal de soporte, capa 7); Nota de la Figura 1 aclara que CTRL-23 es de procedimiento y no se dibuja; texto de 1.5.4 dice "veintitrés controles" |
 | 2.1 Inventario | ☑ | `docs/entregas/Entrega1_Seccion_2_Activos_Riesgos.docx`. Tabla 12: 28 activos (semilla 27 + ACT-28 SIEM Wazuh), 6 tipos, 15 campos. ACT-27 renombrado "Alineación regulatoria (referencia JM-104-2021)". **13-oct:** ACT-09 en S3 con bloqueo nativo (`use_lockfile`), SSE-KMS, versionado y Block Public Access |
 | 2.2 CIA y criticidad | ☑ | Tablas 13–15: criterios, cálculo C+I+D por activo y distribución. Crítica 11 · Alta 13 · Media 4 · Baja 0 |
@@ -120,7 +120,8 @@ Revisado el 12-oct (sección 2.5.5 del Word): el residual Alto es RSK-32 (pipeli
 | 2.4 DREAD | ☑ | Tablas 19–20 (criterios por factor y DREAD de 41 AME con justificación). Alta 15 · Media 26 · Baja 0 |
 | 2.5 Matriz + heatmap + capas | ☑ | Tabla 21 (RSK-01..41 con P, I, nivel, capa, tipo, impacto, tratamiento), Figura 5 (EVD-2-05), Tabla 22 (riesgos por capa, las 10 capas cubiertas). Mitigar 39 · Transferir 1 · Aceptar 1. **2.5.5 nueva:** Figura 6 (EVD-2-07, residual proyectado: Alto 1 · Medio 26 · Bajo 14), Tabla 23 (inherente vs. residual por RSK, suma 580 → 207), criterio de aceptación del riesgo, plan para RSK-32 y defensa de "ningún inherente Bajo". **Correcciones de la revisión:** 2.5.1 explica que el impacto mide lo que la amenaza le hace al activo (8 AME sobre activos Críticos con I ≤ 3, ejemplo AME-14); Tabla 21 con rótulo APA (faltaba), página horizontal y columna "Dueño del riesgo" (Lead Security Architect 28 · Gerente de Producto 13; **13-oct:** RSK-02 pasa de Cliente a Gerente de Producto y 2.5.2 lo explica), criterio en 2.5.2 |
 | Referencias APA | ☑ | `docs/entregas/Entrega1_Referencias.docx`: 24 referencias APA 7 unificadas (orden alfabético, "y", "s. f.", sufijos a/b/c). Resueltos los `[VERIFICAR]` de URL: JM-104-2021 y Decreto 67-2001 en Banguat, Decreto 57-2008 en SVET. **JM-104-2021 derogada por JM-98-2025 (decisión pendiente)**. Findex 23 % sin fuente primaria. Al ensamblar: AWS (s. f.-a/b/c), MASVS = OWASP Mobile Application Security Project (2024) y ISO "e" en lugar de "&" en las citas del texto; 1.5 no tiene citas en el texto |
-| Presentación P-1 a P-6 | ◐ | Presentación de avance en Claude Slides (14 diapositivas, exportable a PDF). Cubre P-1 a P-6. Falta poner EVD-2-07 en la diapositiva de proyección (P-4) junto a EVD-2-05. Diapositiva de controles: agregar CTRL-23 |
+| **Word final ensamblado** | ✔ | `docs/entregas/Entrega1_Informe_QWallet.docx` (52 págs., validado y renderizado). Generado con `scripts/entrega1_ensamblar.py` + `scripts/entrega1_indice.py`. Orden 0 → 1.1–1.4 → 1.5 → 2 → Referencias (24, todas citadas). Tablas 1–23 y Figuras 1–6 en orden; páginas horizontales conservadas; índice con páginas reales; citas ajustadas a la lista unificada y agregadas en 1.5; registro en primera persona plural. Quedan 3 `[VERIFICAR]` (Findex 23 %, autorización SIB, iniciativa 6464). Los Word por sección quedan como históricos: la fuente es el script + esos Word |
+| Presentación P-1 a P-6 | ◐ | Presentación de avance en Claude Slides (14 diapositivas, exportable a PDF). Cubre P-1 a P-6. Falta poner EVD-2-07 en la diapositiva de proyección (P-4) junto a EVD-2-05. Diapositiva de controles: agregar CTRL-23. Cambiar JM-104-2021 por JM-98-2025 |
 
 ---
 
@@ -144,7 +145,7 @@ Revisado el 12-oct (sección 2.5.5 del Word): el residual Alto es RSK-32 (pipeli
 - **Una tarea por chat.** Al cerrar: actualizar sección 4 de este archivo, sección 11 de CONTEXTO y una entrada en BITÁCORA.
 - Todo cambio al repo por rama + PR (`main` protegida).
 - Ningún dato inventado: cifras del mercado y normas con fuente real; si no se puede verificar, marcar `[VERIFICAR]`.
-- No afirmar "cumplimiento" de JM-104-2021: usar "diseñado con referencia a".
+- No afirmar "cumplimiento" de JM-98-2025 (antes JM-104-2021): usar "diseñado con referencia a".
 - La pantalla Welcome de la app todavía dice "cifrado de extremo a extremo" y "cumplimiento JM-104-2021": no usar capturas de esa pantalla hasta corregirla.
 - Las cifras de sección 3 salen del JSON, no se escriben a mano.
 
@@ -160,6 +161,8 @@ Revisado el 12-oct (sección 2.5.5 del Word): el residual Alto es RSK-32 (pipeli
 - [x] Registrar en BITÁCORA el threat model T2 v1/v2 (entrada 2026-10-10).
 - [x] Revisar los casos de abuso CA-xx vs. la política de pentest de AWS: **hecho en 1.5 (Tabla 11)**. Rediseñar CA-02, CA-03, CA-12; matizar CA-06, CA-13; los nuevos CA-14 y CA-16 también chocan. Falta aplicarlo al ejecutar.
 - [x] **Sincronizar el repo de GitHub con el proyecto:** el `.docx` de 1.1–1.4 se sube el 13-oct (rama `docs/entrega1-seccion0-referencias`).
-- [~] Verificar en fuente primaria: URL de JM-104-2021 y de los Decretos 67-2001 y 57-2008 **resueltas el 13-oct**; Findex 38 % coincide con el Banco Mundial, **23 % sin confirmar**; **JM-104-2021 derogada por JM-98-2025 (decidir)**. (OWASP Top 10:2025 en 1.5: confirmada el 12-oct.)
-- [ ] 1.2 desactualizado: OE3 "13 casos de abuso" y OE4 "21 controles (CTRL-01 a CTRL-21)"; hoy son 23 controles.
+- [~] Verificar en fuente primaria: URL de JM-104-2021 y de los Decretos 67-2001 y 57-2008 **resueltas el 13-oct**; Findex 38 % coincide con el Banco Mundial, **23 % sin confirmar**; JM-98-2025 adoptada el 14-oct; **falta su texto oficial**. (OWASP Top 10:2025 en 1.5: confirmada el 12-oct.)
+- [x] 1.2: OE4 corregido a 23 controles; OE3 se mantiene en 13 casos (catálogo vigente) con el diseño de la Tabla 11 (14-oct).
 - [ ] Confirmar el título exacto de la sección 1 en el enunciado (se usó "1. Selección y Planificación").
+- [ ] 1.5: el texto dice "Cuatro requieren rediseño"; la Tabla 11 marca 3 (CA-02, CA-03, CA-12) más CA-06 en límite. Corregir.
+- [ ] Notas de las Tablas 7, 9 y 10 citan "CONTEXTO, sección x" (archivo interno del equipo). Cambiar antes de entregar.
