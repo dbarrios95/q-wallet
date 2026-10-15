@@ -14,7 +14,7 @@ Como no hay demo en vivo, toda afirmación técnica del informe necesita una evi
 |---|---|---|---|---|
 | ☑ | EVD-1-01 | Diagrama de arquitectura con controles y fronteras de confianza (Figura 1) | SVG por script | 1.5 |
 | ☐ | EVD-1-02 | Repositorio con estructura de carpetas | GitHub | 1.5 |
-| ☐ | EVD-1-03 | Cuenta AWS: MFA en root + presupuesto con alerta | AWS Console | 1.5 / capa 7 |
+| ◐ | EVD-1-03 | Cuenta AWS: MFA en root + presupuesto con alerta | AWS Console | 1.5 / capa 7 | 15-oct: `EVD-1-03a_aws-consola.png`, `EVD-1-03b_aws-mfa.png` (cuenta tapada), `EVD-1-03c_aws-presupuesto-5usd.png` (presupuesto de US$5, con fecha) y `EVD-1-03d_aws-plan-gratuito.png` (US$100 de crédito, 183 días). Falta confirmar que el MFA es del usuario raíz |
 | ☑ | EVD-2-01 | DFD nivel 0, contexto (Figura 2) | Threat Dragon 2.6.2 | 2.3 |
 | ☑ | EVD-2-02 | DFD nivel 1 con fronteras TB1–TB6 (Figura 3) | Threat Dragon 2.6.2 | 2.3 |
 | ☑ | EVD-2-03 | DFD nivel 2 de la transferencia P2P con los elementos que tienen amenazas STRIDE abiertas marcados en rojo (Figura 4). El detalle de cada amenaza está en la Tabla 17 | Threat Dragon 2.6.2 | 2.3 |
