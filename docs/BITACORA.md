@@ -19,6 +19,33 @@
 
 ---
 
+### 2026-10-14 — Manual — Claude (claude.ai)
+- Fase / sección del informe: Entrega 1 — ensamblaje del Word final.
+- Qué se hizo:
+  - Se verificó que el PR #17 (sección 0 y referencias) estaba en `main`.
+  - Norma de riesgo tecnológico: se cambia JM-104-2021 por **JM-98-2025**. El texto oficial no se pudo abrir (`banguat.gob.gt/.../Res_JM/2025/Res_JM-98-2025.pdf` y leyes.infile.com dan error; la página de Banguat 2025 solo lista actas). Se cita "como se citó en" Carrillo & Asociados (2025, 6 de noviembre, boletín 182: publicada en el Diario de Centro América el 30-oct-2025 y deroga el reglamento de 2021). Apoyo: Bitso (emisión 22-oct-2025), BLP (15-dic-2025) y White Jaguars (vigente desde 30-oct-2025). Cambios: 1.1, 1.4 (Tabla 6 y texto, con la aclaración de fuente secundaria), ACT-27 en las Tablas 12 y 14 y en 2.1, CONTEXTO sección 8, REGISTRO_RIESGOS y lista de referencias (sale Junta Monetaria 2021, entra Carrillo & Asociados 2025; siguen 24).
+  - 1.2: OE4 pasa a 23 controles (CTRL-01 a CTRL-23). OE3 se mantiene en 13 casos: el catálogo vigente (REGISTRO_RIESGOS) tiene CA-01 a CA-13; CA-14 a CA-25 del Word T2 nunca se adoptaron y CA-14/CA-16 no pueden dar "evidencia de bloqueo" (se verifican por configuración). Se agregó "con el diseño ajustado que resume la Tabla 11".
+  - Word ensamblado `docs/entregas/Entrega1_Informe_QWallet.docx` (52 págs.) con `scripts/entrega1_ensamblar.py`: orden 0 → 1.1–1.4 → 1.5 → 2 → Referencias; quita las 3 listas por sección; citas a la lista unificada (AWS s. f.-a/b/c, MASVS = OWASP Mobile Application Security Project 2024, ISO "e"); en 1.5 se agregan citas de MASVS, API Top 10, Threat Dragon, CIS (2024, 2025), ISO 27001, NIST SP 800-115, WSTG, Top 10:2025 y AWS (s. f.-b/c); 1.5 pasa a primera persona plural donde el sujeto era el equipo; Burp: "[VERIFICAR]" → "Vigente al instalar" (regla de CONTEXTO sección 3.1).
+  - Formato: títulos APA uniformes (nivel 1 centrado negrita; 2 izquierda negrita; 3 negrita cursiva); 1.5 baja a nivel 2 y 1.5.x a nivel 3 (antes eran 1 y 2, con color azul); nueva página antes de 1, 2 y Referencias; número de página en todas las secciones (antes solo en la última); interlineado "auto" explícito (sin eso LibreOffice recortaba la Figura 1); se ordenaron elementos de tablas mal ubicados y un `tblLayout` duplicado heredados del Word de la sección 2.
+  - Índice actualizado con `scripts/entrega1_indice.py` (páginas medidas en el render). Validador del skill de docx: sin errores. Revisión visual de todas las páginas.
+  - Verificación automática: Tablas 1–23 y Figuras 1–6 en orden; las 24 referencias citadas y ninguna cita sin referencia; sin signo de sección; sin "&" entre autores ni "s.f.".
+- Archivos creados o modificados: `docs/entregas/Entrega1_Informe_QWallet.docx` (nuevo), `scripts/entrega1_ensamblar.py` y `scripts/entrega1_indice.py` (nuevos), `docs/REGISTRO_RIESGOS.md`, `docs/CONTEXTO.md` (secciones 8, 10 y 11), `docs/entregas/ENTREGA_1.md` (secciones 4, 6 y 7), `docs/BITACORA.md`.
+- Decisiones tomadas (y por qué):
+  - Los Word por sección no se modifican: el Word final se genera con el script a partir de ellos, así el cambio queda trazable y repetible.
+  - JM-98-2025 por fuente secundaria con "como se citó en", igual que Findex: no se puede citar como leído un texto que no abrimos.
+- Cambios de versión: ninguno (docxcompose solo en el entorno de Claude).
+- Evidencias generadas (EVD-): ninguna.
+- IDs nuevos: ninguno.
+- Hallazgos para el informe:
+  - Quedan 3 `[VERIFICAR]`: Findex 23 % (1.1), autorización de la SIB para operar con dinero real (1.4) e iniciativa 6464 a la fecha de entrega (1.4).
+  - 1.5 dice "Cuatro requieren rediseño"; la Tabla 11 marca 3 casos que infringen más CA-06 en límite. No se tocó (cifra fuera de la tarea).
+  - Las Notas de las Tablas 7, 9 y 10 citan "CONTEXTO, sección x", un archivo interno.
+  - La JM-99-2025 (misma fecha) reforma el reglamento de seguridad en canales electrónicos (MFA, bloqueos temporales, alertas): útil como referencia para F1 y CTRL-18 en entregas siguientes.
+- Problemas / bloqueos: texto oficial de JM-98-2025 no accesible.
+- Siguiente paso: revisión final en Microsoft Word (vie 16) y ajustes de la presentación.
+
+---
+
 ### 2026-10-13 — Manual — Claude (claude.ai)
 - Fase / sección del informe: Entrega 1 — sección 0, referencias unificadas y pendientes cortos (ACT-09, RSK-02).
 - Qué se hizo:

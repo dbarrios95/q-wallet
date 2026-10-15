@@ -39,10 +39,10 @@ Las escalas están en `CONTEXTO.md` sección 6. No se cambian.
 | ACT-24 | GitHub | Servicios | Repositorio |
 | ACT-25 | Servicio de correo de Cognito | Servicios | Cloud |
 | ACT-26 | Reputación de la marca | Empresa | — |
-| ACT-27 | Alineación regulatoria (referencia JM-104-2021) | Empresa | — |
+| ACT-27 | Alineación regulatoria (referencia JM-98-2025) | Empresa | — |
 | ACT-28 | SIEM Wazuh (Docker local) | Software | Local |
 
-> Inventario completo con CIA, criticidad y responsables: Tabla 12 de `docs/entregas/Entrega1_Seccion_2_Activos_Riesgos.docx`. ACT-28 se agregó el 12-oct (lo usan AME-31 y AME-41); ACT-27 se renombró para no afirmar cumplimiento.
+> Inventario completo con CIA, criticidad y responsables: Tabla 12 de `docs/entregas/Entrega1_Informe_QWallet.docx`. ACT-28 se agregó el 12-oct (lo usan AME-31 y AME-41); ACT-27 se renombró para no afirmar cumplimiento y el 14-oct pasó a JM-98-2025 (derogó la JM-104-2021).
 
 ---
 
