@@ -68,7 +68,7 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 | RASP móvil | freeRASP (Talsec) — plan gratuito | Root/hook/emulador/tampering |
 | Ofuscación | Hermes bytecode + R8/ProGuard | MASVS-RESILIENCE |
 | Backend | 5 microservicios **AWS Lambda Node.js 24 (`nodejs24.x`) + TypeScript**, empaquetados como **imágenes de contenedor (ECR)** | Genera Dockerfiles reales para Trivy/Checkov |
-| API | **Amazon API Gateway REST** (no HTTP API: AWS WAF solo se asocia a REST) | Authorizer Cognito, throttling, validación |
+| API | **Amazon API Gateway REST, tipo regional** (no HTTP API: AWS WAF solo se asocia a REST). Política de seguridad `SecurityPolicy_TLS13_1_2_2021_06` con modo de acceso `STRICT` (decisión 15-oct-2026) | Authorizer Cognito, throttling, validación |
 | Identidad | **Amazon Cognito** User Pool | OAuth2/OIDC, PKCE, MFA |
 | Base de datos | **Amazon DynamoDB** cifrado con **KMS CMK** propia | Siempre gratis hasta 25 GB |
 | Secretos | SSM Parameter Store SecureString | Sin costo en tier estándar |
@@ -279,7 +279,7 @@ GitHub Actions --OIDC--> AWS (ECR, Lambda, Terraform)
 | CTRL-05 | Paginación por cursor con tope de 50 + throttling por usuario (usage plan) | Exfiltración masiva vía paginación | API4:2023 | 2d / 5 |
 | CTRL-06 | Cabecera `Idempotency-Key` + `TransactWriteItems` con `ConditionExpression` (saldo ≥ monto) | Doble gasto / race condition | API6:2023 | 2b |
 | CTRL-07 | Tokens en `expo-secure-store` (Keystore) con `requireAuthentication` biométrico | Robo de tokens en el dispositivo | MASVS-STORAGE | 1 |
-| CTRL-08 | TLS 1.2+ en el endpoint por defecto de API Gateway (sin dominio propio, por costo) + pinning de las llaves públicas de Amazon Root CA, con pin de respaldo. TLS 1.3 queda como riesgo residual **aceptado** y recomendación del roadmap | MITM | MASVS-NETWORK | 1 |
+| CTRL-08 | Endpoint por defecto de API Gateway (sin dominio propio, por costo) con la política de seguridad mejorada `SecurityPolicy_TLS13_1_2_2021_06`: TLS 1.3, con TLS 1.2 solo de respaldo (Android anterior a 10 no trae TLS 1.3; minSdk 24). Más pinning de las llaves públicas de Amazon Root CA, con pin de respaldo. **Decisión 15-oct-2026:** desde nov-2025 API Gateway REST permite TLS 1.3 en el endpoint por defecto, por eso TLS 1.3 deja de ser riesgo residual aceptado | MITM | MASVS-NETWORK | 1 |
 | CTRL-09 | Logs JSON estructurados con redacción de tokens y PII + `correlationId` | Fuga en logs / repudio | A09 / CWE-532 | 1 / 7 |
 | CTRL-10 | SCA en CI que falla con hallazgos High/Critical + Dependabot (alerts + security updates; npm con `open-pull-requests-limit: 0` = solo PR de seguridad) | Dependencias vulnerables | A06 | 2c |
 | CTRL-11 | Dockerfile multi-stage, imagen base fijada por digest, usuario no root | Contenedor comprometido | CIS Docker | 3 |
@@ -324,7 +324,7 @@ Aceptar · Eliminar · Evitar · Mitigar · Transferir.
 
 | # | Capa | Qué se evalúa aquí |
 |---|---|---|
-| 1 | Datos | Cifrado en reposo (KMS, Keystore) y en tránsito (TLS 1.2+; TLS 1.3 = riesgo residual aceptado, CTRL-08), enmascaramiento de DPI/teléfono, gestión de llaves |
+| 1 | Datos | Cifrado en reposo (KMS, Keystore) y en tránsito (TLS 1.3 con TLS 1.2 de respaldo, CTRL-08), enmascaramiento de DPI/teléfono, gestión de llaves |
 | 2a | Código | Sanitización, validación de entrada, secretos, prácticas seguras |
 | 2b | Aplicación | Lógica de negocio (transferencias, PIN, límites), autenticación y autorización |
 | 2c | Implementación | Dependencias npm, SDKs, frameworks |
@@ -344,9 +344,9 @@ Aceptar · Eliminar · Evitar · Mitigar · Transferir.
 - STRIDE (Shostack, 2014), DREAD (Howard y LeBlanc, 2003).
 - NIST CSF 2.0 (NIST CSWP 29, 2024).
 - PCI DSS v4.0.1 (referencial; no se procesan tarjetas).
-- **Guatemala:** Resolución **JM-98-2025**, Reglamento para la Administración del Riesgo Tecnológico (Junta Monetaria / SIB), publicada en el Diario de Centro América y vigente desde el 30-oct-2025; derogó la JM-104-2021. Obliga solo a entidades supervisadas: Q-Wallet está "diseñada con referencia a"; nunca "cumple". **Decisión 14-oct-2026:** el informe cita la JM-98-2025. El texto oficial no se pudo abrir (PDF de Banguat y leyes.infile con error), por eso se cita "como se citó en" Carrillo & Asociados (2025, boletín 182). Pendiente: conseguir el texto oficial y cambiar a cita directa. Fuentes de apoyo: Bitso (emisión 22-oct-2025), BLP y White Jaguars.
+- **Guatemala:** Resolución **JM-98-2025**, Reglamento para la Administración del Riesgo Tecnológico (Junta Monetaria / SIB), publicada en el Diario de Centro América y vigente desde el 30-oct-2025; derogó la JM-104-2021. Obliga solo a entidades supervisadas: Q-Wallet está "diseñada con referencia a"; nunca "cumple". **Decisión 14-oct-2026:** el informe cita la JM-98-2025. El texto oficial no se pudo abrir (PDF de Banguat y leyes.infile con error), por eso se cita "como se citó en" Carrillo & Asociados (2025, boletín 182). Pendiente: conseguir el texto oficial y cambiar a cita directa. El PDF sí figura en el índice oficial de Banguat (`banguat.gob.gt/page/ano-2025-0`), pero el 15-oct tampoco se pudo abrir. Fuentes de apoyo: Bitso (emisión 22-oct-2025), BLP y White Jaguars.
 - **Guatemala:** Decreto 67-2001, Ley contra el Lavado de Dinero u Otros Activos (contexto KYC).
-- **Guatemala:** sin ley general de protección de datos para el sector privado. Decreto 57-2008 (Acceso a la Información Pública) aplica sobre todo al Estado. Iniciativa 6464 (protección de datos y derechos digitales) en análisis en comisión del Congreso (julio 2026). Volver a verificar antes de la entrega final.
+- **Guatemala:** sin ley general de protección de datos para el sector privado. Decreto 57-2008 (Acceso a la Información Pública) aplica sobre todo al Estado. Iniciativa 6464 (protección de datos y derechos digitales), presentada el 29-oct-2024, en análisis en la Comisión de Asuntos de Seguridad Nacional sin dictamen (Emisoras Unidas, 16-jul-2026). Al 15-oct-2026 no se encontró dictamen ni aprobación. Volver a verificar antes de la entrega final.
 
 **Regla:** toda cita APA 7 debe ser una fuente real y verificable. Nunca inventar referencias.
 
@@ -392,7 +392,11 @@ GEMINI.md
 **Sincronización (fuente de verdad = GitHub):** al iniciar una tarea se clona el repo y se lee el estado real desde ahí; al cerrar se actualizan los docs, se entregan los comandos git (rama → commit → push, sin `gh`) y el usuario crea el PR en el navegador (`main` protegida). El proyecto de claude.ai es un espejo de conveniencia, no la verdad.
 
 ### Formato del informe (UMG)
-- Arial 12, interlineado 1.5, sangría de primera línea 1.27 cm, márgenes 2.54 cm, texto justificado.
+- **Decisión 15-oct-2026 (observación de Katherine, aprobada por Daniel):** letra **Times New Roman** en todo el documento (cuerpo, títulos, tablas, notas, índice y encabezado). Reemplaza a Arial.
+- Texto fuera de tablas (cuerpo, títulos, rótulos "Tabla N"/"Figura N", notas, índice y referencias): **interlineado doble, 0 pt antes y 8 pt después**.
+- Texto dentro de tablas: **interlineado 1.5, 0 pt antes y 0 pt después**.
+- Sin cambio: tamaño 12 en el cuerpo (las tablas pueden ir en 10), sangría de primera línea 1.27 cm, márgenes 2.54 cm, texto justificado.
+- Se aplica con `scripts/entrega1_estilos.py` (después de generar el Word y antes de actualizar el índice). Todo Word nuevo del proyecto sigue estas reglas.
 - Tablas y figuras numeradas en estilo APA 7. Referencias en APA 7 con sangría francesa.
 - Estructura obligatoria: la del enunciado, **Opción A**, sin renumerar secciones.
 
@@ -407,8 +411,9 @@ GEMINI.md
 - [ ] Verificar que el Free Plan de AWS permite WAF y ECR.
 - [ ] Revisar los 6 PR de Dependabot en `/mobile`: cerrar los de versión (Tailwind 4 y TypeScript 7 rompen sección 3.1).
 - [ ] Conciliar 5 alertas de Dependabot vs. 33 de `npm audit` (fase SCA).
+- [ ] Fecha de la Entrega 2: el plan de RSK-32 se ató a "antes del primer despliegue del pipeline a AWS".
 - [~] Ajustar los casos de abuso CA-xx a la política de pentest de AWS: **diseño revisado en la sección 1.5** (Tabla 11; rediseñar CA-02, CA-03, CA-12; matizar CA-06, CA-13; y los nuevos CA-14, CA-16). Falta aplicarlo al ejecutar en la fase de evaluación.
-- [~] Verificar en fuente primaria: URL de JM-104-2021 y Decretos 67-2001 y 57-2008 resueltas (13-oct). Pendientes: texto oficial de **JM-98-2025** (se cita por fuente secundaria); Global Findex **23 %** y cifras de Costa Rica; estado de la iniciativa 6464 a la fecha de entrega.
+- [~] Verificar en fuente primaria: URL de JM-104-2021 y Decretos 67-2001 y 57-2008 resueltas (13-oct); iniciativa 6464 resuelta (15-oct). Pendientes: texto oficial de **JM-98-2025** (se cita por fuente secundaria); Global Findex **23 %** y cifras de Costa Rica (único `[VERIFICAR]` del Word).
 
 ---
 
@@ -418,13 +423,13 @@ GEMINI.md
 
 | Campo | Valor |
 |---|---|
-| Última actualización | 14-oct-2026 (Claude, ensamblaje del Word final de la Entrega 1) |
-| Fase actual | Entrega 1 — Selección y Planificación + Activos y Riesgos. Plan y estado en `docs/entregas/ENTREGA_1.md` |
+| Última actualización | 15-oct-2026 (Claude, revisión de Paco integrada en el Word final) |
+| Fase actual | Entrega 1 — Selección y Planificación + Activos y Riesgos. Plan y estado en `docs/entregas/ENTREGA_1.md`. Reglas y tareas del equipo en `docs/EQUIPO.md` |
 | Versión de la app | Expo SDK 57 (React Native 0.86.3, TS strict), NativeWind 4.2.7, Tailwind 3.4.19, Reanimated 4, expo-router, freeRASP 5.2.2, 8 pantallas simuladas |
-| Completado | Primer build nativo Android (`EVD-1-05`). Repo público con ruleset `main-protegida` (`EVD-1-04c`, `EVD-1-06`), Secret Protection y push protection (`EVD-1-04a`), Dependabot (`EVD-1-04b`), gitleaks sin hallazgos (`EVD-1-07`). Threat model T2 v2 (41 AME, DFD 0–2, PR #8). **Secciones 1.1–1.4 redactadas** (6 tablas, 17 referencias). **Sección 1.5 redactada** (`docs/entregas/Entrega1_Seccion_1-5_Scope_Tecnico.docx`): arquitectura + Figura 1 (diagrama con TB1–TB6 y 22 controles, `EVD-1-01` PNG+SVG), Tablas 7–11 (superficie API, fronteras, controles por componente, herramientas, revisión CA vs política AWS), reglas de enfrentamiento. **CTRL-22 (FLAG_SECURE) catalogado** en sección 5. **Heatmap inherente EVD-2-05** (PNG+SVG) calculado del threat model. **Presentación de avance** en Claude Slides (14 diapositivas, exportable a PDF). Referencia OWASP Top 10:2025 confirmada. **Sección 2 redactada** (`docs/entregas/Entrega1_Seccion_2_Activos_Riesgos.docx`): inventario de 28 activos (ACT-28 SIEM Wazuh nuevo), CIA y criticidad, STRIDE (41 AME + 14 N/A), DREAD con justificación, matriz RSK-01..41, heatmap (Figura 5) y riesgos por capa. Tablas 12–22, Figuras 2–5. **Capturas de los 3 DFD** (EVD-2-01/02/03) insertadas como Figuras 2–4. **Residual proyectado** (EVD-2-07, Figura 6; Alto 1 · Medio 26 · Bajo 14) y **sección 2.5.5** (Tabla 23 inherente vs. residual, criterio de aceptación del riesgo, plan para RSK-32), generados con `scripts/heatmap_riesgo.py`. **Correcciones de la sección 2** (BITACORA 2026-10-12 (5)): aclaración impacto vs. criticidad en 2.5.1, Tabla 21 con rótulo, página horizontal y columna "Dueño del riesgo", **CTRL-23** (verificación de identidad en soporte + capacitación, capa 7) en sección 5, JSON (AME-03), Tabla 17 y Tabla 9 de 1.5. Conteos sin cambio. **Sección 0** (`docs/entregas/Entrega1_Seccion_0_Portada_Resumen_Indice.docx`): portada APA 7 de estudiante, resumen ejecutivo de 1 página e índice como campo TOC de Word (3 páginas). **Referencias unificadas** (`docs/entregas/Entrega1_Referencias.docx`): 24 entradas APA 7 sin duplicados. **Word de 1.1–1.4 subido al repo.** **ACT-09**: estado de Terraform en S3 con bloqueo nativo. **RSK-02**: dueño Gerente de Producto (Lead Security Architect 28 · Gerente de Producto 13). **Word final ensamblado** (`docs/entregas/Entrega1_Informe_QWallet.docx`, 52 páginas, generado con `scripts/entrega1_ensamblar.py` + `scripts/entrega1_indice.py`): orden 0 → 1.1–1.4 → 1.5 → 2 → Referencias (24), Tablas 1–23 y Figuras 1–6 en orden, índice con páginas reales, títulos APA uniformes, número de página en todas las secciones. **JM-98-2025** reemplaza a la JM-104-2021 (1.1, 1.4, Tabla 6, ACT-27). **OE4** = 23 controles; **OE3** = 13 casos (CA-01 a CA-13) con el diseño ajustado de la Tabla 11. Citas de 1.5 agregadas y registro en primera persona plural. |
-| En curso | Entrega 1: revisión final del Word ensamblado (vie 16) y presentación |
-| Siguiente paso / Pendientes | 1) Revisión final del Word en Microsoft Word (clic derecho en el índice → Actualizar campo; la paginación de Word puede variar 1 página respecto a LibreOffice); 2) Quitar o resolver los 3 `[VERIFICAR]` que quedan (Findex 23 %, autorización de la SIB, estado de la iniciativa 6464); 3) Texto oficial de JM-98-2025; 4) Presentación: JM-98-2025, EVD-2-07 en P-4 y CTRL-23 en la diapositiva de controles; 5) 1.5 dice "Cuatro requieren rediseño" pero la Tabla 11 marca 3 (CA-02, CA-03, CA-12) + CA-06 en límite: corregir el texto; 6) Notas de las Tablas 7, 9 y 10 citan "CONTEXTO, sección x" (archivo interno): cambiar por "elaboración propia"; 7) Límite de monto por transferencia; 8) Textos falsos de la UI (Welcome dice "Cumplimiento JM-104-2021"); 9) Cuenta AWS (EVD-1-03); 10) PR de Dependabot de versión |
+| Completado | Todo lo anterior (ver BITACORA hasta 14-oct): repo público con ruleset, threat model T2 v2, secciones 0, 1.1–1.5 y 2, referencias (24), Word final ensamblado (PR #18). **15-oct: revisión de Paco integrada** con `scripts/entrega1_revision_paco.py` (Word de 55 páginas, índice actualizado, validado y renderizado completo): 1.5 dice "Tres infringen... (CA-02, CA-03, CA-12); uno en el límite (CA-06)"; notas de las Tablas 7, 9 y 10 = "Elaboración propia" (ya no citan CONTEXTO); **RSK-01 pasa de Transferir a Aceptar** (Mitigar 39 · Aceptar 2; JSON, Tablas 21 y 23, 2.5.2, 2.5.5, resumen); **CTRL-08 con TLS 1.3** (política mejorada en el endpoint por defecto; ya no es riesgo aceptado); Figura 1 en página horizontal, sin título incrustado y con nodo **AWS IAM** (CTRL-12, CTRL-21); Figuras 5 y 6 regeneradas sin título (EVD-2-05/07); Tabla 9 alineada con la Tabla 7 y con fila de capa 6; Tabla 17 con tratamiento en AME-01 y AME-31; Tabla 18 retitulada y corregida (admin → AME-06; SSM → AME-27); [FECHA PENDIENTE] quitados (plazo = entrega final); [VERIFICAR] de la SIB e iniciativa 6464 resueltos; párrafo de cierre al final de 2.5.5 (sin sección 3); notas de tablas y figuras a Arial 12 e interlineado 1.5. **Formato nuevo** (Times New Roman; doble 0/8 pt fuera de tablas; 1.5 0/0 pt en tablas; Word de 67 páginas). **EVD-1-03a/b** (cuenta AWS y MFA, con el número de cuenta tapado). **Revisión de 1.5, 2.1 y 2.2** (Claude, en lugar de Katherine): objetivos del pentest = WAF, API Gateway y Lambda (DynamoDB, SSM, S3 e IAM solo por configuración, por la política de AWS); MASTG; Tablas 7, 8, 9 y 12 ajustadas; 2.2 cita ISO 27001 5.12 |
+| En curso | Entrega 1: presentación; Katherine lee 1.5, 2.1 y 2.2 para exponer |
+| Siguiente paso / Pendientes | 1) EVD-1-03 casi completa (a–d: consola, MFA, presupuesto de US$5 y plan gratuito con US$100 hasta el 15-abr-2027); solo falta confirmar que el MFA es del usuario raíz. Usar us-east-1 al crear recursos (la consola estaba en Ohio); 2) Presentación: JM-98-2025, EVD-2-07 en P-4, CTRL-23, RSK-01 Aceptar (39/2), TLS 1.3, Figura 1 nueva con IAM, Tabla 18 renombrada; 3) Único `[VERIFICAR]`: Findex 23 % (abrir el Excel de globalfindex en el navegador o dejar la cita secundaria y quitar el marcador); 4) Texto oficial de JM-98-2025; 5) Revisión final en Microsoft Word (clic derecho en el índice → Actualizar campo); exportar PDF; 6) Límite de monto por transferencia; 7) Textos falsos de la UI (Welcome dice "Cumplimiento JM-104-2021"); 8) PR de Dependabot de versión; 9) Decreto 57-2008: buscar versión oficial (Congreso o Diario de Centro América) en lugar de SVET |
 | Regla de trabajo | Sin commits directos a `main` (personas ni agy): rama → PR → merge. Cada cambio de la app se valida con build nativo |
 | Bloqueos | Pendientes de la sección 10 |
 | Recursos AWS desplegados | Ninguno |
-| Gasto AWS acumulado | US$0 |
+| Gasto AWS acumulado | US$0 (cuenta creada el 15-oct-2026 por Katherine; plan gratuito con US$100 de crédito hasta el 15-abr-2027; presupuesto `qwallet-presupuesto-5usd`) |

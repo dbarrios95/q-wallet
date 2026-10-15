@@ -2,7 +2,9 @@
 Uso: python scripts/heatmap_riesgo.py docs/threat-model/T2_QWallet_ThreatModel.json [inh|res] [salida.svg]
 - Inherente: P e I recalculados desde DREAD (CONTEXTO, sección 6) y comparados con la descripción.
 - Residual: "Residual esperado P x I" del campo mitigation de cada amenaza.
-Con "inh" reproduce EVD-2-05 byte a byte; con "res" genera EVD-2-07. PNG: cairosvg a escala 2.
+Con "inh" genera EVD-2-05; con "res", EVD-2-07. PNG: cairosvg a escala 2.
+15-oct-2026 (revisión de Paco): sin título incrustado (el rótulo APA va en el Word, Figuras 5 y 6)
+y la escala se refiere a la sección 2.5.1 del informe, no a CONTEXTO.
 """
 import json,re,math,sys,collections
 m=json.load(open(sys.argv[1]))
@@ -46,12 +48,10 @@ if mode=='inh':
 else:
   cells=collections.Counter((r['Pr'],r['Ir']) for r in rows)
   title='Mapa de calor de riesgo residual proyectado (después)'
-  sub='Q-Wallet — 41 amenazas con los controles previstos (CTRL-01 a CTRL-22). Proyección, no medición.'
+  sub='Q-Wallet — 41 amenazas con los controles previstos (CTRL-01 a CTRL-23). Proyección, no medición.'
 lv=collections.Counter()
 for (p,i),n in cells.items(): lv[lvl(p*i)]+=n
-o=[f'<svg xmlns="http://www.w3.org/2000/svg" width="940" height="690" viewBox="0 0 940 690"><rect x="0" y="0" width="940" height="690" fill="#FFFFFF"/>',
-f'<text x="470.0" y="46" {F} font-size="24" font-weight="700" fill="#0B1F3A" text-anchor="middle">{title}</text>',
-f'<text x="470.0" y="72" {F} font-size="14" fill="#64748B" text-anchor="middle">{sub}</text>',
+o=[f'<svg xmlns="http://www.w3.org/2000/svg" width="940" height="490" viewBox="0 76 940 490"><rect x="0" y="76" width="940" height="490" fill="#FFFFFF"/>',
 f'<text x="385.0" y="92" {F} font-size="15" font-weight="700" fill="#0F172A" text-anchor="middle">Impacto →</text>',
 f'<text x="78" y="335.0" {F} font-size="15" font-weight="700" fill="#0F172A" text-anchor="middle" transform="rotate(-90 78 335.0)">Probabilidad →</text>']
 for i in range(1,6): o.append(f'<text x="{173+86*(i-1)+40:.1f}" y="112" {F} font-size="14" font-weight="600" fill="#64748B" text-anchor="middle">{i}</text>')
@@ -76,8 +76,8 @@ for k,(name,rng,c) in enumerate([('Crítico','15–25','#EF4444'),('Alto','10–
   extra='' if mode=='inh' else f' (antes: {inh[name]})'
   o.append(f'<text x="676" y="{y+36}" {F} font-size="12" fill="#64748B">{lv[name]} amenaza{'' if lv[name]==1 else 's'}{extra}</text>')
 o.append(f'<text x="640" y="330" {F} font-size="11" fill="#64748B">Total: 41 amenazas</text>')
-o.append(f'<text x="640" y="348" {F} font-size="11" fill="#64748B">Escala P×I de CONTEXTO,</text>')
-o.append(f'<text x="640" y="364" {F} font-size="11" fill="#64748B">sección 6.</text>')
+o.append(f'<text x="640" y="348" {F} font-size="11" fill="#64748B">Escala P×I de la</text>')
+o.append(f'<text x="640" y="364" {F} font-size="11" fill="#64748B">sección 2.5.1.</text>')
 if mode!='inh':
   for k,t in enumerate(['Fuente: campo "mitigation" de','cada amenaza en el threat model','(Residual esperado P x I).','Pendiente de verificación.']):
     o.append(f'<text x="640" y="{392+16*k}" {F} font-size="11" fill="#64748B">{t}</text>')
