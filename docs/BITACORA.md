@@ -19,6 +19,26 @@
 
 ---
 
+### 2026-10-16 (2) — Daniel — Claude (claude.ai)
+- Fase / sección del informe: Entrega 1 — presentación de 6 minutos y Word sin menciones de empresa ficticia ni de dinero simulado.
+- Qué se hizo:
+  - Presentación (Claude Slides "Q-Wallet — Entrega 1 (Avance)", https://claude.ai/artifact/QtKs5QSHKcXECYeLuWHkAL; hecho en el chat anterior y registrado aquí): el catedrático pidió explicar de forma resumida resultados, conclusiones y cómo llegamos a esos datos, en **6 minutos por grupo**. Se reorganizó en **7 diapositivas principales** (portada, qué evaluamos, cómo llegamos, activos, STRIDE/DREAD, mapas de calor antes y después con tratamiento, conclusiones; ~2 min por integrante) y **9 de anexo (A1–A9)** solo para preguntas. Notas del orador recortadas al tiempo. Se quitaron las menciones de empresa ficticia y de dinero o datos simulados.
+  - Word: script nuevo `scripts/entrega1_sin_ficticio.py` (corre después de `entrega1_rubrica.py` y antes de `entrega1_estilos.py`; cada reemplazo exige una sola coincidencia y al final verifica que no quede "ficti" ni "simulad", salvo las dos "incluso simulada" de la política de AWS). 8 cambios aprobados (14 reemplazos): resumen ejecutivo ("una billetera digital para Android que opera en quetzales"); 1.1, párrafo 4 ("una billetera digital de Q-Wallet, S.A."; "opera en quetzales (GTQ)"); nota de la Tabla 1 (sin "reales"); Tabla 4 ("Tarjetas e integración bancaria" y "Verificación de identidad (KYC)", con su motivo nuevo); Tabla 5 ("Datos de prueba"); 1.4 ("Q-Wallet, S.A. no está supervisada por la SIB" y oración del alcance de la autorización sin "dinero real"); 2.1, párrafo 2 (sin "organización ficticia").
+  - Word regenerado: `entrega1_sin_ficticio.py` → `entrega1_estilos.py` → `entrega1_indice.py` sobre el Word del PR #20. Validador del skill de docx: sin errores. Render: **78 páginas** (sin cambio); cambian las páginas 2, 6–16 y 29, revisadas.
+  - Otras coincidencias de "real" revisadas y dejadas como están (decisión de Daniel): "debilidad real" (1.3), "inundación real" (Tabla 11), "versión real de la aplicación" (introducción de la sección 2) y "calendario académico" (Tabla 5).
+- Archivos creados o modificados: `docs/entregas/Entrega1_Informe_QWallet.docx`, `scripts/entrega1_sin_ficticio.py` (nuevo), `docs/CONTEXTO.md` (secciones 9 y 11), `docs/entregas/ENTREGA_1.md` (secciones 1, 4 y 7), `docs/BITACORA.md`.
+- Decisiones tomadas (y por qué):
+  - **Ningún entregable dice que la empresa es ficticia ni que el dinero o los datos son simulados** (indicación del catedrático). Regla nueva en CONTEXTO, sección 9. Los documentos internos del repo pueden seguir usándolo como contexto.
+  - El cambio 2 se aplicó sin el artículo: el Word decía "una billetera digital de la empresa ficticia…", no "la".
+  - Los Word por sección no se modifican: el script corrige el Word final, igual que los anteriores.
+- Cambios de versión: ninguno.
+- Evidencias generadas (EVD-): ninguna.
+- IDs nuevos: ninguno.
+- Problemas / bloqueos: ninguno.
+- Siguiente paso: lectura final del Word (Daniel), actualizar el índice en Microsoft Word, exportar PDF y ensayar la presentación de 6 minutos.
+
+---
+
 ### 2026-10-16 — Daniel — Claude (claude.ai)
 - Fase / sección del informe: Entrega 1 — Word ajustado a la rúbrica (cambios aprobados por Daniel: "aplicá los cambios según tus sugerencias").
 - Qué se hizo:
