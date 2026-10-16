@@ -38,7 +38,7 @@ def main():
     entry = re.compile(r'(<w:p><w:pPr><w:pStyle w:val="TOC[123]"/>(?:(?!</w:pPr>).)*</w:pPr>.*?<w:t xml:space="preserve">)([^<]*)'
                        r'(</w:t></w:r><w:r><w:t xml:space="preserve">\t)(\d+)(</w:t></w:r>)', re.S)
     pages = [[norm(l) for l in p.splitlines()] for p in pages_text(DOCX)]
-    toc_page = next(i for i, p in enumerate(pages) if 'Índice' in p)
+    toc_page = next(i for i, p in enumerate(pages) if 'Índice' in p or 'Índice general' in p)
     pos = 0
     found = []
     for m in entry.finditer(x):

@@ -19,6 +19,54 @@
 
 ---
 
+### 2026-10-16 — Daniel — Claude (claude.ai)
+- Fase / sección del informe: Entrega 1 — Word ajustado a la rúbrica (cambios aprobados por Daniel: "aplicá los cambios según tus sugerencias").
+- Qué se hizo:
+  - Script nuevo `scripts/entrega1_rubrica.py` (corre después de `entrega1_revision_paco.py`, antes de `entrega1_estilos.py`). Cambios: 6 títulos con la redacción del enunciado (en el título y en el índice); cita de 1.1 reordenada (Carrillo & Asociados, 2025 junto a la JM-98-2025 y AWS, s. f.-a junto a la JM-104-2021); marcador `[VERIFICAR]` del Findex quitado; AWS (s. f.-c) con "Recuperado el 16 de octubre de 2026" (página consultada ese día); Tablas 7–23 con letra de 10 pt (cortas) o 9 pt (largas) y anchos de columna recalculados para que ninguna palabra se parta; Tabla 12 en 8 pt con márgenes de celda de 40 dxa por lado.
+  - `scripts/entrega1_estilos.py`: Arial en todo el documento e interlineado 1.5 fuera de tablas (0/8 pt); las viñetas con caracteres de Symbol conservan esa fuente.
+  - `scripts/entrega1_indice.py`: reconoce el título "Índice general".
+  - Word regenerado: `entrega1_rubrica.py` → `entrega1_estilos.py` → `entrega1_indice.py` sobre el Word del PR #19. Validador del skill de docx: sin errores. Render completo revisado: **78 páginas** (antes 67).
+- Archivos creados o modificados: `docs/entregas/Entrega1_Informe_QWallet.docx`, `scripts/entrega1_rubrica.py` (nuevo), `scripts/entrega1_estilos.py`, `scripts/entrega1_indice.py`, `docs/CONTEXTO.md` (secciones 9 y 11), `docs/entregas/ENTREGA_1.md` (secciones 2, 4 y 7), `docs/BITACORA.md`.
+- Decisiones tomadas (y por qué):
+  - **Arial 12 e interlineado 1.5** en lugar de Times New Roman doble: lo exigen la rúbrica y el enunciado ("cumplimiento estricto del formato UMG").
+  - Títulos con la redacción del enunciado, pero con mayúscula solo en la primera palabra, igual que el resto de títulos del informe. La numeración no cambia.
+  - Tabla 12 en 8 pt: con 15 columnas obligatorias, a más de 8 pt las palabras más largas no caben en la página horizontal sin partirse. A 7.5 pt ahorraría 3 páginas.
+- Hallazgos: la viñeta de 2.5.1 (carácter de Symbol) se veía como un cuadro vacío desde el PR #19, porque el script de estilos le había cambiado la fuente; corregido.
+- Cambios de versión: ninguno.
+- Evidencias generadas (EVD-): ninguna.
+- IDs nuevos: ninguno.
+- Problemas / bloqueos: ninguno.
+- Siguiente paso: abrir el Word en Microsoft Word, actualizar el campo del índice (toda la tabla), revisar y exportar PDF; ensayar la presentación. Actualizar las instrucciones del proyecto de claude.ai, que todavía dicen Times New Roman y doble.
+
+---
+
+### 2026-10-15 — Daniel — Claude (claude.ai), segunda sesión
+- Fase / sección del informe: Entrega 1 — presentación de avance (P-1 a P-6) y revisión del Word contra la rúbrica.
+- Qué se hizo:
+  - Se verificó que el PR #19 (`docs/entrega1-revision-paco`) estaba en `main`.
+  - Presentación (Claude Slides "Q-Wallet — Entrega 1 (Avance)"): el deck era del 12-oct y estaba más atrasado de lo que decía ENTREGA_1 (27 activos, 22 controles, OE con otro texto, TLS como riesgo aceptado, RSK-01 transferido, sin diapositiva de normativas, letra Rubik/IBM Plex). Se reescribieron todas las diapositivas con las cifras del Word y del JSON, la paleta y la letra Inter de ENTREGA_1, sección 1. Pasa de 14 a **15 diapositivas** (nueva: 1.4 Normativas, con JM-98-2025). Orden por expositor según EQUIPO.md: Daniel (portada, 1.1–1.4, cronograma y cierre), Katherine (1.5 arquitectura, controles y reglas del pentest, metodología, 2.1–2.2), Aroldo (2.3–2.5). Cada diapositiva dice en el pie quién expone y tiene notas del orador.
+  - Cambios pedidos: JM-98-2025 en lugar de JM-104-2021; Figura 1 nueva con el nodo IAM; CTRL-23 (23 controles); pentest solo sobre WAF, API Gateway y Lambda y DynamoDB, SSM, S3 e IAM por configuración; "14 categorías STRIDE sin amenaza separada"; P-4 con EVD-2-05 y EVD-2-07 (PNG sin título) lado a lado; tratamiento mitigar 39 · aceptar 2 (RSK-01 y RSK-31); TLS 1.3 deja de ser riesgo aceptado.
+  - Revisión del Word contra la rúbrica (`RUBRICA_PROYECTO_FINAL.docx`, adjuntada por Daniel) y el enunciado: estructura Opción A completa; Tablas 1–23 y Figuras 1–6 en orden; índice igual al render (67 págs.); 24 referencias, todas citadas y ninguna sobrante; cifras iguales al JSON. **El Word no se modificó**: queda una lista de cambios pendiente de aprobación.
+- Archivos creados o modificados: `docs/evidencias/EVD-1-03e_aws-mfa-raiz.png` (nuevo), `docs/entregas/ENTREGA_1.md` (secciones 1, 4 y 7), `docs/CONTEXTO.md` (secciones 9, 10 y 11), `docs/BITACORA.md`. La presentación vive en claude.ai (no está en el repo).
+- Decisiones tomadas (y por qué):
+  - Diapositiva nueva de normativas: Daniel expone 1.4 y la JM-98-2025 no tenía dónde ir.
+  - En la diapositiva de contexto solo se usa el 38 % del Findex (coincide con el Banco Mundial); el 23 % no se dice como dato confirmado.
+- Cambios de versión: ninguno.
+- Evidencias generadas (EVD-): `EVD-1-03e_aws-mfa-raiz.png` (captura de Katherine: IAM > Credenciales de seguridad con sesión "root" y MFA virtual creado el 15-oct-2026; se tapó el número de cuenta que aparecía en el ARN). Con esto **se confirma que el MFA es del usuario raíz** y EVD-1-03 queda completa.
+- IDs nuevos: ninguno.
+- Hallazgos de la revisión del Word (pendientes de decisión de Daniel):
+  1. **La rúbrica y el enunciado piden Arial 12 e interlineado 1.5**; el Word está en Times New Roman con doble espacio (decisión del 15-oct, tomada sin la rúbrica). Es el punto más grave.
+  2. Las Tablas 7–23 van de 6.5 a 9 pt (CONTEXTO pone 10 como mínimo).
+  3. Seis títulos difieren del esquema del enunciado (1.1, 1.4, 2.1, 2.3, 2.4 e "Índice General").
+  4. La cita AWS (s. f.-a) acompaña a la JM-98-2025, pero esa página de AWS solo menciona la JM-104-2021.
+  5. AWS (s. f.-c) sin "Recuperado el" (consistencia).
+  6. Queda el `[VERIFICAR]` del Findex 23 %.
+  7. La rúbrica .docx agrupa 5 + 5 + 10 puntos y el enunciado 4 × 5 (informativo).
+- Problemas / bloqueos: ninguno nuevo.
+- Siguiente paso: Daniel decide los puntos 1, 2, 3, 4 y 6; se aplican con un script nuevo sobre el Word, se regenera el índice, se renderiza y se exporta a PDF.
+
+---
+
 ### 2026-10-15 — Manual — Claude (claude.ai)
 - Fase / sección del informe: Entrega 1 — revisión de Aroldo (Paco) y correcciones pendientes del Word final.
 - Qué se hizo:
