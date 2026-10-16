@@ -1,11 +1,13 @@
-"""Aplica el formato acordado el 15-oct-2026 (observación de Katherine) al Word final.
+"""Aplica al Word final el formato UMG que exigen la rúbrica y el enunciado.
 
-Uso (después de entrega1_revision_paco.py y antes de entrega1_indice.py):
+Uso (después de entrega1_revision_paco.py y entrega1_rubrica.py, antes de entrega1_indice.py):
     python scripts/entrega1_estilos.py docs/entregas/Entrega1_Informe_QWallet.docx
 
 Reglas (CONTEXTO, sección 9):
-- Letra Times New Roman en todo el documento (cuerpo, títulos, tablas, notas, índice y encabezado).
-- Texto fuera de tablas: interlineado doble, 0 pt antes y 8 pt después.
+- 16-oct-2026: letra Arial en todo el documento (cuerpo, títulos, tablas, notas, índice y encabezado)
+  e interlineado 1.5, como piden la rúbrica y el enunciado ("Arial 12, interlineado 1.5").
+  Reemplaza la decisión del 15-oct (Times New Roman, doble), que se tomó sin tener la rúbrica.
+- Texto fuera de tablas: interlineado 1.5, 0 pt antes y 8 pt después.
 - Texto dentro de tablas: interlineado 1.5, 0 pt antes y 0 pt después.
 - No cambia tamaños de letra, sangrías, márgenes, alineación ni contenido.
 Requiere: lxml.
@@ -19,8 +21,8 @@ from lxml import etree
 DOCX = sys.argv[1]
 W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 q = lambda t: '{%s}%s' % (W, t)
-FONT = 'Times New Roman'
-CUERPO = {'before': '0', 'after': '160', 'line': '480', 'lineRule': 'auto'}
+FONT = 'Arial'
+CUERPO = {'before': '0', 'after': '160', 'line': '360', 'lineRule': 'auto'}
 TABLA = {'before': '0', 'after': '0', 'line': '360', 'lineRule': 'auto'}
 # Orden de los hijos de w:pPr según el esquema (solo los que preceden a w:spacing).
 ANTES_DE_SPACING = ['pStyle', 'keepNext', 'keepLines', 'pageBreakBefore', 'framePr', 'widowControl',
@@ -91,12 +93,22 @@ for name in z.namelist():
             'word/footnotes.xml', 'word/endnotes.xml', 'word/comments.xml', 'word/numbering.xml'):
         r = etree.fromstring(z.read(name))
         fuentes(r)
+        if name == 'word/numbering.xml':
+            # Las viñetas con caracteres de Symbol (U+F000 a U+F0FF) conservan esa fuente;
+            # con otra letra se ven como un cuadro vacío.
+            for lvl in r.iter(q('lvl')):
+                lt = lvl.find(q('lvlText'))
+                txt = lt.get(q('val'), '') if lt is not None else ''
+                if txt and all(0xF000 <= ord(c) <= 0xF0FF for c in txt):
+                    for rf in lvl.iter(q('rFonts')):
+                        for a in ('ascii', 'hAnsi', 'cs'):
+                            rf.set(q(a), 'Symbol')
         out[name] = r
 
 ft = z.read('word/fontTable.xml').decode('utf-8')
 if f'w:name="{FONT}"' not in ft:
-    ft = ft.replace('</w:fonts>', f'<w:font w:name="{FONT}"><w:panose1 w:val="02020603050405020304"/>'
-                    '<w:charset w:val="00"/><w:family w:val="roman"/><w:pitch w:val="variable"/></w:font></w:fonts>')
+    ft = ft.replace('</w:fonts>', f'<w:font w:name="{FONT}"><w:panose1 w:val="020B0604020202020204"/>'
+                    '<w:charset w:val="00"/><w:family w:val="swiss"/><w:pitch w:val="variable"/></w:font></w:fonts>')
 
 tmp = DOCX + '.tmp'
 with zipfile.ZipFile(tmp, 'w', zipfile.ZIP_DEFLATED) as zo:
@@ -109,4 +121,4 @@ with zipfile.ZipFile(tmp, 'w', zipfile.ZIP_DEFLATED) as zo:
             data = z.read(it.filename)
         zo.writestr(it, data)
 shutil.move(tmp, DOCX)
-print(f'Párrafos de cuerpo: {n_cuerpo} (doble, 0/8 pt) · en tablas: {n_tabla} (1.5, 0/0 pt) · letra {FONT}')
+print(f'Párrafos de cuerpo: {n_cuerpo} (1.5, 0/8 pt) · en tablas: {n_tabla} (1.5, 0/0 pt) · letra {FONT}')
