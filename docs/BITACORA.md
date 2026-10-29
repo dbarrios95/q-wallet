@@ -23,6 +23,7 @@
 - Evidencias generadas: EVD-3-08; EVD-3-06 parcial (comentario del PR #22). EVD-3-11, 3-12, 3-13 y 5-04 se generan en el primer despliegue.
 - IDs nuevos: EVD-3-13. REQ-01 a REQ-14 (matriz de requisitos, Tabla 28).
 - Problemas / bloqueos: desde la sesión de Claude no se pueden leer los logs ni los artefactos de Actions, ni crear entornos o secretos del repo: el flujo publica sus resultados como comentarios; el entorno `dev` y el secreto los crea Daniel. No hay Terraform local (se validó en Actions; el formato se aplicó con una herramienta de HCL compilada desde GitHub).
+- Decisiones de Daniel al cierre (opción múltiple): (1) el merge basta como aprobación del despliegue, sin aprobación manual en `dev`; queda ajustar el texto del plan de RSK-32 en el Word final. (2) Regla de ciclo de vida en ECR: conservar las 5 imágenes más recientes por servicio (borrado automático aprobado por Daniel; respaldo no aplica: las imágenes se reconstruyen desde git). (3) Los títulos de la sección 4 y de 4.5 los pega Daniel en el chat.
 - Siguiente paso: Daniel hace los 5 pasos manuales de `ESTADO.md`; con el primer despliegue se completan las evidencias de 4.2. Después, bloque 2 (presentación).
 
 ### 2026-10-28 — Daniel — Claude (claude.ai)

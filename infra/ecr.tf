@@ -43,3 +43,22 @@ resource "aws_ecr_repository_policy" "servicio" {
   repository = each.value.name
   policy     = data.aws_iam_policy_document.ecr_lambda.json
 }
+
+# Decisión de Daniel (29-oct-2026): ECR conserva las 5 imágenes más recientes de cada
+# servicio y borra solo las más viejas. Las imágenes se pueden reconstruir desde git.
+resource "aws_ecr_lifecycle_policy" "servicio" {
+  for_each   = aws_ecr_repository.servicio
+  repository = each.value.name
+  policy = jsonencode({
+    rules = [{
+      rulePriority = 1
+      description  = "Conservar las 5 imagenes mas recientes"
+      selection = {
+        tagStatus   = "any"
+        countType   = "imageCountMoreThan"
+        countNumber = 5
+      }
+      action = { type = "expire" }
+    }]
+  })
+}

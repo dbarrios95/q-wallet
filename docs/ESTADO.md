@@ -36,10 +36,12 @@
 4. GitHub → Actions → infra → Run workflow (rama main). Ese es el primer despliegue.
 5. Confirmar en la consola que el plan gratuito permite AWS WAF y ECR (si ECR falla, el paso 4 lo muestra).
 
+## Decisiones tomadas (29-oct-2026)
+- El merge del PR cuenta como aprobación del despliegue (sin aprobación manual en el entorno `dev`). En el Word final, ajustar el texto del plan de RSK-32 (sección 2.5.5) a "PR revisado y aprobado por merge + revisión automática de destrucciones".
+- ECR conserva las 5 imágenes más recientes por servicio y borra solas las más viejas.
+
 ## Decisiones pendientes
-- Aprobación manual en el entorno `dev` antes de cada despliegue (preguntada al cerrar el bloque 1).
-- Borrado automático de imágenes viejas en ECR (preguntado al cerrar el bloque 1).
-- Títulos exactos de la sección 4 y de 4.5 en el enunciado.
+- Títulos exactos de la sección 4 y de 4.5 en el enunciado: Daniel los pega en el chat; se corrigen en `scripts/entrega2_seccion4.py`.
 - SIEM (bloque 5): Wazuh necesita 4 GB+ de RAM y no cabe en US$5; opción: CloudWatch + alarmas + CloudTrail.
 - Pruebas en el teléfono (Frida, freeRASP): emulador en la computadora de Daniel o intento en GitHub Actions.
 

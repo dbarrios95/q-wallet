@@ -230,7 +230,7 @@ jobs:
         run: |
           set -o pipefail
           {
-            terraform -chdir=infra plan -no-color -target=aws_ecr_repository.servicio -target=aws_ecr_repository_policy.servicio -out=ecr.tfplan
+            terraform -chdir=infra plan -no-color -target=aws_ecr_repository.servicio -target=aws_ecr_repository_policy.servicio -target=aws_ecr_lifecycle_policy.servicio -out=ecr.tfplan
             terraform -chdir=infra show -json ecr.tfplan > ecr.json
             python3 infra/scripts/revisar_plan.py ecr.json infra/destrucciones_aprobadas.txt
             terraform -chdir=infra apply -no-color ecr.tfplan
