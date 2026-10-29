@@ -109,7 +109,7 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 |---|---|
 | compileSdk | 36 |
 | targetSdk | 36 |
-| minSdk | 24 |
+| minSdk | 24 → **29** (decisión 28-oct-2026, se aplica en el bloque 3 con `expo-build-properties`) |
 | Kotlin | 2.1.20 |
 | Gradle | 9.3.1 |
 | Metro | 0.84.5 |
@@ -227,7 +227,7 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 ## 4. Arquitectura (alto nivel)
 
 ```
-[App Android] --TLS 1.2+--> [AWS WAF] --> [API Gateway REST + Cognito Authorizer]
+[App Android] --TLS 1.3--> [AWS WAF] --> [API Gateway REST + Cognito Authorizer]
       |                                         |
       +--OAuth2 PKCE--> [Cognito Managed Login]  +--> svc-profile    --+
                                                  +--> svc-accounts   --+--> [DynamoDB (KMS CMK)]
@@ -279,7 +279,7 @@ GitHub Actions --OIDC--> AWS (ECR, Lambda, Terraform)
 | CTRL-05 | Paginación por cursor con tope de 50 + throttling por usuario (usage plan) | Exfiltración masiva vía paginación | API4:2023 | 2d / 5 |
 | CTRL-06 | Cabecera `Idempotency-Key` + `TransactWriteItems` con `ConditionExpression` (saldo ≥ monto) | Doble gasto / race condition | API6:2023 | 2b |
 | CTRL-07 | Tokens en `expo-secure-store` (Keystore) con `requireAuthentication` biométrico | Robo de tokens en el dispositivo | MASVS-STORAGE | 1 |
-| CTRL-08 | Endpoint por defecto de API Gateway (sin dominio propio, por costo) con la política de seguridad mejorada `SecurityPolicy_TLS13_1_2_2021_06`: TLS 1.3, con TLS 1.2 solo de respaldo (Android anterior a 10 no trae TLS 1.3; minSdk 24). Más pinning de las llaves públicas de Amazon Root CA, con pin de respaldo. **Decisión 15-oct-2026:** desde nov-2025 API Gateway REST permite TLS 1.3 en el endpoint por defecto, por eso TLS 1.3 deja de ser riesgo residual aceptado | MITM | MASVS-NETWORK | 1 |
+| CTRL-08 | Endpoint por defecto de API Gateway (sin dominio propio, por costo) con la política de seguridad mejorada `SecurityPolicy_TLS13_1_3_2025_09` en modo STRICT: **solo TLS 1.3** (rechaza TLS 1.2 y anteriores). Más pinning de las llaves públicas de Amazon Root CA, con pin de respaldo. **Decisión 28-oct-2026:** minSdk sube a 29 (Android 10 trae TLS 1.3), así se cumple el enunciado tal cual; reemplaza `SecurityPolicy_TLS13_1_2_2021_06` (TLS 1.2 de respaldo) de la Entrega 1 | MITM | MASVS-NETWORK | 1 |
 | CTRL-09 | Logs JSON estructurados con redacción de tokens y PII + `correlationId` | Fuga en logs / repudio | A09 / CWE-532 | 1 / 7 |
 | CTRL-10 | SCA en CI que falla con hallazgos High/Critical + Dependabot (alerts + security updates; npm con `open-pull-requests-limit: 0` = solo PR de seguridad) | Dependencias vulnerables | A06 | 2c |
 | CTRL-11 | Dockerfile multi-stage, imagen base fijada por digest, usuario no root | Contenedor comprometido | CIS Docker | 3 |
@@ -324,7 +324,7 @@ Aceptar · Eliminar · Evitar · Mitigar · Transferir.
 
 | # | Capa | Qué se evalúa aquí |
 |---|---|---|
-| 1 | Datos | Cifrado en reposo (KMS, Keystore) y en tránsito (TLS 1.3 con TLS 1.2 de respaldo, CTRL-08), enmascaramiento de DPI/teléfono, gestión de llaves |
+| 1 | Datos | Cifrado en reposo (KMS, Keystore) y en tránsito (solo TLS 1.3, CTRL-08), enmascaramiento de DPI/teléfono, gestión de llaves |
 | 2a | Código | Sanitización, validación de entrada, secretos, prácticas seguras |
 | 2b | Aplicación | Lógica de negocio (transferencias, PIN, límites), autenticación y autorización |
 | 2c | Implementación | Dependencias npm, SDKs, frameworks |
@@ -406,13 +406,13 @@ GEMINI.md
 ## 10. Pendientes
 
 - [x] Nombres de integrantes y asignación de roles (sección 1 y sección 9).
-- [ ] Fecha de entrega final y fechas de otras entregas parciales (los plazos de OE2–OE5 dependen de ella).
+- [~] Fechas: Entrega 2 = sáb 7-nov-2026 (Fase 2). Entrega final = 28-nov-2026 `[VERIFICAR]` con el catedrático.
 - [x] ¿La Entrega 1 incluye presentación? Sí: objetivos, resultados, cómo llegamos, proyección, cronograma e implementación (ver `docs/entregas/ENTREGA_1.md`).
 - [ ] ¿Existe plantilla oficial de portada UMG?
 - [ ] Verificar que el Free Plan de AWS permite WAF y ECR.
 - [ ] Revisar los 6 PR de Dependabot en `/mobile`: cerrar los de versión (Tailwind 4 y TypeScript 7 rompen sección 3.1).
 - [ ] Conciliar 5 alertas de Dependabot vs. 33 de `npm audit` (fase SCA).
-- [ ] Fecha de la Entrega 2: el plan de RSK-32 se ató a "antes del primer despliegue del pipeline a AWS".
+- [x] Fecha de la Entrega 2: 7-nov-2026. El plan de RSK-32 sigue atado a "antes del primer despliegue del pipeline a AWS" (bloque 1).
 - [~] Ajustar los casos de abuso CA-xx a la política de pentest de AWS: **diseño revisado en la sección 1.5** (Tabla 11; rediseñar CA-02, CA-03, CA-12; matizar CA-06, CA-13; y los nuevos CA-14, CA-16). Falta aplicarlo al ejecutar en la fase de evaluación.
 - [~] Verificar en fuente primaria: URL de JM-104-2021 y Decretos 67-2001 y 57-2008 resueltas (13-oct); iniciativa 6464 resuelta (15-oct). Pendientes: texto oficial de **JM-98-2025** (se cita por fuente secundaria); Global Findex **23 %** y cifras de Costa Rica (único `[VERIFICAR]` del Word).
 
@@ -424,13 +424,13 @@ GEMINI.md
 
 | Campo | Valor |
 |---|---|
-| Última actualización | 16-oct-2026 (Claude: Word ajustado a la rúbrica, Arial 12 e interlineado 1.5) |
-| Fase actual | Entrega 1 — Selección y Planificación + Activos y Riesgos. Plan y estado en `docs/entregas/ENTREGA_1.md`. Reglas y tareas del equipo en `docs/EQUIPO.md` |
+| Última actualización | 28-oct-2026 (Claude: nueva forma de trabajo; Daniel lleva el resto solo) |
+| Fase actual | Entrega 2 (sáb 7-nov-2026) = Fase 2 del enunciado. **Arranque y plan por bloques en `docs/ESTADO.md`** |
 | Versión de la app | Expo SDK 57 (React Native 0.86.3, TS strict), NativeWind 4.2.7, Tailwind 3.4.19, Reanimated 4, expo-router, freeRASP 5.2.2, 8 pantallas simuladas |
-| Completado | Todo lo anterior (ver BITACORA hasta 14-oct): repo público con ruleset, threat model T2 v2, secciones 0, 1.1–1.5 y 2, referencias (24), Word final ensamblado (PR #18). **15-oct: revisión de Paco integrada** con `scripts/entrega1_revision_paco.py` (Word de 55 páginas, índice actualizado, validado y renderizado completo): 1.5 dice "Tres infringen... (CA-02, CA-03, CA-12); uno en el límite (CA-06)"; notas de las Tablas 7, 9 y 10 = "Elaboración propia" (ya no citan CONTEXTO); **RSK-01 pasa de Transferir a Aceptar** (Mitigar 39 · Aceptar 2; JSON, Tablas 21 y 23, 2.5.2, 2.5.5, resumen); **CTRL-08 con TLS 1.3** (política mejorada en el endpoint por defecto; ya no es riesgo aceptado); Figura 1 en página horizontal, sin título incrustado y con nodo **AWS IAM** (CTRL-12, CTRL-21); Figuras 5 y 6 regeneradas sin título (EVD-2-05/07); Tabla 9 alineada con la Tabla 7 y con fila de capa 6; Tabla 17 con tratamiento en AME-01 y AME-31; Tabla 18 retitulada y corregida (admin → AME-06; SSM → AME-27); [FECHA PENDIENTE] quitados (plazo = entrega final); [VERIFICAR] de la SIB e iniciativa 6464 resueltos; párrafo de cierre al final de 2.5.5 (sin sección 3); notas de tablas y figuras a Arial 12 e interlineado 1.5. **Formato nuevo** (Times New Roman; doble 0/8 pt fuera de tablas; 1.5 0/0 pt en tablas; Word de 67 páginas). **EVD-1-03a/b** (cuenta AWS y MFA, con el número de cuenta tapado); **EVD-1-03e** confirma que el MFA es del usuario raíz (EVD-1-03 completa). **Presentación terminada** (Claude Slides, 15 diapositivas, Inter y paleta de la app, notas del orador por integrante, JM-98-2025, CTRL-23, EVD-2-05 y EVD-2-07 en P-4, mitigar 39 · aceptar 2). **Revisión del Word contra la rúbrica**: estructura, numeración, índice, referencias y cifras correctas. **16-oct: Word ajustado a la rúbrica** con `scripts/entrega1_rubrica.py` + `entrega1_estilos.py` + `entrega1_indice.py`: Arial 12 e interlineado 1.5; Tablas 7–23 en 9–10 pt (Tabla 12 en 8 pt) con anchos sin palabras cortadas; 6 títulos según el enunciado; cita AWS (s. f.-a) junto a la JM-104-2021 y Carrillo & Asociados junto a la JM-98-2025; sin `[VERIFICAR]` (Findex 23 % con su cita "como se citó en"); AWS (s. f.-c) con fecha de consulta; viñetas de 2.5.1 con su fuente Symbol (se veían como cuadros desde el PR #19). Word de **78 páginas**, validado y renderizado completo. **Revisión de 1.5, 2.1 y 2.2** (Claude, en lugar de Katherine): objetivos del pentest = WAF, API Gateway y Lambda (DynamoDB, SSM, S3 e IAM solo por configuración, por la política de AWS); MASTG; Tablas 7, 8, 9 y 12 ajustadas; 2.2 cita ISO 27001 5.12 |
-| En curso | Entrega 1: revisión final en Microsoft Word, exportar PDF y ensayar la presentación |
-| Siguiente paso / Pendientes | 1) Abrir el Word en Microsoft Word, clic derecho en el índice → Actualizar campo → toda la tabla, revisar y exportar PDF. Usar us-east-1 al crear recursos (la consola estaba en Ohio); 2) Ensayar la presentación (~15 min `[VERIFICAR]`); 3) Findex 23 %: ya no lleva marcador en el Word (cita "como se citó en"); sigue sin fuente primaria; 4) Texto oficial de JM-98-2025; 5) Actualizar las instrucciones del proyecto de claude.ai (todavía dicen Times New Roman y doble); 6) Límite de monto por transferencia; 7) Textos falsos de la UI (Welcome dice "Cumplimiento JM-104-2021"); 8) PR de Dependabot de versión; 9) Decreto 57-2008: buscar versión oficial (Congreso o Diario de Centro América) en lugar de SVET |
-| Regla de trabajo | Sin commits directos a `main` (personas ni agy): rama → PR → merge. Cada cambio de la app se valida con build nativo |
-| Bloqueos | Pendientes de la sección 10 |
+| Completado | Entrega 1 entregada el 17-oct (Word de 78 páginas, presentación de 15 diapositivas; detalle en BITÁCORA hasta el 16-oct). 24-oct: plan del equipo para la Entrega 2 (PDF). 28-oct: `CLAUDE.md` con la forma de trabajo por bloques y la regla de borrado; `docs/ESTADO.md`; CTRL-08 solo TLS 1.3 con minSdk 29 |
+| En curso | Bloque 1: Terraform de la arquitectura, despliegue con OIDC, secciones 4.1 y 4.2 |
+| Siguiente paso / Pendientes | Ver `docs/ESTADO.md`. Arrastrados de la Entrega 1: texto oficial de JM-98-2025; Findex 23 % sin fuente primaria; límite de monto por transferencia; textos falsos de la UI (Welcome dice "Cumplimiento JM-104-2021"); PR de Dependabot de versión; Decreto 57-2008 en versión oficial |
+| Regla de trabajo | Claude hace rama, commit, push y PR; Daniel hace merge. Claude no borra nada sin preguntar y respaldar (`CLAUDE.md`) |
+| Bloqueos | Confirmar AWS WAF y ECR en el plan gratuito |
 | Recursos AWS desplegados | Ninguno |
 | Gasto AWS acumulado | US$0 (cuenta creada el 15-oct-2026 por Katherine; plan gratuito con US$100 de crédito hasta el 15-abr-2027; presupuesto `qwallet-presupuesto-5usd`) |
