@@ -9,7 +9,7 @@ Proyecto final de Seguridad en Aplicaciones (UMG). Desde el 28-oct-2026 Daniel l
 
 ## Forma de trabajo
 - **Un bloque por chat.** Daniel abre un chat con "Q-Wallet: sigue con el bloque X". Claude trabaja de corrido hasta terminar el bloque, sin pedir confirmaciones intermedias, salvo decisiones que solo Daniel puede tomar (se agrupan y se preguntan con opción múltiple).
-- **Claude hace las ramas, los commits, el push y el PR** (con `gh`). Daniel solo revisa y da clic en "Merge". `main` está protegida: nunca commits directos a `main`, nunca `push --force`, nunca `npm audit fix --force`.
+- **Claude hace las ramas, los commits, el push y el PR** (con `gh api repos/dbarrios95/q-wallet/pulls ...`; `gh pr create` no funciona en estas sesiones). Daniel solo revisa y da clic en "Merge". `main` está protegida: nunca commits directos a `main`, nunca `push --force`, nunca `npm audit fix --force`.
 - **Al cerrar cada bloque**, en el mismo PR: reescribir `docs/ESTADO.md`, actualizar CONTEXTO sección 11 y agregar una entrada en BITÁCORA. Daniel no tiene que subir archivos ni hacer commits.
 - Las evidencias de AWS se generan en GitHub Actions (despliegue con OIDC, pruebas y escaneos) y Claude las lee con `gh`. Solo se piden capturas de consola cuando la rúbrica lo exige.
 - El Word se arma **una vez por entrega**, al final, con los scripts de `scripts/`.
