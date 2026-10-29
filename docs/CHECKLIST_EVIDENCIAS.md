@@ -34,9 +34,12 @@ Como no hay demo en vivo, toda afirmación técnica del informe necesita una evi
 | ☐ | EVD-3-03 | CodeQL / SonarQube Cloud: dashboard (quality gate) |
 | ☐ | EVD-3-04 | Dependency-Check / Snyk: reporte SCA |
 | ☐ | EVD-3-05 | Trivy: imagen de contenedor |
-| ☐ | EVD-3-06 | Checkov sobre Terraform y Dockerfile |
+| ◐ | EVD-3-06 | Checkov sobre Terraform y Dockerfile (29-oct: 282 pasan, 0 fallan, 39 omitidas con motivo; resultado en el comentario del PR #22) |
 | ☐ | EVD-3-07 | MobSF: reporte del APK de release |
-| ☐ | EVD-3-08 | Diagrama de arquitectura de seguridad (API Gateway, IAM, Cognito, WAF, KMS) |
+| ☑ | EVD-3-08 | Diagrama de arquitectura de seguridad con el flujo de datos numerado (Figura 7). Script `scripts/entrega2_diagrama_flujo.py` |
+| ☐ | EVD-3-11 | Simulador de políticas IAM: matriz rol × tabla (lo genera `infra/scripts/verificar_aws.sh` en cada despliegue) |
+| ☐ | EVD-3-12 | Prueba de TLS: 1.3 aceptado, 1.2 rechazado, 401 sin token (igual, automático) |
+| ☐ | EVD-3-13 | Configuración desplegada de Cognito, API Gateway y CloudTrail (igual, automático) |
 | ☐ | EVD-3-09 | gitleaks + Prowler: resultado |
 | ☐ | EVD-3-10 | Pipeline bloqueando un PR con una dependencia vulnerable (demostración del gate) |
 
@@ -63,7 +66,7 @@ Como no hay demo en vivo, toda afirmación técnica del informe necesita una evi
 | ☐ | EVD-5-01 | AWS WAF: reglas configuradas |
 | ☐ | EVD-5-02 | WAF bloqueando un ataque (muestras de solicitudes) |
 | ☐ | EVD-5-03 | freeRASP detectando root/hook |
-| ☐ | EVD-5-04 | KMS CMK y DynamoDB cifrado |
+| ☐ | EVD-5-04 | KMS CMK y DynamoDB cifrado (automático, `verificar_aws.sh`) |
 | ☐ | EVD-5-05 | Wazuh: ingesta de CloudTrail |
 | ☐ | EVD-5-06 | Wazuh: alerta por fuerza bruta / BOLA |
 | ☐ | EVD-5-07 | Dashboard de seguridad |

@@ -3,6 +3,28 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-10-29 — Daniel — Claude (claude.ai), bloque 1
+- Fase / sección del informe: Fase 2 (diseño arquitectónico cloud) y parte de la Fase 5 (revisión del IaC). Secciones 4.1, 4.2 y 4.5.
+- Qué se hizo:
+  - Terraform de toda la arquitectura en `/infra` (Terraform 1.16.5, AWS 6.67.0, random 3.9.1, con `.terraform.lock.hcl`): llave KMS propia, 8 tablas DynamoDB, Cognito (ESSENTIALS, MFA TOTP obligatorio, cliente público con PKCE, tokens de 15 min, rotación del refresh token, login administrado v2), API Gateway REST regional con `SecurityPolicy_TLS13_1_3_2025_09` y modo STRICT, authorizer de Cognito con alcance `qwallet/api` en las 18 rutas, respuestas de error genéricas, logs de acceso sin tokens, throttling 10/s y ráfaga 20, X-Ray; 5 Lambdas en contenedor (ECR, etiquetas inmutables) con un rol IAM por función y límite de permisos; CloudTrail multirregión cifrado; WAF apagable con la variable `WAF_HABILITADO`.
+  - Bootstrap para CloudShell (`infra/bootstrap/bootstrap.sh` y `politicas/`): bucket del estado, proveedor OIDC, límite `qwallet-limite-permisos`, roles `qwallet-gha-plan` (solo lectura, PR) y `qwallet-gha-despliegue` (entorno `dev`). El rol de despliegue tiene denegaciones explícitas para borrar la llave, tablas, user pool, buckets, trail y repositorios, y para tocar los roles de GitHub.
+  - Flujo `.github/workflows/infra.yml` y scripts `infra/scripts/revisar_plan.py` (detiene el despliegue si hay destrucciones o reemplazos no aprobados) y `verificar_aws.sh` (EVD-3-11, 3-12, 3-13, 5-04, sin número de cuenta).
+  - Imagen provisional `services/hola` (responde 501), base `public.ecr.aws/lambda/nodejs:24` fijada por digest (obtenido en GitHub Actions el 29-oct).
+  - Figura EVD-3-08 y Word de 4.1, 4.2 y 4.5 (13 págs., Arial 12, 1.5; anchos de tabla calculados para no partir palabras; renderizado y revisado completo).
+  - Checkov 3.3.22: primera corrida 52 fallas; se corrigieron retención de logs (365 días), X-Ray y `create_before_destroy` en la API; las 39 restantes se omiten con motivo junto al recurso. Resultado: 282 pasan, 0 fallan. `terraform fmt` y `validate` en verde en GitHub Actions.
+- Archivos creados o modificados: `infra/*`, `services/hola/*`, `.github/workflows/infra.yml`, `scripts/entrega2_diagrama_flujo.py`, `scripts/entrega2_seccion4.py`, `docs/entregas/Entrega2_Seccion_4_Arquitectura_Controles.docx`, `docs/evidencias/EVD-3-08_arquitectura_flujo_datos.svg/.png`, `docs/CONTEXTO.md` (secciones 3, 4 y 11), `docs/CHECKLIST_EVIDENCIAS.md`, `docs/ESTADO.md`, `docs/BITACORA.md`.
+- Decisiones tomadas (y por qué):
+  - Una tabla por tipo de dato (8) en lugar de una tabla única: permite el menor privilegio tabla por tabla y la prueba "svc-budgets no lee transferencias".
+  - Sin VPC para las Lambdas: exigiría NAT Gateway (prohibido); segmentación por rol IAM.
+  - ECR con AES-256 administrado por AWS (sin datos de clientes); estado de Terraform con SSE-KMS de AWS (`aws/s3`) para no pagar una segunda llave.
+  - Entorno de GitHub `dev` (no "produccion"): es un entorno académico con dinero simulado.
+  - El grupo `admins` se valida por ahora solo en el handler; la validación en el borde (CTRL-14) se resuelve en el bloque 3.
+- Cambios de versión: ninguno (se agregó el proveedor `hashicorp/random` 3.9.1 y `actions/upload-artifact` v7.0.2, fijados).
+- Evidencias generadas: EVD-3-08; EVD-3-06 parcial (comentario del PR #22). EVD-3-11, 3-12, 3-13 y 5-04 se generan en el primer despliegue.
+- IDs nuevos: EVD-3-13. REQ-01 a REQ-14 (matriz de requisitos, Tabla 28).
+- Problemas / bloqueos: desde la sesión de Claude no se pueden leer los logs ni los artefactos de Actions, ni crear entornos o secretos del repo: el flujo publica sus resultados como comentarios; el entorno `dev` y el secreto los crea Daniel. No hay Terraform local (se validó en Actions; el formato se aplicó con una herramienta de HCL compilada desde GitHub).
+- Siguiente paso: Daniel hace los 5 pasos manuales de `ESTADO.md`; con el primer despliegue se completan las evidencias de 4.2. Después, bloque 2 (presentación).
+
 ### 2026-10-28 — Daniel — Claude (claude.ai)
 - Fase / sección del informe: Organización para la Entrega 2 y la entrega final.
 - Qué se hizo: el enunciado y la rúbrica confirman una entrega por fase; la Entrega 2 (7-nov) es la Fase 2. Plan del equipo en PDF (24-oct). Desde el 28-oct Daniel lleva el resto solo: nueva forma de trabajo por bloques, con Claude haciendo ramas, commits y PR.

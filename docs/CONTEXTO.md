@@ -68,7 +68,7 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 | RASP móvil | freeRASP (Talsec) — plan gratuito | Root/hook/emulador/tampering |
 | Ofuscación | Hermes bytecode + R8/ProGuard | MASVS-RESILIENCE |
 | Backend | 5 microservicios **AWS Lambda Node.js 24 (`nodejs24.x`) + TypeScript**, empaquetados como **imágenes de contenedor (ECR)** | Genera Dockerfiles reales para Trivy/Checkov |
-| API | **Amazon API Gateway REST, tipo regional** (no HTTP API: AWS WAF solo se asocia a REST). Política de seguridad `SecurityPolicy_TLS13_1_2_2021_06` con modo de acceso `STRICT` (decisión 15-oct-2026) | Authorizer Cognito, throttling, validación |
+| API | **Amazon API Gateway REST, tipo regional** (no HTTP API: AWS WAF solo se asocia a REST). Política de seguridad `SecurityPolicy_TLS13_1_3_2025_09` (solo TLS 1.3) con modo de acceso `STRICT` (decisión 28-oct-2026; ver CTRL-08) | Authorizer Cognito, throttling, validación |
 | Identidad | **Amazon Cognito** User Pool | OAuth2/OIDC, PKCE, MFA |
 | Base de datos | **Amazon DynamoDB** cifrado con **KMS CMK** propia | Siempre gratis hasta 25 GB |
 | Secretos | SSM Parameter Store SecureString | Sin costo en tier estándar |
@@ -76,7 +76,7 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 | Logs/Auditoría | CloudWatch Logs + CloudTrail → S3 | Fuente del SIEM |
 | SIEM | **Wazuh** en Docker local (lee CloudTrail/CloudWatch) | Gratis |
 | IaC | Terraform; estado remoto en **S3 con bloqueo nativo** (`use_lockfile = true`, sin DynamoDB), SSE-KMS, versionado y Block Public Access (ACT-09) | Checkov/tfsec/Trivy; el estado lo comparten los 3 integrantes y el pipeline (OIDC) |
-| CI/CD | GitHub Actions, despliegue a AWS vía **OIDC** (sin llaves estáticas) | |
+| CI/CD | GitHub Actions (`.github/workflows/infra.yml`), despliegue a AWS vía **OIDC** (sin llaves estáticas). Roles `qwallet-gha-plan` (solo lectura, PR) y `qwallet-gha-despliegue` (entorno `dev`, rama `main`), creados por `infra/bootstrap/bootstrap.sh`; límite de permisos `qwallet-limite-permisos` para todo rol que crea Terraform. El despliegue se detiene si el plan destruye o reemplaza algo fuera de `infra/destrucciones_aprobadas.txt` (decisión 29-oct-2026) | |
 | Repositorio | `github.com/dbarrios95/q-wallet`, **público** desde 05-oct-2026. Ruleset `main-protegida`: sin commits directos a `main` (rama → PR → merge) | Rulesets, secret scanning, push protection y CodeQL gratis solo en repos públicos |
 | Región AWS | `us-east-1` | Menor costo, disponibilidad completa de servicios |
 | Dominio | Ninguno: endpoint `execute-api` de AWS | Costo $0 |
@@ -237,6 +237,9 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 CloudWatch Logs / CloudTrail --> S3 --> [Wazuh local (SIEM)]
 GitHub Actions --OIDC--> AWS (ECR, Lambda, Terraform)
 ```
+
+### Datos (DynamoDB, decisión 29-oct-2026)
+Ocho tablas, una por tipo de dato, para dar permisos tabla por tabla (menor privilegio): `qwallet-perfiles` (GSI `por-telefono` sobre `telefonoHash`), `qwallet-pin`, `qwallet-cuentas`, `qwallet-movimientos`, `qwallet-transferencias` (también claves de idempotencia con TTL `expiraEn`), `qwallet-beneficiarios`, `qwallet-presupuestos`, `qwallet-auditoria`. Todas con la CMK `alias/qwallet-datos`, PITR y protección de borrado. Matriz de acceso por Lambda en `infra/iam.tf` (Tabla 26 del informe).
 
 ### Endpoints (superficie de API)
 | Servicio | Endpoints |
@@ -424,13 +427,13 @@ GEMINI.md
 
 | Campo | Valor |
 |---|---|
-| Última actualización | 28-oct-2026 (Claude: nueva forma de trabajo; Daniel lleva el resto solo) |
+| Última actualización | 29-oct-2026 (Claude: bloque 1, PR #22) |
 | Fase actual | Entrega 2 (sáb 7-nov-2026) = Fase 2 del enunciado. **Arranque y plan por bloques en `docs/ESTADO.md`** |
 | Versión de la app | Expo SDK 57 (React Native 0.86.3, TS strict), NativeWind 4.2.7, Tailwind 3.4.19, Reanimated 4, expo-router, freeRASP 5.2.2, 8 pantallas simuladas |
-| Completado | Entrega 1 entregada el 17-oct (Word de 78 páginas, presentación de 15 diapositivas; detalle en BITÁCORA hasta el 16-oct). 24-oct: plan del equipo para la Entrega 2 (PDF). 28-oct: `CLAUDE.md` con la forma de trabajo por bloques y la regla de borrado; `docs/ESTADO.md`; CTRL-08 solo TLS 1.3 con minSdk 29 |
-| En curso | Bloque 1: Terraform de la arquitectura, despliegue con OIDC, secciones 4.1 y 4.2 |
-| Siguiente paso / Pendientes | Ver `docs/ESTADO.md`. Arrastrados de la Entrega 1: texto oficial de JM-98-2025; Findex 23 % sin fuente primaria; límite de monto por transferencia; textos falsos de la UI (Welcome dice "Cumplimiento JM-104-2021"); PR de Dependabot de versión; Decreto 57-2008 en versión oficial |
+| Completado | Entrega 1 (17-oct). 28-oct: forma de trabajo por bloques. **29-oct, bloque 1 (PR #22):** Terraform de toda la arquitectura en `/infra` (KMS, 8 tablas DynamoDB, Cognito con PKCE y MFA, API Gateway solo TLS 1.3 con authorizer en 18 rutas, 5 Lambdas en contenedor con un rol por función, ECR, CloudTrail, WAF apagable); bootstrap OIDC para CloudShell; flujo `infra.yml` (fmt, validate, Checkov, plan en PR, despliegue con revisión de destrucciones, verificación automática de TLS, IAM y cifrado); imagen provisional `services/hola`; Word de las secciones 4.1, 4.2 y 4.5 (`docs/entregas/Entrega2_Seccion_4_Arquitectura_Controles.docx`, 13 págs.); figura EVD-3-08. Checkov: 282 pasan, 0 fallan, 39 omitidas con motivo. `terraform validate` en verde en GitHub Actions |
+| En curso | Bloque 1 cerrado en código; falta el primer despliegue (depende del bootstrap manual de Daniel) |
+| Siguiente paso / Pendientes | Ver `docs/ESTADO.md`. Arrastrados: texto oficial de JM-98-2025; Findex 23 %; límite de monto por transferencia; textos falsos de la UI (Welcome); PR de Dependabot de versión; Decreto 57-2008 oficial |
 | Regla de trabajo | Claude hace rama, commit, push y PR; Daniel hace merge. Claude no borra nada sin preguntar y respaldar (`CLAUDE.md`) |
-| Bloqueos | Confirmar AWS WAF y ECR en el plan gratuito |
-| Recursos AWS desplegados | Ninguno |
-| Gasto AWS acumulado | US$0 (cuenta creada el 15-oct-2026 por Katherine; plan gratuito con US$100 de crédito hasta el 15-abr-2027; presupuesto `qwallet-presupuesto-5usd`) |
+| Bloqueos | Bootstrap en CloudShell y secreto `AWS_ACCOUNT_ID` (Daniel). Confirmar AWS WAF y ECR en el plan gratuito. Los logs y artefactos de Actions no se pueden leer desde las sesiones de Claude: el flujo publica los resultados como comentario del PR y en el issue "Evidencias AWS" |
+| Recursos AWS desplegados | Ninguno todavía |
+| Gasto AWS acumulado | US$0. Costo esperado al desplegar: unos US$1 al mes (llave KMS) más centavos de uso; el WAF suma unos US$8 al mes solo mientras esté encendido. Se descuenta del crédito de US$100 (vence 15-abr-2027) |
