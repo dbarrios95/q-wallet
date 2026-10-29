@@ -1,0 +1,77 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DatosDelProyecto",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:Query",
+        "dynamodb:ConditionCheckItem"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:us-east-1:__CUENTA__:table/qwallet-*",
+        "arn:aws:dynamodb:us-east-1:__CUENTA__:table/qwallet-*/index/*"
+      ]
+    },
+    {
+      "Sid": "LlaveDelProyecto",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:GenerateDataKey",
+        "kms:DescribeKey"
+      ],
+      "Resource": "arn:aws:kms:us-east-1:__CUENTA__:key/*",
+      "Condition": {
+        "StringEquals": {
+          "aws:ResourceTag/Project": "qwallet"
+        }
+      }
+    },
+    {
+      "Sid": "LogsDeCloudWatch",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams",
+        "logs:GetLogEvents",
+        "logs:FilterLogEvents"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ParametrosDelProyecto",
+      "Effect": "Allow",
+      "Action": "ssm:GetParameter",
+      "Resource": "arn:aws:ssm:us-east-1:__CUENTA__:parameter/qwallet/*"
+    },
+    {
+      "Sid": "AdministracionDeUsuarios",
+      "Effect": "Allow",
+      "Action": [
+        "cognito-idp:ListUsers",
+        "cognito-idp:AdminDisableUser",
+        "cognito-idp:AdminUserGlobalSignOut",
+        "cognito-idp:AdminListGroupsForUser"
+      ],
+      "Resource": "arn:aws:cognito-idp:us-east-1:__CUENTA__:userpool/*"
+    },
+    {
+      "Sid": "TrazasXRay",
+      "Effect": "Allow",
+      "Action": [
+        "xray:PutTraceSegments",
+        "xray:PutTelemetryRecords"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
