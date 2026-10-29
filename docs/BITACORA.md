@@ -1,7 +1,23 @@
 # BITÁCORA DEL PROYECTO — Q-Wallet
 
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
-> El resumen vigente está en `CONTEXTO.md` sección 11; aquí queda el historial.
+> El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
+
+### 2026-10-28 — Daniel — Claude (claude.ai)
+- Fase / sección del informe: Organización para la Entrega 2 y la entrega final.
+- Qué se hizo: el enunciado y la rúbrica confirman una entrega por fase; la Entrega 2 (7-nov) es la Fase 2. Plan del equipo en PDF (24-oct). Desde el 28-oct Daniel lleva el resto solo: nueva forma de trabajo por bloques, con Claude haciendo ramas, commits y PR.
+- Archivos creados o modificados: `CLAUDE.md` (forma de trabajo y regla de borrado), `docs/ESTADO.md` (nuevo), `docs/CONTEXTO.md` (CTRL-08, capa 1, minSdk, secciones 10 y 11), `docs/BITACORA.md`.
+- Decisiones tomadas:
+  - Claude no borra nada sin preguntar y justificar; respalda primero (pedido de Daniel).
+  - Despliegue automático desde GitHub Actions con OIDC.
+  - minSdk 29 y TLS solo 1.3 (`SecurityPolicy_TLS13_1_3_2025_09`, modo STRICT): cumple el enunciado sin costo; Android 7 a 9 queda fuera, aceptable para el proyecto.
+  - Fase 2 en las secciones 4.1 y 4.2 del informe.
+  - Entrega final: 28-nov-2026 `[VERIFICAR]`.
+- Cambios de versión: ninguno (minSdk se aplica en el bloque 3).
+- Evidencias generadas: ninguna.
+- IDs nuevos: EVD-3-11 (simulador IAM) y EVD-3-12 (prueba TLS 1.3), propuestos en el plan del equipo.
+- Problemas / bloqueos: falta confirmar WAF y ECR en el plan gratuito.
+- Siguiente paso: bloque 1 (Terraform + OIDC + 4.1 y 4.2).
 
 ## Plantilla
 ```
