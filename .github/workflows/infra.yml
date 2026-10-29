@@ -64,6 +64,11 @@ jobs:
             echo "== terraform init (sin backend) y validate"
             terraform -chdir=infra init -backend=false -no-color
             terraform -chdir=infra validate -no-color
+            if [ ! -f infra/.terraform.lock.hcl.versionado ]; then
+              echo "== archivo de bloqueo de proveedores (falta en el repo)"
+              terraform -chdir=infra providers lock -no-color -platform=linux_amd64 -platform=windows_amd64 >/dev/null
+              cat infra/.terraform.lock.hcl
+            fi
           } 2>&1 | tee registro/1_formato_validacion.txt
 
       - name: Checkov 3.3.22 sobre Terraform y Dockerfile (EVD-3-06)
