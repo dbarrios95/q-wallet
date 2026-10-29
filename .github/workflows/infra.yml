@@ -1,12 +1,12 @@
 # Infraestructura de Q-Wallet: revisión, plan, despliegue y verificación.
 # CTRL-21: AWS se alcanza solo con OIDC (sin llaves guardadas).
 #   - Pull request: revisión estática (fmt, validate, Checkov, Dockerfile) y plan con
-#     el rol de solo lectura qwallet-gha-plan.
+#     el rol de solo lectura qwallet-gha-plan. El resultado se publica como comentario del PR.
 #   - main (después del merge) o ejecución manual: despliegue con el rol
 #     qwallet-gha-despliegue, solo desde el entorno "dev". El despliegue se detiene si
 #     el plan destruye o reemplaza algo no aprobado (regla de borrado, CLAUDE.md).
-#   - Después del despliegue: verificación de TLS 1.3, menor privilegio y cifrado;
-#     el resultado queda como artefacto "evidencias-aws" (sin número de cuenta).
+#   - Después del despliegue: verificación de TLS 1.3, menor privilegio y cifrado.
+#     La evidencia (sin número de cuenta) queda en el issue "Evidencias AWS" y como artefacto.
 name: infra
 
 on:
@@ -41,6 +41,9 @@ jobs:
   revisar:
     name: Revisión estática (fmt, validate, Checkov)
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -51,44 +54,74 @@ jobs:
           terraform_version: 1.16.5
           terraform_wrapper: false
 
-      - name: Formato
-        run: terraform -chdir=infra fmt -check -recursive -diff
-
-      - name: Validación
+      - name: Formato y validación
         run: |
-          terraform -chdir=infra init -backend=false
-          terraform -chdir=infra validate
+          mkdir -p registro evidencias
+          set -o pipefail
+          {
+            echo "== terraform fmt"
+            terraform -chdir=infra fmt -check -recursive -diff
+            echo "== terraform init (sin backend) y validate"
+            terraform -chdir=infra init -backend=false -no-color
+            terraform -chdir=infra validate -no-color
+          } 2>&1 | tee registro/1_formato_validacion.txt
 
       - name: Checkov 3.3.22 sobre Terraform y Dockerfile (EVD-3-06)
         run: |
+          set -o pipefail
           pip install --quiet --break-system-packages checkov==3.3.22
-          mkdir -p evidencias
-          checkov --config-file infra/.checkov.yaml -d infra --framework terraform \
-            --output cli --output junitxml --output-file-path console,evidencias \
-            | tee evidencias/EVD-3-06_checkov_terraform.txt
-          checkov -d services --framework dockerfile --skip-download --compact --output cli \
+          checkov --config-file infra/.checkov.yaml -d infra --output cli --output junitxml \
+            --output-file-path console,evidencias 2>&1 | tee evidencias/EVD-3-06_checkov_terraform.txt
+          checkov -d services --framework dockerfile --skip-download --compact --output cli 2>&1 \
             | tee evidencias/EVD-3-06_checkov_dockerfile.txt
 
       - name: Imagen base de Lambda fijada por digest (CTRL-11)
         run: |
           actual=$(docker buildx imagetools inspect public.ecr.aws/lambda/nodejs:24 --format '{{json .Manifest.Digest}}' | tr -d '"')
           fijado=$(grep -o 'nodejs:24@sha256:[a-f0-9]*' services/hola/Dockerfile | cut -d@ -f2 || true)
-          echo "Digest publicado hoy: ${actual}"
-          echo "Digest en el Dockerfile: ${fijado:-ninguno}"
-          echo "### Imagen base de Lambda" >> "$GITHUB_STEP_SUMMARY"
-          echo "Publicado: \`${actual}\` · Fijado: \`${fijado:-ninguno}\`" >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "Digest publicado hoy: ${actual}"
+            echo "Digest en el Dockerfile: ${fijado:-ninguno}"
+          } | tee registro/2_digest.txt
           if [ -z "$fijado" ]; then echo "::error::El Dockerfile no fija la imagen base por digest"; exit 1; fi
           if [ "$fijado" != "$actual" ]; then echo "::warning::Hay una imagen base más nueva; actualizar el digest en un PR"; fi
 
       - name: Construcción de la imagen (sin publicar)
-        run: docker build -t qwallet-hola:prueba services/hola
+        run: |
+          set -o pipefail
+          docker buildx build --platform linux/amd64 --provenance=false --sbom=false --load \
+            -t qwallet-hola:prueba services/hola 2>&1 | tail -20 | tee registro/3_imagen.txt
 
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: revision-estatica
-          path: evidencias/
+          path: |
+            evidencias/
+            registro/
           retention-days: 90
+
+      - name: Resumen en el PR
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESULTADO: ${{ job.status }}
+        run: |
+          {
+            echo "## Revisión estática: ${RESULTADO}"
+            echo "Ejecución: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            for f in registro/*.txt; do
+              [ -f "$f" ] || continue
+              echo; echo "<details><summary>$(basename "$f")</summary>"; echo; echo '```'
+              tail -c 12000 "$f"; echo '```'; echo "</details>"
+            done
+            echo; echo "<details><summary>Checkov (Terraform y Dockerfile)</summary>"; echo; echo '```'
+            for f in evidencias/EVD-3-06_checkov_terraform.txt evidencias/EVD-3-06_checkov_dockerfile.txt; do
+              [ -f "$f" ] && grep -E "scan results|Passed checks|FAILED|Check: " "$f" | head -60
+            done
+            echo '```'; echo "</details>"
+          } > comentario.md
+          gh pr comment "${{ github.event.pull_request.number }}" --repo "${{ github.repository }}" --body-file comentario.md
 
   plan:
     name: Plan de Terraform (solo lectura)
@@ -98,6 +131,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
+      pull-requests: write
     steps:
       - name: Bootstrap hecho
         id: listo
@@ -131,12 +165,30 @@ jobs:
 
       - name: Plan
         if: steps.listo.outputs.ok == 'true'
+        env:
+          CUENTA: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
+          set -o pipefail
           export TF_VAR_image_tag="svc-$(git rev-parse HEAD:services | cut -c1-12)"
-          terraform -chdir=infra init -backend-config="bucket=qwallet-tfstate-${{ secrets.AWS_ACCOUNT_ID }}"
-          terraform -chdir=infra plan -lock=false -out=tfplan
-          terraform -chdir=infra show -json tfplan > plan.json
-          python3 infra/scripts/revisar_plan.py plan.json infra/destrucciones_aprobadas.txt
+          {
+            terraform -chdir=infra init -no-color -backend-config="bucket=qwallet-tfstate-${CUENTA}"
+            terraform -chdir=infra plan -no-color -lock=false -out=tfplan
+            terraform -chdir=infra show -json tfplan > plan.json
+            python3 infra/scripts/revisar_plan.py plan.json infra/destrucciones_aprobadas.txt
+          } 2>&1 | sed "s/${CUENTA}/************/g" > plan.txt
+
+      - name: Plan en el PR
+        if: always() && steps.listo.outputs.ok == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "## Plan de Terraform"
+            grep -E "^Plan:|No changes|Error|Bloqueado|Crear:" plan.txt | head -20 || true
+            echo; echo "<details><summary>Salida completa</summary>"; echo; echo '```'
+            tail -c 55000 plan.txt; echo '```'; echo "</details>"
+          } > comentario.md
+          gh pr comment "${{ github.event.pull_request.number }}" --repo "${{ github.repository }}" --body-file comentario.md
 
   desplegar:
     name: Despliegue en AWS (entorno dev)
@@ -147,6 +199,9 @@ jobs:
     permissions:
       contents: read
       id-token: write
+      issues: write
+    env:
+      CUENTA: ${{ secrets.AWS_ACCOUNT_ID }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -165,19 +220,25 @@ jobs:
 
       - name: Inicializar
         run: |
+          set -o pipefail
+          mkdir -p registro evidencias
           echo "TF_VAR_image_tag=svc-$(git rev-parse HEAD:services | cut -c1-12)" >> "$GITHUB_ENV"
-          terraform -chdir=infra init -backend-config="bucket=qwallet-tfstate-${{ secrets.AWS_ACCOUNT_ID }}"
+          terraform -chdir=infra init -no-color -backend-config="bucket=qwallet-tfstate-${CUENTA}" 2>&1 | tee registro/1_init.txt
 
       - name: Repositorios de imágenes (primero, para poder publicar)
         run: |
-          terraform -chdir=infra plan -target=aws_ecr_repository.servicio -target=aws_ecr_repository_policy.servicio -out=ecr.tfplan
-          terraform -chdir=infra show -json ecr.tfplan > ecr.json
-          python3 infra/scripts/revisar_plan.py ecr.json infra/destrucciones_aprobadas.txt
-          terraform -chdir=infra apply ecr.tfplan
+          set -o pipefail
+          {
+            terraform -chdir=infra plan -no-color -target=aws_ecr_repository.servicio -target=aws_ecr_repository_policy.servicio -out=ecr.tfplan
+            terraform -chdir=infra show -json ecr.tfplan > ecr.json
+            python3 infra/scripts/revisar_plan.py ecr.json infra/destrucciones_aprobadas.txt
+            terraform -chdir=infra apply -no-color ecr.tfplan
+          } 2>&1 | tee registro/2_ecr.txt
 
       - name: Publicar imágenes de los servicios
         run: |
-          REGISTRO="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com"
+          set -o pipefail
+          REGISTRO="${CUENTA}.dkr.ecr.us-east-1.amazonaws.com"
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin "$REGISTRO"
           construida=false
           for s in svc-profile svc-accounts svc-transfers svc-budgets svc-admin; do
@@ -191,30 +252,61 @@ jobs:
             fi
             docker tag qwallet-hola:local "${REGISTRO}/qwallet/${s}:${TF_VAR_image_tag}"
             docker push --quiet "${REGISTRO}/qwallet/${s}:${TF_VAR_image_tag}"
-          done
+            echo "${s}: publicada ${TF_VAR_image_tag}"
+          done 2>&1 | tee registro/3_imagenes.txt
 
       - name: Plan completo y revisión de destrucciones
         run: |
-          terraform -chdir=infra plan -out=tfplan
-          terraform -chdir=infra show -json tfplan > plan.json
-          python3 infra/scripts/revisar_plan.py plan.json infra/destrucciones_aprobadas.txt
+          set -o pipefail
+          {
+            terraform -chdir=infra plan -no-color -out=tfplan
+            terraform -chdir=infra show -json tfplan > plan.json
+            python3 infra/scripts/revisar_plan.py plan.json infra/destrucciones_aprobadas.txt
+          } 2>&1 | tee registro/4_plan.txt
 
       - name: Aplicar
-        run: terraform -chdir=infra apply tfplan
+        run: |
+          set -o pipefail
+          terraform -chdir=infra apply -no-color tfplan 2>&1 | tee registro/5_apply.txt
 
       - name: Verificar controles (EVD-3-11, EVD-3-12, EVD-3-13, EVD-5-04)
         env:
           SALIDA: evidencias
         run: |
-          infra/scripts/verificar_aws.sh
-          {
-            echo "### Verificación"
-            for f in evidencias/*.txt; do echo "- $(basename "$f")"; done
-          } >> "$GITHUB_STEP_SUMMARY"
+          set -o pipefail
+          infra/scripts/verificar_aws.sh 2>&1 | tee registro/6_verificacion.txt
 
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      - name: Publicar resultado en el issue "Evidencias AWS"
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESULTADO: ${{ job.status }}
+        run: |
+          for f in registro/*.txt evidencias/*.txt; do
+            [ -f "$f" ] && sed -i "s/${CUENTA}/************/g" "$f"
+          done
+          {
+            echo "## Despliegue ${RESULTADO} · commit ${GITHUB_SHA::7} · $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo "Ejecución: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            for f in evidencias/*.txt registro/*.txt; do
+              [ -f "$f" ] || continue
+              echo; echo "<details><summary>$(basename "$f")</summary>"; echo; echo '```'
+              tail -c 7000 "$f"; echo '```'; echo "</details>"
+            done
+          } > comentario.md
+          head -c 64000 comentario.md > c.md
+          n=$(gh issue list --repo "${{ github.repository }}" --state open --search "Evidencias AWS in:title" --json number --jq '.[0].number')
+          if [ -z "$n" ]; then
+            n=$(gh issue create --repo "${{ github.repository }}" --title "Evidencias AWS" \
+              --body "Resultados automáticos del despliegue y la verificación (sin número de cuenta)." | grep -o '[0-9]*$')
+          fi
+          gh issue comment "$n" --repo "${{ github.repository }}" --body-file c.md
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: evidencias-aws
-          path: evidencias/
+          path: |
+            evidencias/
+            registro/
           retention-days: 90

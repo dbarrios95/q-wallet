@@ -80,13 +80,13 @@ data "aws_iam_policy_document" "kms_datos" {
 }
 
 resource "aws_kms_key" "datos" {
-  description             = "Q-Wallet: cifrado de datos en reposo (DynamoDB, logs, CloudTrail, Lambda)"
-  key_usage               = "ENCRYPT_DECRYPT"
+  description              = "Q-Wallet: cifrado de datos en reposo (DynamoDB, logs, CloudTrail, Lambda)"
+  key_usage                = "ENCRYPT_DECRYPT"
   customer_master_key_spec = "SYMMETRIC_DEFAULT"
-  enable_key_rotation     = true
-  rotation_period_in_days = 365
-  deletion_window_in_days = 30
-  policy                  = data.aws_iam_policy_document.kms_datos.json
+  enable_key_rotation      = true
+  rotation_period_in_days  = 365
+  deletion_window_in_days  = 30
+  policy                   = data.aws_iam_policy_document.kms_datos.json
 }
 
 resource "aws_kms_alias" "datos" {

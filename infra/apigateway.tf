@@ -10,11 +10,11 @@ locals {
   # Árbol de recursos por nivel (la API no permite referenciar un for_each a sí mismo).
   recursos_n1 = toset(["me", "users", "pin", "accounts", "transfers", "beneficiaries", "categories", "budgets", "admin"])
   recursos_n2 = {
-    "users/search"          = { padre = "users", parte = "search" }
-    "accounts/{accountId}"  = { padre = "accounts", parte = "{accountId}" }
-    "transfers/{id}"        = { padre = "transfers", parte = "{id}" }
-    "admin/users"           = { padre = "admin", parte = "users" }
-    "admin/audit"           = { padre = "admin", parte = "audit" }
+    "users/search"         = { padre = "users", parte = "search" }
+    "accounts/{accountId}" = { padre = "accounts", parte = "{accountId}" }
+    "transfers/{id}"       = { padre = "transfers", parte = "{id}" }
+    "admin/users"          = { padre = "admin", parte = "users" }
+    "admin/audit"          = { padre = "admin", parte = "audit" }
   }
   recursos_n3 = {
     "accounts/{accountId}/transactions" = { padre = "accounts/{accountId}", parte = "transactions" }
@@ -101,11 +101,11 @@ locals {
 }
 
 resource "aws_api_gateway_authorizer" "cognito" {
-  name                   = "${local.prefijo}-cognito"
-  rest_api_id            = aws_api_gateway_rest_api.api.id
-  type                   = "COGNITO_USER_POOLS"
-  provider_arns          = [aws_cognito_user_pool.usuarios.arn]
-  identity_source        = "method.request.header.Authorization"
+  name                             = "${local.prefijo}-cognito"
+  rest_api_id                      = aws_api_gateway_rest_api.api.id
+  type                             = "COGNITO_USER_POOLS"
+  provider_arns                    = [aws_cognito_user_pool.usuarios.arn]
+  identity_source                  = "method.request.header.Authorization"
   authorizer_result_ttl_in_seconds = 0
 }
 
@@ -204,16 +204,16 @@ resource "aws_api_gateway_stage" "v1" {
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.apigateway.arn
     format = jsonencode({
-      requestId      = "$context.requestId"
-      ip             = "$context.identity.sourceIp"
-      usuario        = "$context.authorizer.claims.sub"
-      metodo         = "$context.httpMethod"
-      ruta           = "$context.resourcePath"
-      estado         = "$context.status"
-      error          = "$context.error.responseType"
-      latenciaMs     = "$context.responseLatency"
-      tiempo         = "$context.requestTime"
-      waf            = "$context.wafResponseCode"
+      requestId  = "$context.requestId"
+      ip         = "$context.identity.sourceIp"
+      usuario    = "$context.authorizer.claims.sub"
+      metodo     = "$context.httpMethod"
+      ruta       = "$context.resourcePath"
+      estado     = "$context.status"
+      error      = "$context.error.responseType"
+      latenciaMs = "$context.responseLatency"
+      tiempo     = "$context.requestTime"
+      waf        = "$context.wafResponseCode"
     })
   }
 
