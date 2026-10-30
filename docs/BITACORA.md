@@ -19,7 +19,8 @@
 - EVD-3-10: PR #37 (rama `demo/compuerta-sca-zod`) bajó zod a 4.6.5 en services; la etapa SCA falló. Se cerró sin merge; la rama no se borró.
 - Decisiones de Daniel (30-oct): tope Q5,000.00 por transferencia y saldo inicial simulado Q1,000.00; excepciones de HAL-02 y HAL-03 aprobadas hasta 28-nov; Dependency-Check y Snyk opcionales; borrar `services/hola` en el bloque 4 con respaldo. Decisiones de Claude: cambiar un PIN existente queda fuera del MVP (409); Trivy y gitleaks como binarios verificados por SHA-256 en lugar de acciones de terceros; eslint no se usa en services (tsc + Semgrep + CodeQL); Dependency-Check y Snyk solo con llaves.
 - Problemas: los logs y artefactos de Actions no se pueden descargar desde la sesión (bloqueo del almacenamiento de Azure); por eso los flujos publican el detalle en comentarios. La prueba de humo necesitó HTTP/1.1, la cabecera de trazas y las variables `AWS_LAMBDA_LOG_GROUP_NAME`/`AWS_LAMBDA_LOG_STREAM_NAME`.
-- Siguiente paso: merge del PR #36 (despliega el código real), build nativo de la app con minSdk 29, bloque 4.
+- Validación de la app (Daniel, 30-oct): `npx expo prebuild --clean` + `npx expo run:android --variant release` compiló con minSdk 29 y R8 y la app abre en el emulador (EVD-3-17, pantalla de inicio de sesión; sin datos sensibles).
+- Siguiente paso: merge del PR #36 (despliega el código real) y bloque 4.
 
 ### 2026-10-30 — Daniel — CloudShell, MFA y presupuesto de la cuenta
 - Qué se hizo: confirmación por CLI, sin capturas. `aws iam get-account-summary` → `AccountMFAEnabled = 1` (MFA de la cuenta raíz activo). `aws budgets describe-budgets` → presupuesto "My Monthly Cost Budget - Q-wallet", límite US$5.0, gastado US$0.0.

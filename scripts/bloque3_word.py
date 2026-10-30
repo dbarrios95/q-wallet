@@ -362,10 +362,10 @@ tabla(
     "Controles de hardening de la app Android",
     ["Control", "MASVS", "Cómo", "Estado"],
     [
-        ["Android 10 o superior (minSdk 29)", "NETWORK", "expo-build-properties en app.json", "Configurado (bloque 3)"],
-        ["Sin tráfico HTTP en claro", "NETWORK", "usesCleartextTraffic: false", "Configurado (bloque 3)"],
-        ["Ofuscación y reducción con R8 en la versión de release", "RESILIENCE", "enableMinifyInReleaseBuilds y enableShrinkResourcesInReleaseBuilds", "Configurado (bloque 3)"],
-        ["Inspector de red de desarrollo apagado", "CODE", "networkInspector: false", "Configurado (bloque 3)"],
+        ["Android 10 o superior (minSdk 29)", "NETWORK", "expo-build-properties en app.json", "Configurado y compilado"],
+        ["Sin tráfico HTTP en claro", "NETWORK", "usesCleartextTraffic: false", "Configurado y compilado"],
+        ["Ofuscación y reducción con R8 en la versión de release", "RESILIENCE", "enableMinifyInReleaseBuilds y enableShrinkResourcesInReleaseBuilds", "Configurado y compilado"],
+        ["Inspector de red de desarrollo apagado", "CODE", "networkInspector: false", "Configurado y compilado"],
         ["Sin respaldo de datos de la app", "STORAGE", "android.allowBackup: false", "Implementado"],
         ["Bloqueo de capturas de pantalla (CTRL-22)", "PLATFORM", "FLAG_SECURE en transferir, desbloquear y perfil", "Implementado"],
         ["Validación de formularios con zod estricto", "CODE", "login y transferencia; zod 4.6.7 (HAL-01)", "Implementado"],
@@ -378,9 +378,9 @@ tabla(
     tam=9,
     nota_txt=(
         "MASVS = OWASP Mobile Application Security Verification Standard 2.1.0. Lo "
-        "configurado en el bloque 3 se aplica al generar el proyecto nativo; falta comprobarlo "
-        "con una compilación de release en el equipo de desarrollo y con MobSF (evidencia "
-        "EVD-3-07)."
+        "configurado en el bloque 3 se aplica al generar el proyecto nativo; el 30 de octubre "
+        "compilamos la versión de release con esa configuración y la app abrió en el emulador "
+        "(EVD-3-17). El análisis del APK con MobSF queda para la Fase 4 (EVD-3-07)."
     ),
 )
 

@@ -111,7 +111,7 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 |---|---|
 | compileSdk | 36 |
 | targetSdk | 36 |
-| minSdk | **29** (decisión 28-oct-2026; aplicado el 30-oct en `app.json` con `expo-build-properties`, falta validar con build nativo) |
+| minSdk | **29** (decisión 28-oct-2026; aplicado el 30-oct en `app.json` con `expo-build-properties`; build de release validado el 30-oct, EVD-3-17) |
 | Kotlin | 2.1.20 |
 | Gradle | 9.3.1 |
 | Metro | 0.84.5 |
@@ -435,7 +435,7 @@ GEMINI.md
 | Fase actual | Entrega 2 (sáb 7-nov-2026) = Fase 2; en paralelo Fases 3 a 6 para la entrega final. **Arranque y plan por bloques en `docs/ESTADO.md`** |
 | Versión de la app | Expo SDK 57 (React Native 0.86.3, TS strict), NativeWind 4.2.7, Tailwind 3.4.19, Reanimated 4, expo-router, freeRASP 5.2.2, 8 pantallas simuladas; minSdk 29, R8 en release, zod 4.6.7 (bloque 3) |
 | Completado | Entrega 1 (17-oct). 28-oct: forma de trabajo por bloques. **29-oct, bloque 1 (PR #22):** Terraform de toda la arquitectura en `/infra` (KMS, 8 tablas DynamoDB, Cognito con PKCE y MFA, API Gateway solo TLS 1.3 con authorizer en 18 rutas, 5 Lambdas en contenedor con un rol por función, ECR, CloudTrail, WAF apagable); bootstrap OIDC para CloudShell; flujo `infra.yml` (fmt, validate, Checkov, plan en PR, despliegue con revisión de destrucciones, verificación automática de TLS, IAM y cifrado); imagen provisional `services/hola`; Word de las secciones 4.1, 4.2 y 4.5 (`docs/entregas/Entrega2_Seccion_4_Arquitectura_Controles.docx`, 13 págs.); figura EVD-3-08. Checkov: 282 pasan, 0 fallan, 39 omitidas con motivo. `terraform validate` en verde en GitHub Actions. **30-oct, bloque 2:** presentación de la Entrega 2 en Claude Slides (5 diapositivas, ~5 min, notas del orador; guion y cifras en `docs/entregas/Entrega2_Presentacion.md`) **30-oct, bloque 3 (PR #36):** código real de las 5 Lambdas con CTRL-01 a 06, 09, 13, 14, 18 y 23 y 60 pruebas vitest; flujo `devsecops.yml` (Semgrep + 7 reglas propias, CodeQL, npm audit con compuerta y excepciones, Trivy + SBOM, gitleaks); `infra.yml` con imágenes reales, prueba de humo y Trivy; HAL-01 a HAL-05; EVD-3-10 (PR #37); minSdk 29; Word de 3.4, 3.5, 4.3, 4.4 y 4.6 (12 págs.) |
-| En curso | Bloques 1, 2 y 3 terminados (bloque 3 espera merge del PR #36). Siguiente: build nativo de la app con minSdk 29, ensayar la presentación del 7-nov y bloque 4 |
+| En curso | Bloques 1, 2 y 3 terminados (bloque 3 espera merge del PR #36). Build de release de la app validado (EVD-3-17). Siguiente: ensayar la presentación del 7-nov y bloque 4 |
 | Siguiente paso / Pendientes | Ver `docs/ESTADO.md`. Arrastrados: texto oficial de JM-98-2025; Findex 23 %; excepciones SCA de HAL-02 y HAL-03 vencen el 28-nov; borrar `services/hola` (bloque 4, con respaldo); PR de Dependabot de versión; Decreto 57-2008 oficial |
 | Regla de trabajo | Claude hace rama, commit, push y PR; Daniel hace merge. Claude no borra nada sin preguntar y respaldar (`CLAUDE.md`) |
 | Bloqueos | Ninguno. Confirmar AWS WAF en el plan gratuito (ECR ya funciona). Los logs y artefactos de Actions no se pueden leer desde las sesiones de Claude: el flujo publica los resultados como comentario del PR y en el issue "Evidencias AWS" |
