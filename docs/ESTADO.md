@@ -2,7 +2,7 @@
 
 > Punto de arranque de cada chat. Se reescribe al cerrar cada bloque. Máximo una página.
 
-**Actualizado:** 30-oct-2026 · **Hoy toca:** cerrar el primer despliegue (dominio de Cognito marcado como dañado, ver "Despliegue") y luego bloque 3
+**Actualizado:** 30-oct-2026 · **Hoy toca:** cerrar el primer despliegue (revisar el 403 de la API sin token, ver "Despliegue") y luego bloque 3
 
 ## Fechas
 | Hito | Fecha | Fase del enunciado |
@@ -26,7 +26,8 @@
 - Se descartó una cuenta de la "nueva experiencia" de AWS (proyectos con Builder ID): sus SCP administradas por AWS prohíben `iam:*Provider*` (no se puede crear el OIDC) y bloquearon `s3:CreateBucket`. No se creó nada en ella.
 - Hecho por Daniel: bootstrap en CloudShell **OK** (bucket del estado, OIDC, límite de permisos, roles `qwallet-gha-plan` y `qwallet-gha-despliegue`). Secreto `AWS_ACCOUNT_ID` y entorno `dev` (solo `main`) configurados por Daniel [VERIFICAR que el entorno quedó limitado a `main`].
 - OIDC resuelto (PR #30: GitHub manda el `sub` con números fijos del dueño y del repo). El "Run workflow" del 30-oct ya entró a AWS y creó casi todo: imágenes en ECR, llave KMS, tablas, Cognito, las 5 Lambdas, las 18 rutas y CloudTrail.
-- Permisos corregidos (PR #31). El siguiente despliegue se detuvo solo, como debe: Terraform quería borrar y recrear el dominio de Cognito porque quedó marcado como dañado ("tainted") en el intento anterior, aunque se creó bien. En lugar de borrarlo, el PR "fix/desmarcar-dominio-cognito" agrega `infra/desmarcar.txt` y un paso que lo marca como sano (`terraform untaint`, no toca AWS). Después del merge el despliegue corre solo.
+- Permisos corregidos (PR #31) y dominio de Cognito desmarcado sin borrarlo (PR #32).
+- **Primer despliegue completo (30-oct, ejecución 41092259904):** el apply creó toda la arquitectura. Verificación automática: menor privilegio (EVD-3-11), cifrado con la llave propia (EVD-5-04) y Cognito/API/CloudTrail (EVD-3-13) bien; TLS 1.3 aceptado. Dos avisos del script: TLS 1.2 marcado como aceptado (era un falso positivo: no se acordó cifrado) y `GET /me` sin token dio 403 en lugar de 401 (causa por confirmar). PR "fix/verificacion-tls-401" corrige la prueba de TLS y guarda el tipo de error de AWS.
 - Pendiente de Daniel: MFA de la cuenta raíz y presupuesto de US$5 en Budgets [VERIFICAR si ya se hicieron].
 - Evidencia EVD-1-03 (Entrega 1) quedó de la cuenta de Katherine; no se toca.
 
@@ -64,4 +65,4 @@
 - Pruebas en el teléfono (Frida, freeRASP): emulador en la computadora de Daniel o intento en GitHub Actions.
 
 ## Recursos AWS
-Cuenta de Daniel, us-east-1. Bootstrap (bucket del estado, OIDC, 4 políticas, 2 roles) y, desde el 30-oct, casi toda la arquitectura (despliegue parcial: falta el stage `v1` de API Gateway y el dominio de Cognito). Gasto esperado ~US$1 al mes (llave KMS); WAF ~US$8 al mes solo encendido.
+Cuenta de Daniel, us-east-1: bootstrap y toda la arquitectura desplegada el 30-oct (WAF apagado). Gasto esperado ~US$1 al mes (llave KMS); WAF ~US$8 al mes solo encendido.
