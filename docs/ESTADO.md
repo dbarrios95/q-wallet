@@ -37,6 +37,7 @@
    ```
    Resultado esperado: entre otras líneas, "== 6. Rol de pentest (solo lectura, rama main)" y "qwallet-gha-pentest: creado". No borra nada; es idempotente.
 3. En GitHub, pestaña Actions → flujo **pentest** → **Run workflow** (rama main) para generar EVD-4-01 (perímetro/Nmap), EVD-4-02 (ZAP) y EVD-3-09 (Prowler). Quedan en el issue "Evidencias Pentest". (También corre solo tras cada despliegue.)
+   - **Hecho (30-oct):** merge del bloque 4 (PR #40) y bootstrap del rol de pentest. La corrida #1 de `pentest.yml` dejó EVD-4-01 y EVD-4-02 correctas; EVD-3-09 (Prowler) salió vacío por un bug del flujo, corregido en el PR `fix/pentest-prowler-evidencia`. Al mergear ese fix y volver a correr `pentest.yml`, EVD-3-09 trae el resumen de Prowler.
 
 ## Antes (bloques 1 a 3, detalle en BITÁCORA)
 - Cuenta AWS de Daniel (`qwallet-umg`, us-east-1, Free plan, US$100 de crédito). Bootstrap OIDC hecho; MFA raíz y presupuesto de US$5 confirmados. Toda la arquitectura desplegada y verificada (EVD-3-11, 3-12, 3-13, 5-04 en el issue "Evidencias AWS"). Código real de las 5 Lambdas en producción (PR #36 merge).

@@ -3,6 +3,12 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-10-30 — Daniel — Claude (claude.ai), fix: Prowler (EVD-3-09) no generaba evidencia
+- Tras el merge del bloque 4, la primera corrida de `pentest.yml` (run #1) salió **Success**: EVD-4-01 (perímetro/Nmap: solo 443, TLS 1.3, 1.2 rechazado, todo 401 sin token) y EVD-4-02 (ZAP baseline: 0 High, 0 Medium, 1 Low = falta cabecera HSTS) quedaron bien. Pero **EVD-3-09 (Prowler) salió vacío** ("no se pudo resumir").
+- Causa: en el paso de Prowler el redirect `> prowler-out/consola.txt` se evaluaba antes de que existiera el directorio `prowler-out/`, así que bash fallaba al crear el archivo, Prowler no llegaba a correr y la consola quedaba vacía. Ese es el "exit code 1" del annotation (paso con `continue-on-error`, no tumbó el job).
+- Arreglo: `mkdir -p prowler-out evidencias` antes del comando; el fallback ya no intenta `tail` de un archivo inexistente. `scripts/prowler_resumen.py` ahora busca el CSV de forma recursiva (según la versión, Prowler lo anida). Probado en local con un CSV simulado.
+- Siguiente paso: merge; `pentest.yml` corre solo tras el próximo despliegue, o Daniel lo dispara a mano, y entonces EVD-3-09 sí trae el resumen de Prowler.
+
 ### 2026-10-30 — Daniel — Claude (claude.ai), bloque 4: pentest caja negra/gris, OWASP API Top 10 y arquitectura cloud
 - Fase / sección del informe: Fase 4; secciones 3.1, 3.2, 3.3 y 3.6.
 - Qué se hizo:
