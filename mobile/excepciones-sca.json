@@ -6,21 +6,24 @@
       "paquete": "decode-uri-component",
       "via": "expo-router 57 -> query-string 7.1.3",
       "motivo": "Denegación de servicio local al decodificar un enlace profundo malformado: solo congela la app de quien abre el enlace, no expone datos ni dinero. La corrección exige expo-router 58 (SDK 58). Mitigación: la app solo acepta el esquema qwallet:// con rutas fijas.",
-      "revisarAntesDe": "2026-11-28"
+      "revisarAntesDe": "2026-11-28",
+      "soloIndirecta": true
     },
     {
       "aviso": "GHSA-86w9-cpqp-85rv",
       "paquete": "node-forge",
       "via": "expo -> @expo/cli (herramienta de compilación)",
       "motivo": "Solo lo usa la herramienta de línea de comandos de Expo en la computadora de desarrollo (firma de actualizaciones OTA, que Q-Wallet no usa). No va dentro del APK.",
-      "revisarAntesDe": "2026-11-28"
+      "revisarAntesDe": "2026-11-28",
+      "soloIndirecta": true
     },
     {
       "aviso": "GHSA-mrhx-c7xc-m3w5",
       "paquete": "zod",
       "via": "expo -> @expo/cli -> zod 3.25.76",
       "motivo": "La copia vulnerable es la de la herramienta de compilación de Expo, no va en el APK. El zod que usa la app se subió a 4.6.7 (HAL-01).",
-      "revisarAntesDe": "2026-11-28"
+      "revisarAntesDe": "2026-11-28",
+      "soloIndirecta": true
     }
   ]
 }

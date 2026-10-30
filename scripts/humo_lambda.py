@@ -31,6 +31,9 @@ entregado = False
 
 
 class Api(BaseHTTPRequestHandler):
+    # El cliente nativo del runtime espera HTTP/1.1 con conexión persistente y las
+    # cabeceras completas de la Runtime API (incluida la de trazas).
+    protocol_version = "HTTP/1.1"
     def log_message(self, formato, *a):
         print(f"{SERVICIO}: runtime pidió {self.command} {self.path}", file=sys.stderr, flush=True)
 
@@ -43,6 +46,8 @@ class Api(BaseHTTPRequestHandler):
             self.send_header("Lambda-Runtime-Aws-Request-Id", "humo-0001")
             self.send_header("Lambda-Runtime-Deadline-Ms", "9999999999999")
             self.send_header("Lambda-Runtime-Invoked-Function-Arn", f"arn:aws:lambda:us-east-1:000000000000:function:qwallet-{SERVICIO}")
+            self.send_header("Lambda-Runtime-Trace-Id", "Root=1-00000000-000000000000000000000000;Parent=0000000000000000;Sampled=0")
+            self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(cuerpo)))
             self.end_headers()
             self.wfile.write(cuerpo)
@@ -50,6 +55,7 @@ class Api(BaseHTTPRequestHandler):
             # Segunda espera del runtime: no hay más eventos; se deja colgada hasta terminar.
             listo.wait(30)
             self.send_response(410)
+            self.send_header("Content-Length", "0")
             self.end_headers()
 
     def do_POST(self):
@@ -58,11 +64,15 @@ class Api(BaseHTTPRequestHandler):
         resultado["ruta"] = self.path
         resultado["cuerpo"] = datos
         self.send_response(202)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", "2")
         self.end_headers()
+        self.wfile.write(b"{}")
         listo.set()
 
 
-servidor = HTTPServer(("127.0.0.1", PUERTO), Api)
+from http.server import ThreadingHTTPServer
+servidor = ThreadingHTTPServer(("127.0.0.1", PUERTO), Api)
 threading.Thread(target=servidor.serve_forever, daemon=True).start()
 if not listo.wait(60):
     print(f"{SERVICIO}: FALLA (el runtime no respondió en 60 s)")

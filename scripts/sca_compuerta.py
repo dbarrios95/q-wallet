@@ -22,7 +22,8 @@ def main() -> int:
         for via in v.get("via", []):
             if isinstance(via, dict):
                 ghsa = via.get("url", "").rsplit("/", 1)[-1]
-                avisos.setdefault(ghsa, {"paquete": via.get("name", paquete), "severidad": via.get("severity"), "titulo": via.get("title", ""), "rango": via.get("range", "")})
+                a = avisos.setdefault(ghsa, {"paquete": via.get("name", paquete), "severidad": via.get("severity"), "titulo": via.get("title", ""), "rango": via.get("range", ""), "directa": False})
+                a["directa"] = a["directa"] or bool(v.get("isDirect")) and paquete == via.get("name", paquete)
 
     conteo = auditoria.get("metadata", {}).get("vulnerabilities", {})
     print(f"npm audit: {conteo}")
@@ -34,6 +35,9 @@ def main() -> int:
             e = excepciones.get(ghsa)
             if e is None:
                 estado = "BLOQUEA (sin excepción)"
+                bloqueantes += 1
+            elif e.get("soloIndirecta") and a["directa"]:
+                estado = "BLOQUEA (la excepción es solo para la copia indirecta y aparece como dependencia directa)"
                 bloqueantes += 1
             elif e["revisarAntesDe"] < hoy:
                 estado = f"BLOQUEA (excepción vencida el {e['revisarAntesDe']})"
