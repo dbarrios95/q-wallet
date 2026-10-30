@@ -27,7 +27,12 @@ def columna(campos, *candidatas):
 
 
 def main(directorio):
-    csvs = sorted(glob.glob(os.path.join(directorio, "*.csv")))
+    # Recursivo: según la versión, Prowler deja el CSV en la raíz o en un subdirectorio.
+    csvs = sorted(
+        glob.glob(os.path.join(directorio, "*.csv"))
+        + glob.glob(os.path.join(directorio, "**", "*.csv"), recursive=True)
+    )
+    csvs = sorted(set(csvs))
     if not csvs:
         print("No se encontraron CSV de Prowler.", file=sys.stderr)
         return 2
