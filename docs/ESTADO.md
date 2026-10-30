@@ -26,15 +26,13 @@
 - **Flujo `devsecops.yml`**: pruebas, Semgrep (608 reglas + 7 propias, `semgrep --test` 7/7), CodeQL (103 reglas), npm audit con compuerta y excepciones con vencimiento, Trivy + SBOM, gitleaks (89 commits). Todo en 0 hallazgos graves. Corre en cada PR, en main y cada lunes. Resultados en el comentario del PR y en el issue "Evidencias DevSecOps".
 - **`infra.yml`**: construye las 5 imágenes reales, prueba de humo con el runtime real (GET /me sin token → 401) y Trivy (24 HIGH → 0). Checkov: Terraform 282 pasan, Dockerfile 295 pasan, 0 fallan.
 - **Hallazgos**: HAL-01 zod 4.6.5 (corregido a 4.6.7), HAL-02 y HAL-03 (dependencias de Expo, aceptadas hasta 28-nov), HAL-04 textos falsos de Welcome (corregido), HAL-05 imagen base (corregido). EVD-3-10: PR #37 demostró que la compuerta bloquea zod 4.6.5 (cerrado sin merge, rama conservada).
-- **App**: minSdk 29, R8 y shrink en release, sin tráfico en claro, inspector de red apagado. Falta validarlo: el build del 30-oct se hizo desde `main`, sin los cambios de este PR (la bienvenida aún decía el texto viejo).
+- **App**: minSdk 29, R8 y shrink en release, sin tráfico en claro, inspector de red apagado. **Validado el 30-oct** con build de release desde la rama del PR: `app-release.apk` instalado y bienvenida con el texto corregido (EVD-3-17).
 - **IAM**: svc-profile puede crear la cuenta inicial (PutItem en `cuentas` y `movimientos`). Lambdas con `COGNITO_CLIENT_ID` y `API_SCOPE`. Cambios en sitio, sin destrucciones.
 - **Word** `docs/entregas/Final_Secciones_3-4_3-5_4-3_4-4_4-6_DevSecOps.docx` (12 págs., Tablas 30–37, Figura 8, validado y renderizado). Script `scripts/bloque3_word.py`.
 
 ## Lo que Daniel hace a mano (bloque 3)
 1. Revisar y dar **Merge al PR #36**. El despliegue publica las imágenes reales y verifica AWS (issue "Evidencias AWS").
-2. Validar la app desde la rama del PR (PowerShell normal, emulador abierto):
-   `cd C:\dev\q-wallet; git fetch; git checkout feat/bloque3-lambdas-devsecops; git pull; . .\scripts\dev-env.ps1; cd mobile; npm install --legacy-peer-deps; npx expo prebuild --clean; npx expo run:android --variant release`
-   Resultado esperado: la bienvenida dice abajo "Conexión cifrada TLS 1.3 · Diseñada con referencia a la JM-98-2025". Captura → EVD-3-17.
+2. ~~Validar la app desde la rama del PR~~ Hecho (EVD-3-17). Para volver a `main` después del merge: `git checkout main; git pull`.
 
 ## Antes (bloques 1 y 2, detalle en BITÁCORA)
 - Cuenta AWS de Daniel (`qwallet-umg`, us-east-1, Free plan, US$100 de crédito). Bootstrap OIDC hecho; MFA raíz y presupuesto de US$5 confirmados. Primer despliegue completo y verificado el 30-oct (EVD-3-11, 3-12, 3-13, 5-04 en el issue "Evidencias AWS", #28).

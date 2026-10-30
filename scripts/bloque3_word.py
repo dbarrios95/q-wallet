@@ -362,14 +362,14 @@ tabla(
     "Controles de hardening de la app Android",
     ["Control", "MASVS", "Cómo", "Estado"],
     [
-        ["Android 10 o superior (minSdk 29)", "NETWORK", "expo-build-properties en app.json", "Configurado (bloque 3)"],
-        ["Sin tráfico HTTP en claro", "NETWORK", "usesCleartextTraffic: false", "Configurado (bloque 3)"],
-        ["Ofuscación y reducción con R8 en la versión de release", "RESILIENCE", "enableMinifyInReleaseBuilds y enableShrinkResourcesInReleaseBuilds", "Configurado (bloque 3)"],
-        ["Inspector de red de desarrollo apagado", "CODE", "networkInspector: false", "Configurado (bloque 3)"],
+        ["Android 10 o superior (minSdk 29)", "NETWORK", "expo-build-properties en app.json", "Configurado y compilado"],
+        ["Sin tráfico HTTP en claro", "NETWORK", "usesCleartextTraffic: false", "Configurado y compilado"],
+        ["Ofuscación y reducción con R8 en la versión de release", "RESILIENCE", "enableMinifyInReleaseBuilds y enableShrinkResourcesInReleaseBuilds", "Configurado y compilado"],
+        ["Inspector de red de desarrollo apagado", "CODE", "networkInspector: false", "Configurado y compilado"],
         ["Sin respaldo de datos de la app", "STORAGE", "android.allowBackup: false", "Implementado"],
         ["Bloqueo de capturas de pantalla (CTRL-22)", "PLATFORM", "FLAG_SECURE en transferir, desbloquear y perfil", "Implementado"],
         ["Validación de formularios con zod estricto", "CODE", "login y transferencia; zod 4.6.7 (HAL-01)", "Implementado"],
-        ["Textos de seguridad veraces", "PRIVACY", "pantalla de bienvenida (HAL-04)", "Corregido"],
+        ["Textos de seguridad veraces", "PRIVACY", "pantalla de bienvenida (HAL-04)", "Corregido y compilado"],
         ["OAuth2 con PKCE y MFA (CTRL-18)", "AUTH", "expo-auth-session contra Cognito", "Pendiente: al conectar la app"],
         ["Tokens en el Keystore con biometría (CTRL-07)", "STORAGE", "expo-secure-store con requireAuthentication", "Pendiente: al conectar la app"],
         ["Pinning de llaves públicas (CTRL-08)", "NETWORK", "react-native-ssl-public-key-pinning", "Pendiente: al conectar la app"],
@@ -378,8 +378,10 @@ tabla(
     tam=9,
     nota_txt=(
         "MASVS = OWASP Mobile Application Security Verification Standard 2.1.0. Lo "
-        "configurado en el bloque 3 se aplica al generar el proyecto nativo; falta comprobarlo "
-        "con una compilación de release (EVD-3-17) y con MobSF en la Fase 4 (EVD-3-07)."
+        "configurado en el bloque 3 se aplica al generar el proyecto nativo; el 30 de octubre "
+        "compilamos la versión de release con esa configuración, se instaló en el emulador y "
+        "la bienvenida ya muestra el texto corregido (EVD-3-17). El análisis del APK con MobSF "
+        "queda para la Fase 4 (EVD-3-07)."
     ),
 )
 
