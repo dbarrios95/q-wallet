@@ -39,9 +39,9 @@
 ## Decisiones tomadas (29-oct-2026)
 - El merge del PR cuenta como aprobación del despliegue (sin aprobación manual en el entorno `dev`). En el Word final, ajustar el texto del plan de RSK-32 (sección 2.5.5) a "PR revisado y aprobado por merge + revisión automática de destrucciones".
 - ECR conserva las 5 imágenes más recientes por servicio y borra solas las más viejas.
+- Las entregas parciales no llevan portada ni índice; solo el informe final.
 
 ## Decisiones pendientes
-- Ponderación: el enunciado da 4 puntos a cada componente y la rúbrica da 10 al informe y formato APA. `[VERIFICAR]` con el catedrático (ver `docs/enunciado/README.md`).
 - SIEM (bloque 5): Wazuh necesita 4 GB+ de RAM y no cabe en US$5; opción: CloudWatch + alarmas + CloudTrail.
 - Pruebas en el teléfono (Frida, freeRASP): emulador en la computadora de Daniel o intento en GitHub Actions.
 

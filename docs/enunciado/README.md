@@ -20,8 +20,5 @@ Fuente oficial de lo que pide el catedrático. Subidos por Daniel el 29-oct-2026
 
 En el Word, los títulos llevan mayúscula solo en la primera palabra y en nombres propios (CONTEXTO, sección 9). Ejemplo: "4.5 Hardening de infraestructura cloud".
 
-## Ponderación: el enunciado y la rúbrica no coinciden
-- **Enunciado (sección 4):** 5 componentes de 4 puntos cada uno (riesgos y activos; arquitectura cloud y DevSecOps; ciberdefensa; ciberseguridad; informe técnico y APA).
-- **Rúbrica (docx):** agrupa riesgos + arquitectura en 5 puntos, ciberdefensa + ciberseguridad en 5 puntos e **informe técnico y formato APA 7 en 10 puntos**.
-- `[VERIFICAR]` con el catedrático cuál manda. Mientras tanto se trabaja para cumplir las dos: el informe y su formato pesan entre 4 y 10 de 20.
-- Niveles de la rúbrica: Excelente 100 %, Bueno 80 %, Aceptable 60 %, Deficiente 40 %, No aceptable 10 %.
+## Regla de las entregas parciales
+Las entregas parciales (por fase) **no llevan portada ni índice**: se agregan solo en el informe final, cuando el proyecto esté terminado (indicación de Daniel, 29-oct-2026).

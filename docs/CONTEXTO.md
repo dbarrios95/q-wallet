@@ -22,7 +22,7 @@
 | Presentación | Sí, **sin demo en vivo** → toda prueba debe quedar en captura o video |
 | Informe | Microsoft Word, formato UMG + APA 7 |
 
-### Ponderación (4 pts c/u según el enunciado; la rúbrica da 10 al informe: ver `docs/enunciado/README.md`)
+### Ponderación (4 pts c/u)
 Enunciado, rúbrica e infografía oficiales en `docs/enunciado/` (subidos el 29-oct-2026).
 
 1. Análisis de Riesgos y Activos — inventario ISO 27001, STRIDE/DREAD, 7 capas, matriz de calor y tratamiento.
@@ -404,7 +404,8 @@ GEMINI.md
 - Se aplica con `scripts/entrega1_estilos.py` (después de generar el Word y antes de actualizar el índice). Todo Word nuevo del proyecto sigue estas reglas.
 - Títulos con la redacción del esquema del enunciado (Opción A), con mayúscula solo en la primera palabra: "1.1 Contexto de la aplicación móvil", "1.4 Normativas y estándares", "2.1 Inventario de activos (ISO 27001)", "2.3 Modelado de amenazas (STRIDE)", "2.4 Clasificación de riesgos (DREAD)", "Índice general".
 - Tablas y figuras numeradas en estilo APA 7. Referencias en APA 7 con sangría francesa.
-- Estructura obligatoria: la del enunciado, **Opción A**, sin renumerar secciones.
+- Estructura obligatoria: la del enunciado, **Opción A**, sin renumerar secciones (lista completa en `docs/enunciado/README.md`).
+- **Decisión 29-oct-2026 (Daniel):** las entregas parciales no llevan portada ni índice; solo el informe final.
 
 ---
 
