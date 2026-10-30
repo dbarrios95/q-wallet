@@ -29,7 +29,7 @@
 - Permisos corregidos (PR #31) y dominio de Cognito desmarcado sin borrarlo (PR #32).
 - **Primer despliegue completo y verificado (30-oct, ejecución 41094572066): 0 fallas.** EVD-3-11 (menor privilegio), EVD-3-12 (TLS 1.3 aceptado, TLS 1.2 rechazado, `GET /me` sin token = 401 `UnauthorizedException` del authorizer; ruta inexistente = 403), EVD-3-13 (Cognito, 18 rutas con authorizer, CloudTrail) y EVD-5-04 (cifrado con la llave propia). Evidencias en el issue "Evidencias AWS" (#28). Ya se pueden usar en el Word de la sección 4 y en la diapositiva 5.
 - Pendiente: quitar la línea de `infra/desmarcar.txt` en el bloque 3 (ya no hace falta).
-- Pendiente de Daniel: MFA de la cuenta raíz y presupuesto de US$5 en Budgets [VERIFICAR si ya se hicieron].
+- MFA de la cuenta raíz activo y presupuesto mensual de US$5 creado ("My Monthly Cost Budget - Q-wallet"), confirmados el 30-oct por CLI en CloudShell (`AccountMFAEnabled = 1`; gasto US$0.0).
 - Evidencia EVD-1-03 (Entrega 1) quedó de la cuenta de Katherine; no se toca.
 
 ## Qué dejó el bloque 2

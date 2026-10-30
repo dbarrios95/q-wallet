@@ -3,6 +3,10 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-10-30 — Daniel — CloudShell, MFA y presupuesto de la cuenta
+- Qué se hizo: confirmación por CLI, sin capturas. `aws iam get-account-summary` → `AccountMFAEnabled = 1` (MFA de la cuenta raíz activo). `aws budgets describe-budgets` → presupuesto "My Monthly Cost Budget - Q-wallet", límite US$5.0, gastado US$0.0.
+- Archivos: `docs/ESTADO.md`, `docs/BITACORA.md`.
+
 ### 2026-10-30 — Daniel — Claude (claude.ai), verificación del despliegue sin fallas
 - Qué se hizo: después del merge del PR #33, el despliegue (ejecución 41094572066) terminó en verde con 0 fallas. EVD-3-12: TLS 1.3 aceptado; TLS 1.2 rechazado (sin cifrado acordado); `GET /me` sin token = 401 `UnauthorizedException` (authorizer de Cognito); ruta inexistente = 403 `MissingAuthenticationTokenException`.
 - Lectura del 403 anterior: la prueba corrió segundos después de crear la etapa `v1`; la etapa todavía no estaba lista y respondía como ruta inexistente. Hoy responde 401, como dice el informe.
