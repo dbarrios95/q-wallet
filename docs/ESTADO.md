@@ -2,7 +2,7 @@
 
 > Punto de arranque de cada chat. Se reescribe al cerrar cada bloque. Máximo una página.
 
-**Actualizado:** 30-oct-2026 · **Hoy toca:** cerrar el primer despliegue (revisar el 403 de la API sin token, ver "Despliegue") y luego bloque 3
+**Actualizado:** 30-oct-2026 · **Hoy toca:** bloque 3 (primer despliegue cerrado, ver "Despliegue")
 
 ## Fechas
 | Hito | Fecha | Fase del enunciado |
@@ -27,7 +27,8 @@
 - Hecho por Daniel: bootstrap en CloudShell **OK** (bucket del estado, OIDC, límite de permisos, roles `qwallet-gha-plan` y `qwallet-gha-despliegue`). Secreto `AWS_ACCOUNT_ID` y entorno `dev` (solo `main`) configurados por Daniel [VERIFICAR que el entorno quedó limitado a `main`].
 - OIDC resuelto (PR #30: GitHub manda el `sub` con números fijos del dueño y del repo). El "Run workflow" del 30-oct ya entró a AWS y creó casi todo: imágenes en ECR, llave KMS, tablas, Cognito, las 5 Lambdas, las 18 rutas y CloudTrail.
 - Permisos corregidos (PR #31) y dominio de Cognito desmarcado sin borrarlo (PR #32).
-- **Primer despliegue completo (30-oct, ejecución 41092259904):** el apply creó toda la arquitectura. Verificación automática: menor privilegio (EVD-3-11), cifrado con la llave propia (EVD-5-04) y Cognito/API/CloudTrail (EVD-3-13) bien; TLS 1.3 aceptado. Dos avisos del script: TLS 1.2 marcado como aceptado (era un falso positivo: no se acordó cifrado) y `GET /me` sin token dio 403 en lugar de 401 (causa por confirmar). PR "fix/verificacion-tls-401" corrige la prueba de TLS y guarda el tipo de error de AWS.
+- **Primer despliegue completo y verificado (30-oct, ejecución 41094572066): 0 fallas.** EVD-3-11 (menor privilegio), EVD-3-12 (TLS 1.3 aceptado, TLS 1.2 rechazado, `GET /me` sin token = 401 `UnauthorizedException` del authorizer; ruta inexistente = 403), EVD-3-13 (Cognito, 18 rutas con authorizer, CloudTrail) y EVD-5-04 (cifrado con la llave propia). Evidencias en el issue "Evidencias AWS" (#28). Ya se pueden usar en el Word de la sección 4 y en la diapositiva 5.
+- Pendiente: quitar la línea de `infra/desmarcar.txt` en el bloque 3 (ya no hace falta).
 - Pendiente de Daniel: MFA de la cuenta raíz y presupuesto de US$5 en Budgets [VERIFICAR si ya se hicieron].
 - Evidencia EVD-1-03 (Entrega 1) quedó de la cuenta de Katherine; no se toca.
 

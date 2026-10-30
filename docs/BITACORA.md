@@ -3,6 +3,12 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-10-30 — Daniel — Claude (claude.ai), verificación del despliegue sin fallas
+- Qué se hizo: después del merge del PR #33, el despliegue (ejecución 41094572066) terminó en verde con 0 fallas. EVD-3-12: TLS 1.3 aceptado; TLS 1.2 rechazado (sin cifrado acordado); `GET /me` sin token = 401 `UnauthorizedException` (authorizer de Cognito); ruta inexistente = 403 `MissingAuthenticationTokenException`.
+- Lectura del 403 anterior: la prueba corrió segundos después de crear la etapa `v1`; la etapa todavía no estaba lista y respondía como ruta inexistente. Hoy responde 401, como dice el informe.
+- Archivos: `docs/ESTADO.md`, `docs/CONTEXTO.md` (sección 11), `docs/BITACORA.md`.
+- Siguiente paso: ensayar la presentación del 7-nov (la diapositiva 5 ya puede mostrar resultados reales) y bloque 3.
+
 ### 2026-10-30 — Daniel — Claude (claude.ai), primer despliegue completo
 - Qué se hizo: después del merge del PR #32, el despliegue (ejecución 41092259904) desmarcó el dominio de Cognito, aplicó el plan sin destrucciones y terminó el apply. Toda la arquitectura de `/infra` quedó en la cuenta de Daniel (WAF apagado). Evidencias publicadas en el issue "Evidencias AWS" (#28), sin número de cuenta.
 - Resultado de la verificación: EVD-3-11 bien (matriz rol x tabla, ninguna Lambda con Scan, límite de permisos en los 5 roles); EVD-5-04 bien (8 tablas y 6 grupos de log con la llave propia, rotación de 365 días); EVD-3-13 bien (MFA ON, solo flujo code, tokens de 15 min, las 18 rutas con authorizer, CloudTrail multirregión con validación). EVD-3-12: TLS 1.3 aceptado con política `SecurityPolicy_TLS13_1_3_2025_09` en modo STRICT.
