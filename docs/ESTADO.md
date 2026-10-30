@@ -2,7 +2,7 @@
 
 > Punto de arranque de cada chat. Se reescribe al cerrar cada bloque. Máximo una página.
 
-**Actualizado:** 30-oct-2026 · **Hoy toca:** primer despliegue (pasos manuales de abajo), ensayar la presentación y luego bloque 3
+**Actualizado:** 30-oct-2026 · **Hoy toca:** arreglar el primer despliegue (falló; ver "Despliegue" abajo) y luego bloque 3
 
 ## Fechas
 | Hito | Fecha | Fase del enunciado |
@@ -20,6 +20,14 @@
 | 4 | Pentest caja negra y gris, OWASP API Top 10, casos de abuso, perímetro | 4 | 3.1, 3.2, 3.3, 3.6 | ☐ |
 | 5 | WAF, RASP, SIEM, alertas, tratamiento, mapa de calor "después" | 6 | 5.1 a 5.6 | ☐ |
 | 6 | Word final, dictamen, presentación final | Todas | 0, 6 | ☐ |
+
+## Despliegue (30-oct-2026)
+- **Cuenta AWS nueva de Daniel** (`qwallet-umg`, registro clásico "AWS (advanced)", Free plan con US$100 de crédito, us-east-1). Ya no se usa la cuenta de Katherine.
+- Se descartó una cuenta de la "nueva experiencia" de AWS (proyectos con Builder ID): sus SCP administradas por AWS prohíben `iam:*Provider*` (no se puede crear el OIDC) y bloquearon `s3:CreateBucket`. No se creó nada en ella.
+- Hecho por Daniel: bootstrap en CloudShell **OK** (bucket del estado, OIDC, límite de permisos, roles `qwallet-gha-plan` y `qwallet-gha-despliegue`). Secreto `AWS_ACCOUNT_ID` y entorno `dev` (solo `main`) configurados por Daniel [VERIFICAR que el entorno quedó limitado a `main`].
+- **El primer "Run workflow" de `infra` falló.** Siguiente paso: leer el error (Daniel pega el paso en rojo y su log, porque los logs de Actions no se leen desde las sesiones de Claude), corregir en una rama y PR.
+- Pendiente de Daniel: MFA de la cuenta raíz y presupuesto de US$5 en Budgets [VERIFICAR si ya se hicieron].
+- Evidencia EVD-1-03 (Entrega 1) quedó de la cuenta de Katherine; no se toca.
 
 ## Qué dejó el bloque 2
 - Presentación Claude Slides "Q-Wallet — Entrega 2 (Fase 2)" en claude.ai, 5 diapositivas (~5 min), letra Inter y paleta de la app, notas del orador en cada una: (1) portada y resumen ejecutivo, (2) flujo de datos en 9 pasos con la Figura 7, (3) Zero Trust y matriz de menor privilegio, (4) cifrado AES-256 y TLS 1.3, (5) cómo se comprueba (Checkov 282/0, 11 de 14 requisitos, 3 pruebas automáticas) y Fase 3.
@@ -55,4 +63,4 @@
 - Pruebas en el teléfono (Frida, freeRASP): emulador en la computadora de Daniel o intento en GitHub Actions.
 
 ## Recursos AWS
-Ninguno desplegado. Gasto US$0. Región us-east-1. Al desplegar: ~US$1 al mes (llave KMS); WAF ~US$8 al mes solo encendido.
+Cuenta de Daniel: solo lo del bootstrap (bucket del estado, OIDC, 3 políticas, 2 roles). Nada de Terraform todavía. Gasto US$0. Región us-east-1. Al desplegar: ~US$1 al mes (llave KMS); WAF ~US$8 al mes solo encendido.
