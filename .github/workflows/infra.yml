@@ -107,17 +107,13 @@ jobs:
           curl -fsSLO "${base}/trivy_0.75.0_checksums.txt"
           grep " trivy_0.75.0_Linux-64bit.tar.gz$" trivy_0.75.0_checksums.txt | sha256sum -c -
           tar xzf trivy_0.75.0_Linux-64bit.tar.gz trivy
-          estado=0
+          for s in svc-profile svc-accounts svc-transfers svc-budgets svc-admin; do
+            ./trivy image --quiet --scanners vuln,secret --format json -o "trivy-${s}.json" "qwallet-${s}:prueba"
+          done
           {
             echo "== EVD-3-05 Trivy 0.75.0 sobre las imágenes de las Lambdas · $(date -u '+%Y-%m-%d %H:%M UTC') · commit ${GITHUB_SHA::7}"
             echo "Compuerta: falla con vulnerabilidades HIGH o CRITICAL que ya tienen corrección publicada."
-            for s in svc-profile svc-accounts svc-transfers svc-budgets svc-admin; do
-              echo; echo "== qwallet-${s}"
-              ./trivy image --scanners vuln,secret --severity LOW,MEDIUM,HIGH,CRITICAL --format table --exit-code 0 "qwallet-${s}:prueba"
-              ./trivy image --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 --quiet --format table "qwallet-${s}:prueba" || estado=1
-            done
-            echo; echo "Resultado de la compuerta: $([ $estado -eq 0 ] && echo PASA || echo FALLA)"
-            exit $estado
+            python3 scripts/trivy_resumen.py trivy-svc-*.json
           } 2>&1 | tee evidencias/EVD-3-05_trivy_imagenes.txt
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -127,6 +123,7 @@ jobs:
           path: |
             evidencias/
             registro/
+            trivy-*.json
           retention-days: 90
 
       - name: Resumen en el PR
@@ -149,7 +146,7 @@ jobs:
             done
             echo '```'; echo "</details>"
             echo; echo "<details><summary>Trivy sobre las imágenes (EVD-3-05)</summary>"; echo; echo '```'
-            [ -f evidencias/EVD-3-05_trivy_imagenes.txt ] && grep -E "^== |Total:|Resultado" evidencias/EVD-3-05_trivy_imagenes.txt | head -40
+            [ -f evidencias/EVD-3-05_trivy_imagenes.txt ] && head -c 20000 evidencias/EVD-3-05_trivy_imagenes.txt
             echo '```'; echo "</details>"
           } > comentario.md
           gh pr comment "${{ github.event.pull_request.number }}" --repo "${{ github.repository }}" --body-file comentario.md
