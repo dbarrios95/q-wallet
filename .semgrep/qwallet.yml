@@ -1,0 +1,73 @@
+# Reglas SAST propias de Q-Wallet (Semgrep). Convierten controles del diseño en
+# verificaciones automáticas: si alguien rompe un control, el flujo falla.
+rules:
+  - id: qwallet-dynamodb-scan
+    message: "CTRL-05: Scan recorre toda la tabla (exfiltración masiva). Use Query con la llave del usuario."
+    severity: ERROR
+    languages: [typescript, javascript]
+    pattern-either:
+      - pattern: new ScanCommand(...)
+      - pattern: new $LIB.ScanCommand(...)
+    paths:
+      include: ["/services/"]
+
+  - id: qwallet-log-cuerpo-solicitud
+    message: "CTRL-09: no registre el cuerpo ni las cabeceras de la solicitud (pueden traer PIN, tokens o datos personales)."
+    severity: ERROR
+    languages: [typescript, javascript]
+    pattern-either:
+      - pattern: console.$F(..., $E.body, ...)
+      - pattern: console.$F(..., $E.headers, ...)
+    paths:
+      include: ["/services/", "/mobile/"]
+      exclude: ["/services/comun/src/registro.ts"]
+
+  - id: qwallet-comparacion-pin-directa
+    message: "CTRL-02: el PIN se compara con verificarPin (scrypt + timingSafeEqual), nunca con === sobre texto o hash."
+    severity: ERROR
+    languages: [typescript, javascript]
+    pattern-either:
+      - pattern: $X.pin === $Y
+      - pattern: $X === $Y.pin
+      - pattern: $X.hash === $Y
+      - pattern: $X === $Y.hash
+    paths:
+      include: ["/services/"]
+
+  - id: qwallet-aleatorio-inseguro
+    message: "Use crypto.randomUUID o randomBytes; Math.random no sirve para identificadores ni secretos."
+    severity: ERROR
+    languages: [typescript, javascript]
+    pattern: Math.random()
+    paths:
+      include: ["/services/"]
+
+  - id: qwallet-cuerpo-sin-zod
+    message: "CTRL-04: el cuerpo se lee con leerCuerpo(event, esquema) (zod estricto), no con JSON.parse directo."
+    severity: ERROR
+    languages: [typescript, javascript]
+    pattern: JSON.parse($E.body)
+    paths:
+      include: ["/services/"]
+
+  - id: qwallet-zod-sin-strict
+    message: "CTRL-04: los objetos de entrada usan .strict() para rechazar campos no previstos (mass assignment)."
+    severity: WARNING
+    languages: [typescript]
+    patterns:
+      - pattern: z.object({...})
+      - pattern-not-inside: z.object({...}).strict()
+      - pattern-not-inside: z.object({...}).strict().$M(...)
+      - pattern-not-inside: z.object(...).strict()
+    paths:
+      include: ["/services/"]
+      exclude: ["*.test.ts"]
+
+  - id: qwallet-access-control-allow-origin
+    message: "CTRL-13: la API no publica CORS; solo la app Android la consume."
+    severity: ERROR
+    languages: [typescript, javascript]
+    pattern-regex: (?i)["']access-control-allow-origin["']
+    paths:
+      include: ["/services/"]
+      exclude: ["*.test.ts"]

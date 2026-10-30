@@ -73,25 +73,52 @@ jobs:
           pip install --quiet --break-system-packages checkov==3.3.22
           checkov --config-file infra/.checkov.yaml -d infra --output cli --output junitxml \
             --output-file-path console,evidencias 2>&1 | tee evidencias/EVD-3-06_checkov_terraform.txt
-          checkov -d services --framework dockerfile --skip-download --compact --output cli 2>&1 \
+          checkov -d services --framework dockerfile --skip-download --compact --skip-path services/hola --output cli 2>&1 \
             | tee evidencias/EVD-3-06_checkov_dockerfile.txt
 
       - name: Imagen base de Lambda fijada por digest (CTRL-11)
         run: |
           actual=$(docker buildx imagetools inspect public.ecr.aws/lambda/nodejs:24 --format '{{json .Manifest.Digest}}' | tr -d '"')
-          fijado=$(grep -o 'nodejs:24@sha256:[a-f0-9]*' services/hola/Dockerfile | cut -d@ -f2 || true)
           {
             echo "Digest publicado hoy: ${actual}"
-            echo "Digest en el Dockerfile: ${fijado:-ninguno}"
+            for f in services/svc-*/Dockerfile; do
+              fijado=$(grep -o 'nodejs:24@sha256:[a-f0-9]*' "$f" | cut -d@ -f2 || true)
+              echo "${f}: ${fijado:-ninguno}"
+              if [ -z "$fijado" ]; then echo "::error::${f} no fija la imagen base por digest"; exit 1; fi
+              if [ "$fijado" != "$actual" ]; then echo "::warning::${f}: hay una imagen base más nueva; actualizar el digest en un PR"; fi
+            done
           } | tee registro/2_digest.txt
-          if [ -z "$fijado" ]; then echo "::error::El Dockerfile no fija la imagen base por digest"; exit 1; fi
-          if [ "$fijado" != "$actual" ]; then echo "::warning::Hay una imagen base más nueva; actualizar el digest en un PR"; fi
 
-      - name: Construcción de la imagen (sin publicar)
+      - name: Construcción de las 5 imágenes (sin publicar)
         run: |
           set -o pipefail
-          docker buildx build --platform linux/amd64 --provenance=false --sbom=false --load \
-            -t qwallet-hola:prueba services/hola 2>&1 | tail -20 | tee registro/3_imagen.txt
+          for s in svc-profile svc-accounts svc-transfers svc-budgets svc-admin; do
+            echo "== ${s}"
+            docker buildx build --platform linux/amd64 --provenance=false --sbom=false --load \
+              -f "services/${s}/Dockerfile" -t "qwallet-${s}:prueba" services 2>&1 | tail -8
+            docker image inspect "qwallet-${s}:prueba" --format '   usuario={{.Config.User}} tamaño={{.Size}} bytes'
+          done 2>&1 | tee registro/3_imagenes.txt
+
+      - name: Trivy 0.75.0 sobre las imágenes (EVD-3-05)
+        run: |
+          set -o pipefail
+          base="https://github.com/aquasecurity/trivy/releases/download/v0.75.0"
+          curl -fsSLO "${base}/trivy_0.75.0_Linux-64bit.tar.gz"
+          curl -fsSLO "${base}/trivy_0.75.0_checksums.txt"
+          grep " trivy_0.75.0_Linux-64bit.tar.gz$" trivy_0.75.0_checksums.txt | sha256sum -c -
+          tar xzf trivy_0.75.0_Linux-64bit.tar.gz trivy
+          estado=0
+          {
+            echo "== EVD-3-05 Trivy 0.75.0 sobre las imágenes de las Lambdas · $(date -u '+%Y-%m-%d %H:%M UTC') · commit ${GITHUB_SHA::7}"
+            echo "Compuerta: falla con vulnerabilidades HIGH o CRITICAL que ya tienen corrección publicada."
+            for s in svc-profile svc-accounts svc-transfers svc-budgets svc-admin; do
+              echo; echo "== qwallet-${s}"
+              ./trivy image --scanners vuln,secret --severity LOW,MEDIUM,HIGH,CRITICAL --format table --exit-code 0 "qwallet-${s}:prueba"
+              ./trivy image --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 --quiet --format table "qwallet-${s}:prueba" || estado=1
+            done
+            echo; echo "Resultado de la compuerta: $([ $estado -eq 0 ] && echo PASA || echo FALLA)"
+            exit $estado
+          } 2>&1 | tee evidencias/EVD-3-05_trivy_imagenes.txt
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
@@ -120,6 +147,9 @@ jobs:
             for f in evidencias/EVD-3-06_checkov_terraform.txt evidencias/EVD-3-06_checkov_dockerfile.txt; do
               [ -f "$f" ] && grep -E "scan results|Passed checks|FAILED|Check: " "$f" | head -60
             done
+            echo '```'; echo "</details>"
+            echo; echo "<details><summary>Trivy sobre las imágenes (EVD-3-05)</summary>"; echo; echo '```'
+            [ -f evidencias/EVD-3-05_trivy_imagenes.txt ] && grep -E "^== |Total:|Resultado" evidencias/EVD-3-05_trivy_imagenes.txt | head -40
             echo '```'; echo "</details>"
           } > comentario.md
           gh pr comment "${{ github.event.pull_request.number }}" --repo "${{ github.repository }}" --body-file comentario.md
@@ -302,17 +332,14 @@ jobs:
           set -o pipefail
           REGISTRO="${CUENTA}.dkr.ecr.us-east-1.amazonaws.com"
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin "$REGISTRO"
-          construida=false
           for s in svc-profile svc-accounts svc-transfers svc-budgets svc-admin; do
             if aws ecr describe-images --repository-name "qwallet/${s}" --image-ids imageTag="$TF_VAR_image_tag" >/dev/null 2>&1; then
               echo "${s}: la imagen ${TF_VAR_image_tag} ya existe"
               continue
             fi
-            if [ "$construida" = false ]; then
-              docker buildx build --platform linux/amd64 --provenance=false --sbom=false --load -t qwallet-hola:local services/hola
-              construida=true
-            fi
-            docker tag qwallet-hola:local "${REGISTRO}/qwallet/${s}:${TF_VAR_image_tag}"
+            # Cada servicio con su propio Dockerfile (bloque 3): código real, no la imagen provisional.
+            docker buildx build --platform linux/amd64 --provenance=false --sbom=false --load \
+              -f "services/${s}/Dockerfile" -t "${REGISTRO}/qwallet/${s}:${TF_VAR_image_tag}" services
             docker push --quiet "${REGISTRO}/qwallet/${s}:${TF_VAR_image_tag}"
             echo "${s}: publicada ${TF_VAR_image_tag}"
           done 2>&1 | tee registro/3_imagenes.txt

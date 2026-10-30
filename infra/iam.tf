@@ -13,6 +13,10 @@ locals {
       { tabla = "perfiles", acciones = ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem"], indice = null },
       { tabla = "perfiles", acciones = ["dynamodb:Query"], indice = "por-telefono" },
       { tabla = "pin", acciones = ["dynamodb:PutItem", "dynamodb:UpdateItem"], indice = null },
+      # Bloque 3: al crear el perfil se crea en la misma transacción la cuenta con el saldo
+      # simulado y su movimiento inicial. Solo escritura (PutItem), sin lectura ni borrado.
+      { tabla = "cuentas", acciones = ["dynamodb:PutItem"], indice = null },
+      { tabla = "movimientos", acciones = ["dynamodb:PutItem"], indice = null },
       { tabla = "auditoria", acciones = ["dynamodb:PutItem"], indice = null },
     ]
     "svc-accounts" = [

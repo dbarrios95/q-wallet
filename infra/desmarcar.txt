@@ -5,6 +5,5 @@
 # Formato: una dirección de Terraform por línea, con un comentario del motivo.
 # Si la dirección no está marcada o no existe, se ignora. Quitar la línea cuando ya no haga falta.
 
-# 30-oct-2026: el dominio se creó bien (tiene distribución de CloudFront); quedó marcado
-# porque al rol de despliegue le faltaba cognito-idp:DescribeUserPoolDomain (PR #31).
-aws_cognito_user_pool_domain.login
+# (vacío) 30-oct-2026: se quitó aws_cognito_user_pool_domain.login; el primer despliegue
+# completo ya lo dejó sano (PR #34).
