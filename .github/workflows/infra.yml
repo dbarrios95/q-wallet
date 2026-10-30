@@ -274,6 +274,19 @@ jobs:
           echo "TF_VAR_image_tag=svc-$(git rev-parse HEAD:services | cut -c1-12)" >> "$GITHUB_ENV"
           terraform -chdir=infra init -no-color -backend-config="bucket=qwallet-tfstate-${CUENTA}" 2>&1 | tee registro/1_init.txt
 
+      - name: Marcar como sanos los recursos de infra/desmarcar.txt
+        run: |
+          set -o pipefail
+          grep -Ev '^[[:space:]]*(#|$)' infra/desmarcar.txt | while read -r r; do
+            if salida=$(terraform -chdir=infra untaint -no-color -allow-missing "$r" 2>&1); then
+              echo "${r}: marcado como sano"
+            elif echo "$salida" | grep -qi "not tainted"; then
+              echo "${r}: no estaba marcado"
+            else
+              echo "$salida"; exit 1
+            fi
+          done 2>&1 | tee registro/1b_desmarcar.txt
+
       - name: Repositorios de imágenes (primero, para poder publicar)
         run: |
           set -o pipefail

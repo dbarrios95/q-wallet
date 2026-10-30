@@ -3,6 +3,13 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-10-30 — Daniel — Claude (claude.ai), dominio de Cognito marcado como dañado
+- Qué se hizo: con los permisos del PR #31 y el bootstrap vuelto a correr, el despliegue del merge (ejecución 41088793070) se detuvo en "Plan completo y revisión de destrucciones": el plan reemplazaba `aws_cognito_user_pool_domain.login` porque Terraform lo dejó marcado como dañado ("tainted") cuando falló la verificación del intento anterior. El dominio sí se creó bien (ya tiene distribución de CloudFront). La revisión de destrucciones funcionó como se diseñó.
+- Decisión: no aprobar el reemplazo (borraría y volvería a crear un recurso sano). Se agregó `infra/desmarcar.txt` y el paso "Marcar como sanos los recursos de infra/desmarcar.txt" en el despliegue (`terraform untaint -allow-missing`, solo edita el estado; si el recurso no está marcado, sigue). Probado con un terraform falso en los tres casos (marcado, no marcado, error).
+- Archivos: `infra/desmarcar.txt` (nuevo), `.github/workflows/infra.yml`, `docs/ESTADO.md`, `docs/CONTEXTO.md` (sección 11), `docs/BITACORA.md`.
+- Nota: el plan del PR (rol de solo lectura) todavía muestra el reemplazo y sale en rojo, porque ese rol no puede editar el estado. Es esperado.
+- Siguiente paso: merge; el despliegue corre solo y se revisa el resultado en el issue "Evidencias AWS". Quitar la línea de `desmarcar.txt` cuando ya no haga falta.
+
 ### 2026-10-30 — Daniel — Claude (claude.ai), permisos del rol de despliegue
 - Qué se hizo: con la confianza OIDC corregida (PR #30) y el bootstrap vuelto a correr, el "Run workflow" (ejecución 41087212029) pasó credenciales, ECR, publicación de imágenes y plan sin destrucciones. El apply creó casi toda la arquitectura y falló en dos recursos:
   - `aws_api_gateway_stage.v1`: `Caller does not have permissions to create a Service Linked Role`. Al crear el primer stage con registro de acceso y X-Ray, API Gateway necesita su rol vinculado `AWSServiceRoleForAPIGateway` (se crea una vez por cuenta).
