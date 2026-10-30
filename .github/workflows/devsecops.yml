@@ -366,11 +366,12 @@ jobs:
               [ -f "$f" ] || continue
               echo; echo "<details><summary>$(basename "$f")</summary>"; echo; echo '```'
               # Las líneas largas de las tablas se cortan; el archivo completo queda en el artefacto.
-              cut -c1-220 "$f" | tail -c 9000; echo '```'; echo "</details>"
+              python3 -c 'import sys; t=open(sys.argv[1],encoding="utf-8",errors="replace").read().splitlines(); print("\n".join(l[:220] for l in t)[-8000:])' "$f"; echo '```'; echo "</details>"
             done
           } > resumen.md
-          head -c 64000 resumen.md > c.md
-          head -c 20000 resumen.md >> "$GITHUB_STEP_SUMMARY"
+          # Recorte por caracteres (no por bytes) para no partir una letra con tilde: GitHub
+          # rechaza un comentario con UTF-8 inválido o de más de 65 536 caracteres.
+          python3 -c 'import sys; t=open("resumen.md",encoding="utf-8").read(); open("c.md","w",encoding="utf-8").write(t[:60000]); open(sys.argv[1],"a",encoding="utf-8").write(t[:20000])' "$GITHUB_STEP_SUMMARY"
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             if [ "${{ github.event.pull_request.head.repo.full_name }}" = "${{ github.repository }}" ]; then
               gh pr comment "${{ github.event.pull_request.number }}" --repo "${{ github.repository }}" --body-file c.md

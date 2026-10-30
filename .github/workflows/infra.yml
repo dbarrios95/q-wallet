@@ -106,15 +106,13 @@ jobs:
           {
             echo "== EVD-3-15 Prueba de humo: runtime de Lambda de la imagen + handler, sin AWS · $(date -u '+%Y-%m-%d %H:%M UTC') · commit ${GITHUB_SHA::7}"
             echo "Evento: GET /me sin token. Esperado: 401 no_autenticado con cabeceras de seguridad."
-            docker run --rm --entrypoint /bin/sh qwallet-svc-profile:prueba -c \
-              'echo "entrypoint: $(head -c 600 /lambda-entrypoint.sh | tr "\n" " ")"; echo "runtime: $(ls /var/runtime | tr "\n" " ")"; ls /var/runtime/node_modules 2>&1 | head; id' 2>&1 | sed 's/^/   diag: /' 
             p=9101
             for s in svc-profile svc-accounts svc-transfers svc-budgets svc-admin; do
               python3 scripts/humo_lambda.py "$p" "$s" & srv=$!
               sleep 1
               docker run -d --name "humo-${s}" --network host \
                 -e AWS_LAMBDA_RUNTIME_API="127.0.0.1:${p}" -e AWS_REGION=us-east-1 -e AWS_DEFAULT_REGION=us-east-1 \
-                -e AWS_LAMBDA_FUNCTION_NAME="qwallet-${s}" -e AWS_LAMBDA_FUNCTION_MEMORY_SIZE=256 -e AWS_LAMBDA_FUNCTION_VERSION='$LATEST' \
+                -e AWS_LAMBDA_FUNCTION_NAME="qwallet-${s}" -e AWS_LAMBDA_LOG_GROUP_NAME="/aws/lambda/qwallet-${s}" -e AWS_LAMBDA_LOG_STREAM_NAME=humo -e AWS_LAMBDA_FUNCTION_MEMORY_SIZE=256 -e AWS_LAMBDA_FUNCTION_VERSION='$LATEST' \
                 -e AWS_ACCESS_KEY_ID=humo -e AWS_SECRET_ACCESS_KEY=humo -e SERVICIO="$s" \
                 -e USER_POOL_ID=us-east-1_Humo00000 -e COGNITO_CLIENT_ID=humo0000000000000000000000 -e API_SCOPE=qwallet/api \
                 -e TABLA_PERFILES=t -e TABLA_PIN=t -e TABLA_CUENTAS=t -e TABLA_MOVIMIENTOS=t -e TABLA_TRANSFERENCIAS=t \
