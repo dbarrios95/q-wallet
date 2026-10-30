@@ -49,11 +49,13 @@
 - Ensayar la presentación con cronómetro (notas del orador en cada diapositiva) y descargarla como PDF de respaldo.
 - La presentación es privada: si el catedrático necesita el enlace, compartirla desde el menú Compartir; si no, presentar desde la pantalla o el PDF.
 
+## Decisiones tomadas por Daniel (30-oct-2026, bloque 3)
+- Tope por transferencia Q5,000.00; saldo inicial simulado Q1,000.00.
+- Excepciones SCA de HAL-02 y HAL-03 aprobadas hasta el 28-nov-2026.
+- Dependency-Check y Snyk quedan opcionales (sin llaves).
+- Borrar `services/hola` en el bloque 4, con respaldo en la rama `respaldo/services-hola` y nota en BITÁCORA.
+
 ## Decisiones pendientes
-- Tope por transferencia (aplicado: Q5,000.00) y saldo inicial simulado (Q1,000.00).
-- Aprobar las excepciones SCA de HAL-02 y HAL-03 (vencen el 28-nov) o subir a Expo SDK 58.
-- Dependency-Check y Snyk: crear llaves (`NVD_API_KEY`, `SNYK_TOKEN`) o dejarlos opcionales.
-- Borrar `services/hola` (imagen provisional, ya no se usa): requiere aprobación (regla de borrado).
 - Integración de la app con la API (PKCE, Keystore, pinning, freeRASP): ¿en el bloque 4 o en el 5?
 - SIEM (bloque 5): Wazuh necesita 4 GB+ de RAM y no cabe en US$5; opción: CloudWatch + alarmas + CloudTrail.
 - Pruebas en el teléfono (Frida, freeRASP): emulador en la computadora de Daniel o intento en GitHub Actions.

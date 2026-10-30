@@ -1,5 +1,5 @@
 {
-  "_nota": "Excepciones de SCA (CTRL-10). Solo avisos High/Critical que no se pueden corregir sin salir del SDK 57 de Expo. Cada una tiene motivo y fecha límite: vencida, el flujo vuelve a fallar. Propuesta del bloque 3 (30-oct-2026), pendiente de aprobación de Daniel como dueño del riesgo.",
+  "_nota": "Excepciones de SCA (CTRL-10). Solo avisos High/Critical que no se pueden corregir sin salir del SDK 57 de Expo. Cada una tiene motivo y fecha límite: vencida, el flujo vuelve a fallar. Aprobadas por Daniel (dueño del riesgo) el 30-oct-2026.",
   "excepciones": [
     {
       "aviso": "GHSA-qr28-fpjm-wq7f",

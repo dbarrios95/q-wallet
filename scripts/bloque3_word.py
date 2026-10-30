@@ -336,7 +336,8 @@ tabla(
     tam=9,
     nota_txt=(
         "Las excepciones de HAL-02 y HAL-03 están en mobile/excepciones-sca.json, valen solo "
-        "para la copia indirecta del paquete y vencen el 28 de noviembre de 2026. HAL-04 se "
+        "para la copia indirecta del paquete, las aprobó el dueño del riesgo y vencen el 28 de "
+        "noviembre de 2026. HAL-04 se "
         "encontró por revisión manual del código. El registro completo está en "
         "docs/REGISTRO_RIESGOS.md, sección D.2."
     ),
