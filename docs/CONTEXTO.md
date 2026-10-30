@@ -22,7 +22,9 @@
 | Presentación | Sí, **sin demo en vivo** → toda prueba debe quedar en captura o video |
 | Informe | Microsoft Word, formato UMG + APA 7 |
 
-### Ponderación (4 pts c/u)
+### Ponderación (4 pts c/u según el enunciado; la rúbrica da 10 al informe: ver `docs/enunciado/README.md`)
+Enunciado, rúbrica e infografía oficiales en `docs/enunciado/` (subidos el 29-oct-2026).
+
 1. Análisis de Riesgos y Activos — inventario ISO 27001, STRIDE/DREAD, 7 capas, matriz de calor y tratamiento.
 2. Arquitectura Cloud & DevSecOps — diagrama (API Gateway, IAM, Cloud), evidencia SAST/SCA, análisis IaC.
 3. Implementación de Ciberdefensa — pentest caja negra (ZAP/Burp), caja gris/blanca, casos de abuso y perímetro.

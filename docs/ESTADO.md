@@ -25,7 +25,7 @@
 - `/infra`: KMS (AES-256, rotación anual), 8 tablas DynamoDB (una por tipo de dato), Cognito (PKCE, MFA TOTP, tokens de 15 min), API Gateway solo TLS 1.3 con authorizer en las 18 rutas, 5 Lambdas en contenedor (imagen provisional `services/hola`, responde 501) con un rol IAM por función, ECR, CloudTrail, WAF apagable (`WAF_HABILITADO`).
 - `infra/bootstrap/bootstrap.sh`: bucket del estado, OIDC, límite de permisos y los roles `qwallet-gha-plan` y `qwallet-gha-despliegue` (este último no puede borrar la llave, tablas, user pool, buckets ni la auditoría).
 - `.github/workflows/infra.yml`: en cada PR fmt, validate, Checkov y plan; al hacer merge, despliegue (se detiene si el plan borra algo no aprobado en `infra/destrucciones_aprobadas.txt`) y verificación automática (EVD-3-11, 3-12, 3-13, 5-04) publicada en el issue "Evidencias AWS".
-- Word `docs/entregas/Entrega2_Seccion_4_Arquitectura_Controles.docx` (13 págs.): 4.1, 4.2 y 4.5, Figura 7 y Tablas 24 a 29 (numeración provisional). Faltan las evidencias del despliegue (marcadas `[EVIDENCIA PENDIENTE]`) y los títulos exactos de 4 y 4.5 (`[VERIFICAR]`).
+- Word `docs/entregas/Entrega2_Seccion_4_Arquitectura_Controles.docx` (13 págs.): 4.1, 4.2 y 4.5, Figura 7 y Tablas 24 a 29 (numeración provisional). Faltan las evidencias del despliegue (marcadas `[EVIDENCIA PENDIENTE]`) . Títulos corregidos con el enunciado ("4. Mitigación y ciberseguridad", "4.5 Hardening de infraestructura cloud").
 
 ## Lo que Daniel hace a mano (una sola vez, después del merge del PR #22)
 1. GitHub → Settings → Environments → New environment `dev` → Deployment branches: "Selected branches" → agregar `main`.
@@ -41,7 +41,7 @@
 - ECR conserva las 5 imágenes más recientes por servicio y borra solas las más viejas.
 
 ## Decisiones pendientes
-- Títulos exactos de la sección 4 y de 4.5 en el enunciado: Daniel los pega en el chat; se corrigen en `scripts/entrega2_seccion4.py`.
+- Ponderación: el enunciado da 4 puntos a cada componente y la rúbrica da 10 al informe y formato APA. `[VERIFICAR]` con el catedrático (ver `docs/enunciado/README.md`).
 - SIEM (bloque 5): Wazuh necesita 4 GB+ de RAM y no cabe en US$5; opción: CloudWatch + alarmas + CloudTrail.
 - Pruebas en el teléfono (Frida, freeRASP): emulador en la computadora de Daniel o intento en GitHub Actions.
 

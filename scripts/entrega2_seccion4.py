@@ -216,7 +216,7 @@ def seccion(horizontal):
 
 
 # ---------------------------------------------------------------- contenido
-titulo("4. [VERIFICAR: título de la sección 4 según el enunciado]", 1)
+titulo("4. Mitigación y ciberseguridad", 1)
 
 titulo("4.1 Rediseño arquitectónico cloud seguro", 2)
 parrafo(
@@ -450,8 +450,10 @@ tabla(
 )
 seccion(horizontal=False)
 
-titulo("4.5 [VERIFICAR: título según el enunciado] Revisión de la infraestructura como código", 2)
+titulo("4.5 Hardening de infraestructura cloud", 2)
 parrafo(
+    "El endurecimiento de la infraestructura cloud se aplica en el propio Terraform "
+    "(secciones 4.1 y 4.2) y se audita de forma automática. "
     "Revisamos el Terraform con Checkov 3.3.22 en cada pull request, antes de que algo llegue "
     "a AWS (evidencia EVD-3-06). El primer análisis completo, del 29 de octubre de 2026, "
     "revisó 125 bloques de Terraform: 282 verificaciones pasaron, 0 fallaron y 39 se omitieron con "
