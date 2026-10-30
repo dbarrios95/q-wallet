@@ -3,6 +3,23 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-10-30 — Daniel — Claude (claude.ai), bloque 2
+- Fase / sección del informe: Fase 2. Presentación de la Entrega 2 (sáb 7-nov-2026: 5 min, cámara abierta, resumen ejecutivo).
+- Qué se hizo:
+  - Presentación en Claude Slides "Q-Wallet — Entrega 2 (Fase 2)", 5 diapositivas con notas del orador: portada y resumen ejecutivo; flujo de datos en 9 pasos (Figura 7, EVD-3-08); Zero Trust y matriz de menor privilegio (8 tablas x 5 roles, de la Tabla 26); cifrado AES-256 y TLS 1.3 (Tabla 27); verificación (Checkov 282/0, 11 de 14 requisitos en la infraestructura, 3 pruebas automáticas) y Fase 3.
+  - Guion, tiempos y cifras usadas en `docs/entregas/Entrega2_Presentacion.md`.
+- Archivos creados o modificados: `docs/entregas/Entrega2_Presentacion.md` (nuevo), `docs/ESTADO.md`, `docs/CONTEXTO.md` (sección 11), `docs/BITACORA.md`. La presentación vive en claude.ai (no está en el repo).
+- Decisiones tomadas (y por qué):
+  - Solo las 5 diapositivas pedidas, dos de ellas para los dos controles que exige la Fase 2 (menor privilegio y cifrado) y una para el diagrama: es lo que se califica en esta entrega.
+  - La matriz de la Tabla 26 se resume como L/E (lee/escribe) para que quepa legible en una diapositiva; el detalle por acción queda en el Word.
+  - La diapositiva 5 describe las pruebas automáticas sin afirmar resultados, porque el primer despliegue todavía no corrió.
+  - Rama sacada de `infra/bloque1-terraform-oidc` (PR #22 sin merge): hay que hacer merge del PR #22 primero.
+- Cambios de versión: ninguno.
+- Evidencias generadas (EVD-): ninguna.
+- IDs nuevos: ninguno.
+- Problemas / bloqueos: ninguno nuevo.
+- Siguiente paso: primer despliegue (pasos de ESTADO), ensayar la presentación y bloque 3.
+
 ### 2026-10-29 — Daniel — Claude (claude.ai), bloque 1
 - Fase / sección del informe: Fase 2 (diseño arquitectónico cloud) y parte de la Fase 5 (revisión del IaC). Secciones 4.1, 4.2 y 4.5.
 - Qué se hizo:

@@ -2,7 +2,7 @@
 
 > Punto de arranque de cada chat. Se reescribe al cerrar cada bloque. Máximo una página.
 
-**Actualizado:** 29-oct-2026 · **Hoy toca:** primer despliegue (pasos manuales de abajo) y luego bloque 2
+**Actualizado:** 30-oct-2026 · **Hoy toca:** primer despliegue (pasos manuales de abajo), ensayar la presentación y luego bloque 3
 
 ## Fechas
 | Hito | Fecha | Fase del enunciado |
@@ -15,11 +15,15 @@
 | # | Bloque | Fases | Secciones del informe | Estado |
 |---|---|---|---|---|
 | 1 | Terraform de toda la arquitectura + despliegue automático con OIDC + 4.1, 4.2 y 4.5 del Word | 2 y 5 | 4.1, 4.2, 4.5 | ◐ Código y Word listos (PR #22); falta el primer despliegue |
-| 2 | Presentación del 7-nov (5 diapositivas) | 2 | — | ☐ Siguiente |
-| 3 | Lambdas con código seguro + SAST/SCA en el flujo automático + minSdk 29 | 3 | 3.4, 3.5, 4.3, 4.4, 4.6 | ☐ |
+| 2 | Presentación del 7-nov (5 diapositivas) | 2 | — | ☑ Lista (Claude Slides; guion en `docs/entregas/Entrega2_Presentacion.md`). Falta ensayarla |
+| 3 | Lambdas con código seguro + SAST/SCA en el flujo automático + minSdk 29 | 3 | 3.4, 3.5, 4.3, 4.4, 4.6 | ☐ Siguiente |
 | 4 | Pentest caja negra y gris, OWASP API Top 10, casos de abuso, perímetro | 4 | 3.1, 3.2, 3.3, 3.6 | ☐ |
 | 5 | WAF, RASP, SIEM, alertas, tratamiento, mapa de calor "después" | 6 | 5.1 a 5.6 | ☐ |
 | 6 | Word final, dictamen, presentación final | Todas | 0, 6 | ☐ |
+
+## Qué dejó el bloque 2
+- Presentación Claude Slides "Q-Wallet — Entrega 2 (Fase 2)" en claude.ai, 5 diapositivas (~5 min), letra Inter y paleta de la app, notas del orador en cada una: (1) portada y resumen ejecutivo, (2) flujo de datos en 9 pasos con la Figura 7, (3) Zero Trust y matriz de menor privilegio, (4) cifrado AES-256 y TLS 1.3, (5) cómo se comprueba (Checkov 282/0, 11 de 14 requisitos, 3 pruebas automáticas) y Fase 3.
+- Todas las cifras salen del Word de la sección 4. Si el despliegue corre antes del 7-nov, la diapositiva 5 se puede cambiar a resultados reales.
 
 ## Qué dejó el bloque 1
 - `/infra`: KMS (AES-256, rotación anual), 8 tablas DynamoDB (una por tipo de dato), Cognito (PKCE, MFA TOTP, tokens de 15 min), API Gateway solo TLS 1.3 con authorizer en las 18 rutas, 5 Lambdas en contenedor (imagen provisional `services/hola`, responde 501) con un rol IAM por función, ECR, CloudTrail, WAF apagable (`WAF_HABILITADO`).
@@ -28,6 +32,7 @@
 - Word `docs/entregas/Entrega2_Seccion_4_Arquitectura_Controles.docx` (13 págs.): 4.1, 4.2 y 4.5, Figura 7 y Tablas 24 a 29 (numeración provisional). Faltan las evidencias del despliegue (marcadas `[EVIDENCIA PENDIENTE]`) . Títulos corregidos con el enunciado ("4. Mitigación y ciberseguridad", "4.5 Hardening de infraestructura cloud").
 
 ## Lo que Daniel hace a mano (una sola vez, después del merge del PR #22)
+0. Merge del PR #22 primero y después el del bloque 2.
 1. GitHub → Settings → Environments → New environment `dev` → Deployment branches: "Selected branches" → agregar `main`.
 2. Consola de AWS en **us-east-1** con el usuario administrador → abrir CloudShell → pegar:
    `curl -fsSLO https://raw.githubusercontent.com/dbarrios95/q-wallet/main/infra/bootstrap/bootstrap.sh && bash bootstrap.sh`
@@ -40,6 +45,10 @@
 - El merge del PR cuenta como aprobación del despliegue (sin aprobación manual en el entorno `dev`). En el Word final, ajustar el texto del plan de RSK-32 (sección 2.5.5) a "PR revisado y aprobado por merge + revisión automática de destrucciones".
 - ECR conserva las 5 imágenes más recientes por servicio y borra solas las más viejas.
 - Las entregas parciales no llevan portada ni índice; solo el informe final.
+
+## Antes del 7-nov
+- Ensayar la presentación con cronómetro (notas del orador en cada diapositiva) y descargarla como PDF de respaldo.
+- La presentación es privada: si el catedrático necesita el enlace, compartirla desde el menú Compartir; si no, presentar desde la pantalla o el PDF.
 
 ## Decisiones pendientes
 - SIEM (bloque 5): Wazuh necesita 4 GB+ de RAM y no cabe en US$5; opción: CloudWatch + alarmas + CloudTrail.
