@@ -99,7 +99,35 @@ jobs:
             docker image inspect "qwallet-${s}:prueba" --format '   usuario={{.Config.User}} tamaño={{.Size}} bytes'
           done 2>&1 | tee registro/3_imagenes.txt
 
+      - name: Prueba de humo de cada imagen con el runtime real (EVD-3-15)
+        run: |
+          set -o pipefail
+          estado=0
+          {
+            echo "== EVD-3-15 Prueba de humo: runtime de Lambda de la imagen + handler, sin AWS · $(date -u '+%Y-%m-%d %H:%M UTC') · commit ${GITHUB_SHA::7}"
+            echo "Evento: GET /me sin token. Esperado: 401 no_autenticado con cabeceras de seguridad."
+            p=9101
+            for s in svc-profile svc-accounts svc-transfers svc-budgets svc-admin; do
+              python3 scripts/humo_lambda.py "$p" "$s" & srv=$!
+              sleep 1
+              docker run -d --name "humo-${s}" --network host \
+                -e AWS_LAMBDA_RUNTIME_API="127.0.0.1:${p}" -e AWS_REGION=us-east-1 -e AWS_DEFAULT_REGION=us-east-1 \
+                -e AWS_LAMBDA_FUNCTION_NAME="qwallet-${s}" -e AWS_LAMBDA_FUNCTION_MEMORY_SIZE=256 -e AWS_LAMBDA_FUNCTION_VERSION='$LATEST' \
+                -e AWS_ACCESS_KEY_ID=humo -e AWS_SECRET_ACCESS_KEY=humo -e SERVICIO="$s" \
+                -e USER_POOL_ID=us-east-1_Humo00000 -e COGNITO_CLIENT_ID=humo0000000000000000000000 -e API_SCOPE=qwallet/api \
+                -e TABLA_PERFILES=t -e TABLA_PIN=t -e TABLA_CUENTAS=t -e TABLA_MOVIMIENTOS=t -e TABLA_TRANSFERENCIAS=t \
+                -e TABLA_BENEFICIARIOS=t -e TABLA_PRESUPUESTOS=t -e TABLA_AUDITORIA=t \
+                "qwallet-${s}:prueba" >/dev/null
+              wait "$srv" || { estado=1; docker logs "humo-${s}" 2>&1 | tail -20; }
+              docker rm -f "humo-${s}" >/dev/null
+              p=$((p + 1))
+            done
+            echo "Resultado: $([ $estado -eq 0 ] && echo PASA || echo FALLA)"
+            exit $estado
+          } 2>&1 | tee evidencias/EVD-3-15_humo_imagenes.txt
+
       - name: Trivy 0.75.0 sobre las imágenes (EVD-3-05)
+        if: always()
         run: |
           set -o pipefail
           base="https://github.com/aquasecurity/trivy/releases/download/v0.75.0"
@@ -147,6 +175,9 @@ jobs:
             echo '```'; echo "</details>"
             echo; echo "<details><summary>Trivy sobre las imágenes (EVD-3-05)</summary>"; echo; echo '```'
             [ -f evidencias/EVD-3-05_trivy_imagenes.txt ] && head -c 20000 evidencias/EVD-3-05_trivy_imagenes.txt
+            echo '```'; echo "</details>"
+            echo; echo "<details><summary>Prueba de humo de las imágenes (EVD-3-15)</summary>"; echo; echo '```'
+            [ -f evidencias/EVD-3-15_humo_imagenes.txt ] && head -c 6000 evidencias/EVD-3-15_humo_imagenes.txt
             echo '```'; echo "</details>"
           } > comentario.md
           gh pr comment "${{ github.event.pull_request.number }}" --repo "${{ github.repository }}" --body-file comentario.md

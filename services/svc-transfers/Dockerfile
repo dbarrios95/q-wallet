@@ -15,11 +15,14 @@ COPY svc-transfers/src ./svc-transfers/src
 RUN node esbuild.mjs svc-transfers
 
 # Imagen final: solo el archivo empaquetado, de solo lectura, sin código fuente.
-# HAL-05: se quitan npm, npx, corepack y el emulador local de Lambda (aws-lambda-rie):
-# vienen en la imagen base, Lambda no los usa y traían vulnerabilidades HIGH (Trivy, EVD-3-05).
+# HAL-05: se quitan de la imagen base npm, npx, corepack, el emulador local de Lambda
+# (aws-lambda-rie) y la copia del SDK de AWS que trae el runtime: el servicio lleva su propio
+# SDK empaquetado, Lambda no usa los demás y traían 24 vulnerabilidades HIGH (Trivy, EVD-3-05).
+# La prueba de humo (scripts/humo_lambda.py, EVD-3-15) comprueba que el runtime sigue arrancando.
 FROM base AS final
 RUN rm -rf /var/lang/lib/node_modules/npm /var/lang/lib/node_modules/corepack \
-      /var/lang/bin/npm /var/lang/bin/npx /var/lang/bin/corepack /usr/local/bin/aws-lambda-rie
+      /var/lang/bin/npm /var/lang/bin/npx /var/lang/bin/corepack /usr/local/bin/aws-lambda-rie \
+      /var/runtime/node_modules/@aws-sdk
 COPY --from=compilacion --chmod=0444 /compilacion/dist/svc-transfers/index.mjs ${LAMBDA_TASK_ROOT}/
 USER 1000:1000
 HEALTHCHECK NONE
