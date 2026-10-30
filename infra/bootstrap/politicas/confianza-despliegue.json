@@ -9,7 +9,7 @@
       "Condition": {
         "StringEquals": {
           "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
-          "token.actions.githubusercontent.com:sub": "repo:dbarrios95/q-wallet:environment:dev"
+          "token.actions.githubusercontent.com:sub": "repo:dbarrios95@58736977/q-wallet@1403562245:environment:dev"
         }
       }
     }

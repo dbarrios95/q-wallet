@@ -4,16 +4,12 @@
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
 ### 2026-10-30 — Daniel — Claude (claude.ai), fallo de OIDC en el primer despliegue
-- Qué se hizo: se revisó el "Run workflow" de `infra` (ejecución 41082898147). Falló el paso `configure-aws-credentials` del trabajo de despliegue: `Not authorized to perform sts:AssumeRoleWithWebIdentity` (12 intentos). Revisado desde GitHub: el entorno se llama `dev`, la ejecución fue de `main` y la confianza de `infra/bootstrap/politicas/confianza-despliegue.json` espera `repo:dbarrios95/q-wallet:environment:dev`, que es lo que manda GitHub. No se pudo ver la cuenta de AWS ni el valor del secreto.
-- Causas posibles, en orden: (1) `AWS_ACCOUNT_ID` con guiones o espacios (la consola muestra la cuenta como 1234-5678-9012) o de otra cuenta (la de Katherine o la descartada); (2) el rol o el proveedor OIDC no existen en esa cuenta; (3) la confianza del rol no quedó como la del repo.
-- Cambio: paso "Diagnóstico OIDC (sin secretos)" en los trabajos de plan y despliegue de `.github/workflows/infra.yml`. Revisa que el secreto tenga 12 dígitos (muestra solo los últimos 4) y muestra `aud`, `sub`, `environment` y `ref` del token de GitHub (no el token). Probado localmente con un token falso.
-- Revisión manual en CloudShell (us-east-1, con el usuario administrador):
-  - `aws sts get-caller-identity --query Account --output text` → los últimos 4 deben coincidir con los que muestra el diagnóstico.
-  - `aws iam list-open-id-connect-providers` → debe aparecer `token.actions.githubusercontent.com`.
-  - `aws iam get-role --role-name qwallet-gha-despliegue --query Role.AssumeRolePolicyDocument` → debe tener `repo:dbarrios95/q-wallet:environment:dev`.
-  - Si algo falta, volver a correr el bootstrap (no borra nada).
-- Archivos modificados: `.github/workflows/infra.yml`, `docs/ESTADO.md`, `docs/CONTEXTO.md` (sección 11), `docs/BITACORA.md`.
-- Siguiente paso: merge, revisión en CloudShell, corregir el secreto si hace falta y volver a correr el flujo.
+- Qué se hizo: el "Run workflow" de `infra` (ejecución 41082898147) y el plan del PR #30 fallaron en `configure-aws-credentials`: `Not authorized to perform sts:AssumeRoleWithWebIdentity`. Se agregó el paso "Diagnóstico OIDC (sin secretos)" a los trabajos de plan y despliegue de `.github/workflows/infra.yml` (formato de `AWS_ACCOUNT_ID`, solo los últimos 4 dígitos, y `aud`, `sub`, `environment` y `ref` del token, nunca el token).
+- Causa encontrada con el diagnóstico: el secreto está bien (12 dígitos). GitHub manda el `sub` con los identificadores fijos del dueño y del repo: `repo:dbarrios95@58736977/q-wallet@1403562245:pull_request`. Las políticas de confianza esperaban el formato viejo `repo:dbarrios95/q-wallet:pull_request` con `StringEquals`, y no coincidían.
+- Cambio: `infra/bootstrap/politicas/confianza-plan.json` y `confianza-despliegue.json` usan el formato nuevo (`...@1403562245:pull_request` y `...@1403562245:environment:dev`). Se deja solo el formato nuevo: amarra el rol al repo real aunque alguien cree otro repo con el mismo nombre (mejor para CTRL-21). También el texto de la tabla en `scripts/entrega2_seccion4.py`. El paso "Plan en el PR" ya no falla si no hubo plan.
+- Archivos modificados: `.github/workflows/infra.yml`, `infra/bootstrap/politicas/confianza-plan.json`, `infra/bootstrap/politicas/confianza-despliegue.json`, `scripts/entrega2_seccion4.py`, `docs/ESTADO.md`, `docs/CONTEXTO.md` (sección 11), `docs/BITACORA.md`.
+- Hallazgo para el informe (sección 4.2): el `sub` del token OIDC de GitHub ahora incluye los identificadores inmutables del dueño y del repositorio; la confianza del rol debe usarlos.
+- Siguiente paso: merge, volver a correr el bootstrap en CloudShell (actualiza la confianza de los dos roles; no borra nada) y volver a correr el flujo.
 
 ### 2026-10-30 — Daniel — Claude (claude.ai), cuenta AWS y primer despliegue
 - Qué se hizo: Daniel creó su propia cuenta AWS (registro clásico, Free plan, us-east-1) en lugar de usar la de Katherine (tarjeta y MFA de ella). Una primera cuenta de la "nueva experiencia" se descartó: sus SCP prohíben crear proveedores OIDC (`iam:*Provider*`). Bootstrap en CloudShell completo. Primer despliegue desde Actions: falló (pendiente de diagnóstico).

@@ -2,7 +2,7 @@
 
 > Punto de arranque de cada chat. Se reescribe al cerrar cada bloque. Máximo una página.
 
-**Actualizado:** 30-oct-2026 · **Hoy toca:** cerrar el primer despliegue (diagnóstico OIDC, ver "Despliegue") y luego bloque 3
+**Actualizado:** 30-oct-2026 · **Hoy toca:** cerrar el primer despliegue (bootstrap otra vez y Run workflow, ver "Despliegue") y luego bloque 3
 
 ## Fechas
 | Hito | Fecha | Fase del enunciado |
@@ -25,8 +25,7 @@
 - **Cuenta AWS nueva de Daniel** (`qwallet-umg`, registro clásico "AWS (advanced)", Free plan con US$100 de crédito, us-east-1). Ya no se usa la cuenta de Katherine.
 - Se descartó una cuenta de la "nueva experiencia" de AWS (proyectos con Builder ID): sus SCP administradas por AWS prohíben `iam:*Provider*` (no se puede crear el OIDC) y bloquearon `s3:CreateBucket`. No se creó nada en ella.
 - Hecho por Daniel: bootstrap en CloudShell **OK** (bucket del estado, OIDC, límite de permisos, roles `qwallet-gha-plan` y `qwallet-gha-despliegue`). Secreto `AWS_ACCOUNT_ID` y entorno `dev` (solo `main`) configurados por Daniel [VERIFICAR que el entorno quedó limitado a `main`].
-- **El primer "Run workflow" de `infra` falló** en el paso de credenciales: AWS rechazó el rol (`Not authorized to perform sts:AssumeRoleWithWebIdentity`). En GitHub todo cuadra (entorno `dev` existe, la ejecución sí fue desde `main`), así que la falla está en el secreto `AWS_ACCOUNT_ID` o en la confianza del rol dentro de la cuenta nueva.
-- PR "fix/oidc-diagnostico": agrega un paso "Diagnóstico OIDC (sin secretos)" antes de pedir credenciales (formato del secreto y el `sub` que manda GitHub). Después del merge, Daniel revisa en CloudShell (comandos en la entrada de BITÁCORA del 30-oct) y vuelve a correr el flujo.
+- **El primer "Run workflow" de `infra` falló** porque GitHub ahora manda el `sub` del token OIDC con números fijos del dueño y del repo (`repo:dbarrios95@58736977/q-wallet@1403562245:...`) y la confianza de los roles esperaba el formato viejo. Corregido en el PR #30 (políticas de confianza + paso de diagnóstico). Después del merge, Daniel vuelve a correr el bootstrap en CloudShell y luego "Run workflow".
 - Pendiente de Daniel: MFA de la cuenta raíz y presupuesto de US$5 en Budgets [VERIFICAR si ya se hicieron].
 - Evidencia EVD-1-03 (Entrega 1) quedó de la cuenta de Katherine; no se toca.
 
