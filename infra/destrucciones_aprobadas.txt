@@ -1,0 +1,14 @@
+# Recursos que el despliegue puede destruir o reemplazar sin detenerse.
+# Regla de borrado (CLAUDE.md): todo lo demás detiene el despliegue hasta que
+# Daniel lo apruebe agregando aquí la dirección del recurso en un PR.
+# Formato: una dirección de Terraform por línea; se acepta * como comodín.
+# Cada línea lleva un comentario con el motivo.
+
+# WAF: se enciende solo para pruebas y capturas y se apaga después (costo).
+aws_wafv2_web_acl.api*
+aws_wafv2_web_acl_association.api*
+aws_wafv2_web_acl_logging_configuration.api*
+
+# Despliegue de API Gateway: cada cambio de rutas crea uno nuevo y retira el anterior
+# (create_before_destroy). No guarda datos.
+aws_api_gateway_deployment.api

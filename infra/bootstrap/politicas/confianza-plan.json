@@ -1,0 +1,17 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "GitHubActionsSoloPullRequest",
+      "Effect": "Allow",
+      "Principal": { "Federated": "arn:aws:iam::__CUENTA__:oidc-provider/token.actions.githubusercontent.com" },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+          "token.actions.githubusercontent.com:sub": "repo:dbarrios95/q-wallet:pull_request"
+        }
+      }
+    }
+  ]
+}

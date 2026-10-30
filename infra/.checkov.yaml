@@ -1,0 +1,6 @@
+# Checkov 3.3.22 sobre /infra (EVD-3-06). Las excepciones van junto a cada recurso
+# con "#checkov:skip=ID:motivo" para que el motivo quede a la vista en el código.
+compact: true
+framework:
+  - terraform
+skip-download: true

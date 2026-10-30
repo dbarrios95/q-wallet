@@ -6,6 +6,7 @@ Proyecto final de Seguridad en Aplicaciones (UMG). Desde el 28-oct-2026 Daniel l
 1. `docs/ESTADO.md` — una página: qué está hecho, qué sigue, decisiones pendientes. **Siempre primero.**
 2. Solo lo que pida el bloque en curso: la sección puntual de `docs/CONTEXTO.md` (fuente de verdad de decisiones, stack, versiones e IDs), `docs/PLAN_FASES.md` o el código.
 3. `docs/BITACORA.md` solo si hace falta el historial (entradas nuevas arriba).
+4. Lo que pide el catedrático: `docs/enunciado/README.md` (estructura del informe y ponderación); el detalle de cada fase en `docs/enunciado/ENUNCIADO.md`. Leer solo la parte que toca.
 
 ## Forma de trabajo
 - **Un bloque por chat.** Daniel abre un chat con "Q-Wallet: sigue con el bloque X". Claude trabaja de corrido hasta terminar el bloque, sin pedir confirmaciones intermedias, salvo decisiones que solo Daniel puede tomar (se agrupan y se preguntan con opción múltiple).

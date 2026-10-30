@@ -1,0 +1,91 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "LeerConfiguracion",
+      "Effect": "Allow",
+      "Action": [
+        "sts:GetCallerIdentity",
+        "kms:Describe*",
+        "kms:Get*",
+        "kms:List*",
+        "dynamodb:Describe*",
+        "dynamodb:ListTagsOfResource",
+        "dynamodb:ListTables",
+        "cognito-idp:Describe*",
+        "cognito-idp:GetGroup",
+        "cognito-idp:GetUserPoolMfaConfig",
+        "cognito-idp:GetLogDeliveryConfiguration",
+        "cognito-idp:ListTagsForResource",
+        "cognito-idp:ListGroups",
+        "cognito-idp:ListUserPoolClients",
+        "cognito-idp:ListResourceServers",
+        "apigateway:GET",
+        "lambda:GetFunction*",
+        "lambda:GetPolicy",
+        "lambda:GetRuntimeManagementConfig",
+        "lambda:ListVersionsByFunction",
+        "lambda:ListTags",
+        "iam:GetRole",
+        "iam:GetRolePolicy",
+        "iam:GetPolicy",
+        "iam:GetPolicyVersion",
+        "iam:ListRolePolicies",
+        "iam:ListAttachedRolePolicies",
+        "iam:ListInstanceProfilesForRole",
+        "ecr:DescribeRepositories",
+        "ecr:DescribeImages",
+        "ecr:GetRepositoryPolicy",
+        "ecr:GetLifecyclePolicy",
+        "ecr:ListTagsForResource",
+        "logs:Describe*",
+        "logs:ListTagsForResource",
+        "logs:ListTagsLogGroup",
+        "cloudtrail:Describe*",
+        "cloudtrail:Get*",
+        "cloudtrail:ListTags",
+        "wafv2:Get*",
+        "wafv2:List*",
+        "cognito-idp:ListUserPools"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "LeerConfiguracionDeBuckets",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetBucket*",
+        "s3:GetAccelerateConfiguration",
+        "s3:GetEncryptionConfiguration",
+        "s3:GetLifecycleConfiguration",
+        "s3:GetReplicationConfiguration",
+        "s3:GetAnalyticsConfiguration",
+        "s3:GetInventoryConfiguration",
+        "s3:GetMetricsConfiguration",
+        "s3:GetIntelligentTieringConfiguration"
+      ],
+      "Resource": [
+        "arn:aws:s3:::qwallet-cloudtrail-__CUENTA__",
+        "arn:aws:s3:::qwallet-tfstate-__CUENTA__"
+      ]
+    },
+    {
+      "Sid": "LeerEstadoDeTerraform",
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::qwallet-tfstate-__CUENTA__/qwallet/infra.tfstate"
+    },
+    {
+      "Sid": "DescifrarEstado",
+      "Effect": "Allow",
+      "Action": "kms:Decrypt",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "kms:ViaService": "s3.us-east-1.amazonaws.com"
+        }
+      }
+    }
+  ]
+}

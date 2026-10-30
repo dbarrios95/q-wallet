@@ -1,0 +1,147 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "LecturaGeneral",
+      "Effect": "Allow",
+      "Action": [
+        "sts:GetCallerIdentity",
+        "kms:ListAliases",
+        "kms:CreateKey",
+        "ecr:GetAuthorizationToken",
+        "wafv2:ListWebACLs",
+        "apigateway:GET",
+        "logs:DescribeLogGroups",
+        "cloudtrail:DescribeTrails",
+        "cognito-idp:CreateUserPool",
+        "iam:GetPolicy",
+        "iam:GetPolicyVersion",
+        "kms:ListKeys",
+        "dynamodb:ListTables",
+        "logs:DescribeResourcePolicies",
+        "cognito-idp:ListUserPools"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "KmsDelProyecto",
+      "Effect": "Allow",
+      "Action": [
+        "kms:DescribeKey",
+        "kms:GetKeyPolicy",
+        "kms:PutKeyPolicy",
+        "kms:GetKeyRotationStatus",
+        "kms:EnableKeyRotation",
+        "kms:ListResourceTags",
+        "kms:TagResource",
+        "kms:UntagResource",
+        "kms:UpdateKeyDescription",
+        "kms:CreateAlias",
+        "kms:UpdateAlias",
+        "kms:DeleteAlias",
+        "kms:CreateGrant",
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:GenerateDataKey"
+      ],
+      "Resource": [
+        "arn:aws:kms:us-east-1:__CUENTA__:key/*",
+        "arn:aws:kms:us-east-1:__CUENTA__:alias/qwallet-*"
+      ]
+    },
+    {
+      "Sid": "DynamoDelProyecto",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:CreateTable",
+        "dynamodb:UpdateTable",
+        "dynamodb:DescribeTable",
+        "dynamodb:DescribeContinuousBackups",
+        "dynamodb:UpdateContinuousBackups",
+        "dynamodb:DescribeTimeToLive",
+        "dynamodb:UpdateTimeToLive",
+        "dynamodb:TagResource",
+        "dynamodb:UntagResource",
+        "dynamodb:ListTagsOfResource",
+        "dynamodb:DescribeKinesisStreamingDestination"
+      ],
+      "Resource": "arn:aws:dynamodb:us-east-1:__CUENTA__:table/qwallet-*"
+    },
+    {
+      "Sid": "CognitoDelProyecto",
+      "Effect": "Allow",
+      "Action": [
+        "cognito-idp:Describe*",
+        "cognito-idp:Get*",
+        "cognito-idp:List*",
+        "cognito-idp:UpdateUserPool",
+        "cognito-idp:SetUserPoolMfaConfig",
+        "cognito-idp:TagResource",
+        "cognito-idp:UntagResource",
+        "cognito-idp:CreateUserPoolClient",
+        "cognito-idp:UpdateUserPoolClient",
+        "cognito-idp:DeleteUserPoolClient",
+        "cognito-idp:CreateUserPoolDomain",
+        "cognito-idp:UpdateUserPoolDomain",
+        "cognito-idp:DeleteUserPoolDomain",
+        "cognito-idp:CreateResourceServer",
+        "cognito-idp:UpdateResourceServer",
+        "cognito-idp:CreateGroup",
+        "cognito-idp:UpdateGroup",
+        "cognito-idp:CreateManagedLoginBranding",
+        "cognito-idp:UpdateManagedLoginBranding",
+        "cognito-idp:DeleteManagedLoginBranding"
+      ],
+      "Resource": "arn:aws:cognito-idp:us-east-1:__CUENTA__:userpool/*"
+    },
+    {
+      "Sid": "ApiGateway",
+      "Effect": "Allow",
+      "Action": [
+        "apigateway:POST",
+        "apigateway:PUT",
+        "apigateway:PATCH",
+        "apigateway:DELETE",
+        "apigateway:SetWebACL"
+      ],
+      "Resource": [
+        "arn:aws:apigateway:us-east-1::/restapis",
+        "arn:aws:apigateway:us-east-1::/restapis/*",
+        "arn:aws:apigateway:us-east-1::/account",
+        "arn:aws:apigateway:us-east-1::/tags/*"
+      ]
+    },
+    {
+      "Sid": "LogsDelProyecto",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:PutRetentionPolicy",
+        "logs:AssociateKmsKey",
+        "logs:TagResource",
+        "logs:UntagResource",
+        "logs:ListTagsForResource",
+        "logs:ListTagsLogGroup",
+        "logs:TagLogGroup"
+      ],
+      "Resource": [
+        "arn:aws:logs:us-east-1:__CUENTA__:log-group:/aws/lambda/qwallet-*",
+        "arn:aws:logs:us-east-1:__CUENTA__:log-group:/aws/apigateway/qwallet-*",
+        "arn:aws:logs:us-east-1:__CUENTA__:log-group:aws-waf-logs-qwallet*"
+      ]
+    },
+    {
+      "Sid": "EntregaDeLogsDelWaf",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogDelivery",
+        "logs:DeleteLogDelivery",
+        "logs:GetLogDelivery",
+        "logs:ListLogDeliveries",
+        "logs:PutResourcePolicy",
+        "logs:DescribeResourcePolicies"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
