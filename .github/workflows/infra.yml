@@ -207,6 +207,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          if [ ! -f plan.txt ]; then echo "No hubo plan (falló un paso anterior)."; exit 0; fi
           {
             echo "## Plan de Terraform"
             grep -E "^Plan:|No changes|Error|Bloqueado|Crear:" plan.txt | head -20 || true
