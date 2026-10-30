@@ -3,6 +3,11 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-10-30 — Daniel — Claude (claude.ai), arreglo del despliegue después del merge del PR #36
+- Qué pasó: el despliegue de `main` (ejecución 41132317747) falló en el paso "Marcar como sanos" antes de tocar AWS. Causa: `infra/desmarcar.txt` quedó sin líneas activas en el bloque 3; `grep` sale con código 1 cuando no encuentra nada y `pipefail` lo tomó como error. No se aplicó ningún cambio en AWS (las Lambdas siguen con la imagen provisional).
+- Corrección: `{ grep ... || true; }` en `.github/workflows/infra.yml`. Al hacer merge se repite el despliegue completo del bloque 3.
+- Archivos: `.github/workflows/infra.yml`, `docs/BITACORA.md`.
+
 ### 2026-10-30 — Daniel — Claude (claude.ai), bloque 3: Lambdas seguras, SAST/SCA y minSdk 29
 - Fase / sección del informe: Fase 3 (y parte de la 5); secciones 3.4, 3.5, 4.3, 4.4 y 4.6.
 - Qué se hizo:

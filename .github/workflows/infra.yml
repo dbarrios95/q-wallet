@@ -341,7 +341,8 @@ jobs:
       - name: Marcar como sanos los recursos de infra/desmarcar.txt
         run: |
           set -o pipefail
-          grep -Ev '^[[:space:]]*(#|$)' infra/desmarcar.txt | while read -r r; do
+          # Con el archivo vacío grep sale con 1; eso no es un error (no hay nada que desmarcar).
+          { grep -Ev '^[[:space:]]*(#|$)' infra/desmarcar.txt || true; } | while read -r r; do
             if salida=$(terraform -chdir=infra untaint -no-color -allow-missing "$r" 2>&1); then
               echo "${r}: marcado como sano"
             elif echo "$salida" | grep -qi "not tainted"; then
