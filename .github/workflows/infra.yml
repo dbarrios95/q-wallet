@@ -73,7 +73,7 @@ jobs:
           pip install --quiet --break-system-packages checkov==3.3.22
           checkov --config-file infra/.checkov.yaml -d infra --output cli --output junitxml \
             --output-file-path console,evidencias 2>&1 | tee evidencias/EVD-3-06_checkov_terraform.txt
-          checkov -d services --framework dockerfile --skip-download --compact --skip-path services/hola --output cli 2>&1 \
+          checkov -d services --framework dockerfile --skip-download --compact --output cli 2>&1 \
             | tee evidencias/EVD-3-06_checkov_dockerfile.txt
 
       - name: Imagen base de Lambda fijada por digest (CTRL-11)

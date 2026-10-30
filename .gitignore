@@ -3,6 +3,10 @@ node_modules/
 dist/
 .expo/
 *.log
+__pycache__/
+# Evidencias transitorias de CI (se suben como artefacto y se publican en issues; no se versionan).
+# La evidencia durable (figuras, diagramas) va en docs/evidencias/.
+/evidencias/
 # Android / Expo
 android/
 ios/

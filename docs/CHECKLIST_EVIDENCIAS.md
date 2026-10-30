@@ -53,15 +53,19 @@ Como no hay demo en vivo, toda afirmación técnica del informe necesita una evi
 |---|---|---|
 | ☐ | EVD-4-01 | Nmap / mapeo de superficie expuesta |
 | ☐ | EVD-4-02 | ZAP: escaneo de API con OpenAPI importado |
-| ☐ | EVD-4-03 | CA-01 BOLA bloqueado (403/404) |
-| ☐ | EVD-4-04 | CA-02 fuerza bruta del PIN bloqueada |
-| ☐ | EVD-4-05 | CA-03 datos enmascarados + CA-04 mass assignment rechazado |
-| ☐ | EVD-4-06 | CA-05 paginación limitada |
-| ☐ | EVD-4-07 | CA-06 concurrencia: una sola transferencia aplicada |
-| ☐ | EVD-4-08 | CA-07 tokens no extraíbles + CA-08 MITM rechazado por pinning |
-| ☐ | EVD-4-09 | CA-09 `/admin` rechazado para cliente |
-| ☐ | EVD-4-10 | CA-10 freeRASP detectando Frida/root |
-| ☐ | EVD-4-11 | CA-11 APK sin secretos + CA-13 token alterado rechazado |
+| ◐ | EVD-4-03 | CA-01 BOLA bloqueado (403/404) |
+| ◐ | EVD-4-04 | CA-02 fuerza bruta del PIN bloqueada |
+| ◐ | EVD-4-05 | CA-03 datos enmascarados + CA-04 mass assignment rechazado |
+| ◐ | EVD-4-06 | CA-05 paginación limitada |
+| ◐ | EVD-4-07 | CA-06 concurrencia: una sola transferencia aplicada |
+| ☐ | EVD-4-08 | CA-07 tokens no extraíbles + CA-08 MITM rechazado por pinning (dispositivo, bloque 5) |
+| ◐ | EVD-4-09 | CA-09 `/admin` rechazado para cliente |
+| ☐ | EVD-4-10 | CA-10 freeRASP detectando Frida/root (dispositivo, bloque 5) |
+| ◐ | EVD-4-11 | CA-11 APK sin secretos (bloque 5) + CA-13 token alterado rechazado |
+| ◐ | EVD-4-12 | OWASP API Top 10 (2023): cobertura de los 10 riesgos contra los handlers reales (agregado del arnés de caja gris) |
+| ◐ | EVD-4-13 | Casos de abuso de servidor CA-01..CA-06, CA-09, CA-13: tabla de bloqueos (agregado del arnés de caja gris) |
+
+> ◐ EVD-4-03 a EVD-4-07, EVD-4-09 y EVD-4-11 (lado servidor): los controles quedan probados por el arnés de caja gris (`services/pentest`, 71 pruebas vitest en verde en cada PR) y agregados en EVD-4-12/EVD-4-13; pasan a ✔ al adjuntar la ejecución del flujo. EVD-4-01 (Nmap/perímetro), EVD-4-02 (ZAP) y EVD-3-09 (Prowler) salen del flujo `pentest.yml` tras el merge y el bootstrap del rol. EVD-4-08 y EVD-4-10 (dispositivo) → bloque 5.
 
 ### Ciberseguridad y operación (secciones 4 y 5)
 
