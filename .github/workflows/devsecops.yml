@@ -194,12 +194,12 @@ jobs:
             echo "== EVD-3-04 Trivy ${TRIVY_VERSION}: vulnerabilidades en dependencias (informativo; la compuerta es npm audit)"
             for d in services mobile; do
               echo; echo "== ${d}"
-              trivy fs --scanners vuln --severity LOW,MEDIUM,HIGH,CRITICAL --format table --exit-code 0 "${d}/package-lock.json"
+              trivy fs --quiet --scanners vuln --severity LOW,MEDIUM,HIGH,CRITICAL --format table --exit-code 0 "${d}/package-lock.json"
             done
           } 2>&1 | tee evidencias/EVD-3-04_sca_trivy.txt
           # Inventario de componentes (SBOM CycloneDX) para la gestión continua de vulnerabilidades.
-          trivy fs --format cyclonedx --output evidencias/sbom-services.cdx.json services/package-lock.json
-          trivy fs --format cyclonedx --output evidencias/sbom-mobile.cdx.json mobile/package-lock.json
+          trivy fs --quiet --format cyclonedx --output evidencias/sbom-services.cdx.json services/package-lock.json
+          trivy fs --quiet --format cyclonedx --output evidencias/sbom-mobile.cdx.json mobile/package-lock.json
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
@@ -360,7 +360,7 @@ jobs:
             echo "| SCA (opcional) | Snyk CLI 1.1307.4 | ${R_SNYK} |"
             echo
             echo "Evidencias (EVD-3-01 a EVD-3-04, EVD-3-09, EVD-3-14) en los artefactos de la ejecución y abajo."
-            for f in evd/evidencias/*.txt; do
+            for f in evd/evidencias/*.txt evd/*.txt; do
               [ -f "$f" ] || continue
               echo; echo "<details><summary>$(basename "$f")</summary>"; echo; echo '```'
               # Las líneas largas de las tablas se cortan; el archivo completo queda en el artefacto.
