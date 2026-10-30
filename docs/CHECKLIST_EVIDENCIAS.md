@@ -29,19 +29,23 @@ Como no hay demo en vivo, toda afirmación técnica del informe necesita una evi
 
 | ✔ | EVD | Qué debe verse |
 |---|---|---|
-| ☐ | EVD-3-01 | Pipeline de GitHub Actions con todos los jobs |
-| ☐ | EVD-3-02 | Semgrep: resultado del escaneo |
-| ☐ | EVD-3-03 | CodeQL / SonarQube Cloud: dashboard (quality gate) |
-| ☐ | EVD-3-04 | Dependency-Check / Snyk: reporte SCA |
-| ☐ | EVD-3-05 | Trivy: imagen de contenedor |
+| ☑ | EVD-3-01 | Pipeline de GitHub Actions con todos los jobs (tabla "DevSecOps" en el PR #36 y en el issue "Evidencias DevSecOps") |
+| ☑ | EVD-3-02 | Semgrep: 608 reglas públicas + 7 propias, 0 hallazgos; `semgrep --test` 7/7 |
+| ☑ | EVD-3-03 | CodeQL security-extended: 103 reglas, 0 hallazgos (SonarQube Cloud no se usa) |
+| ☑ | EVD-3-04 | SCA: npm audit con compuerta + Trivy fs + SBOM (Dependency-Check y Snyk solo con llaves) |
+| ☑ | EVD-3-05 | Trivy sobre las 5 imágenes: 24 HIGH antes (HAL-05), 0 HIGH después |
 | ◐ | EVD-3-06 | Checkov sobre Terraform y Dockerfile (29-oct: 282 pasan, 0 fallan, 39 omitidas con motivo; resultado en el comentario del PR #22) |
 | ☐ | EVD-3-07 | MobSF: reporte del APK de release |
 | ☑ | EVD-3-08 | Diagrama de arquitectura de seguridad con el flujo de datos numerado (Figura 7). Script `scripts/entrega2_diagrama_flujo.py` |
-| ☐ | EVD-3-11 | Simulador de políticas IAM: matriz rol × tabla (lo genera `infra/scripts/verificar_aws.sh` en cada despliegue) |
-| ☐ | EVD-3-12 | Prueba de TLS: 1.3 aceptado, 1.2 rechazado, 401 sin token (igual, automático) |
-| ☐ | EVD-3-13 | Configuración desplegada de Cognito, API Gateway y CloudTrail (igual, automático) |
-| ☐ | EVD-3-09 | gitleaks + Prowler: resultado |
-| ☐ | EVD-3-10 | Pipeline bloqueando un PR con una dependencia vulnerable (demostración del gate) |
+| ☑ | EVD-3-11 | Simulador de políticas IAM: matriz rol × tabla (lo genera `infra/scripts/verificar_aws.sh` en cada despliegue) |
+| ☑ | EVD-3-12 | Prueba de TLS: 1.3 aceptado, 1.2 rechazado, 401 sin token (igual, automático) |
+| ☑ | EVD-3-13 | Configuración desplegada de Cognito, API Gateway y CloudTrail (igual, automático) |
+| ☑ | EVD-3-14 | Pruebas unitarias por control (vitest): 60/60 |
+| ☑ | EVD-3-15 | Prueba de humo de cada imagen con el runtime real de Lambda (GET /me sin token → 401) |
+| ☑ | EVD-3-17 | App compilada en release desde la rama del bloque 3 (minSdk 29, R8): `app-release.apk` instalado, bienvenida con el texto corregido (30-oct) |
+| ☑ | EVD-3-16 | Figura del flujo DevSecOps (Figura 8). Script `scripts/bloque3_diagrama_devsecops.py` |
+| ◐ | EVD-3-09 | gitleaks sobre todo el historial en cada PR (hecho); Prowler pendiente (bloque 4) |
+| ☑ | EVD-3-10 | PR #37 (cerrado sin merge): zod 4.6.5 en /services, la etapa SCA falla |
 
 ### Ciberdefensa (sección 3)
 
@@ -66,7 +70,7 @@ Como no hay demo en vivo, toda afirmación técnica del informe necesita una evi
 | ☐ | EVD-5-01 | AWS WAF: reglas configuradas |
 | ☐ | EVD-5-02 | WAF bloqueando un ataque (muestras de solicitudes) |
 | ☐ | EVD-5-03 | freeRASP detectando root/hook |
-| ☐ | EVD-5-04 | KMS CMK y DynamoDB cifrado (automático, `verificar_aws.sh`) |
+| ☑ | EVD-5-04 | KMS CMK y DynamoDB cifrado (automático, `verificar_aws.sh`) |
 | ☐ | EVD-5-05 | Wazuh: ingesta de CloudTrail |
 | ☐ | EVD-5-06 | Wazuh: alerta por fuerza bruta / BOLA |
 | ☐ | EVD-5-07 | Dashboard de seguridad |

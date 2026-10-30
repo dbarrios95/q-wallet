@@ -2,7 +2,7 @@
 
 > Punto de arranque de cada chat. Se reescribe al cerrar cada bloque. Máximo una página.
 
-**Actualizado:** 30-oct-2026 · **Hoy toca:** bloque 3 (primer despliegue cerrado, ver "Despliegue")
+**Actualizado:** 30-oct-2026 · **Hoy toca:** merge del PR #36 y bloque 4
 
 ## Fechas
 | Hito | Fecha | Fase del enunciado |
@@ -14,43 +14,29 @@
 ## Bloques
 | # | Bloque | Fases | Secciones del informe | Estado |
 |---|---|---|---|---|
-| 1 | Terraform de toda la arquitectura + despliegue automático con OIDC + 4.1, 4.2 y 4.5 del Word | 2 y 5 | 4.1, 4.2, 4.5 | ◐ Código y Word listos (PR #22); falta el primer despliegue |
+| 1 | Terraform de toda la arquitectura + despliegue automático con OIDC + 4.1, 4.2 y 4.5 del Word | 2 y 5 | 4.1, 4.2, 4.5 | ☑ Desplegado y verificado (30-oct) |
 | 2 | Presentación del 7-nov (5 diapositivas) | 2 | — | ☑ Lista (Claude Slides; guion en `docs/entregas/Entrega2_Presentacion.md`). Falta ensayarla |
-| 3 | Lambdas con código seguro + SAST/SCA en el flujo automático + minSdk 29 | 3 | 3.4, 3.5, 4.3, 4.4, 4.6 | ☐ Siguiente |
-| 4 | Pentest caja negra y gris, OWASP API Top 10, casos de abuso, perímetro | 4 | 3.1, 3.2, 3.3, 3.6 | ☐ |
+| 3 | Lambdas con código seguro + SAST/SCA en el flujo automático + minSdk 29 | 3 | 3.4, 3.5, 4.3, 4.4, 4.6 | ☑ PR #36 (falta merge) |
+| 4 | Pentest caja negra y gris, OWASP API Top 10, casos de abuso, perímetro | 4 | 3.1, 3.2, 3.3, 3.6 | ☐ Siguiente |
 | 5 | WAF, RASP, SIEM, alertas, tratamiento, mapa de calor "después" | 6 | 5.1 a 5.6 | ☐ |
 | 6 | Word final, dictamen, presentación final | Todas | 0, 6 | ☐ |
 
-## Despliegue (30-oct-2026)
-- **Cuenta AWS nueva de Daniel** (`qwallet-umg`, registro clásico "AWS (advanced)", Free plan con US$100 de crédito, us-east-1). Ya no se usa la cuenta de Katherine.
-- Se descartó una cuenta de la "nueva experiencia" de AWS (proyectos con Builder ID): sus SCP administradas por AWS prohíben `iam:*Provider*` (no se puede crear el OIDC) y bloquearon `s3:CreateBucket`. No se creó nada en ella.
-- Hecho por Daniel: bootstrap en CloudShell **OK** (bucket del estado, OIDC, límite de permisos, roles `qwallet-gha-plan` y `qwallet-gha-despliegue`). Secreto `AWS_ACCOUNT_ID` y entorno `dev` (solo `main`) configurados por Daniel [VERIFICAR que el entorno quedó limitado a `main`].
-- OIDC resuelto (PR #30: GitHub manda el `sub` con números fijos del dueño y del repo). El "Run workflow" del 30-oct ya entró a AWS y creó casi todo: imágenes en ECR, llave KMS, tablas, Cognito, las 5 Lambdas, las 18 rutas y CloudTrail.
-- Permisos corregidos (PR #31) y dominio de Cognito desmarcado sin borrarlo (PR #32).
-- **Primer despliegue completo y verificado (30-oct, ejecución 41094572066): 0 fallas.** EVD-3-11 (menor privilegio), EVD-3-12 (TLS 1.3 aceptado, TLS 1.2 rechazado, `GET /me` sin token = 401 `UnauthorizedException` del authorizer; ruta inexistente = 403), EVD-3-13 (Cognito, 18 rutas con authorizer, CloudTrail) y EVD-5-04 (cifrado con la llave propia). Evidencias en el issue "Evidencias AWS" (#28). Ya se pueden usar en el Word de la sección 4 y en la diapositiva 5.
-- Pendiente: quitar la línea de `infra/desmarcar.txt` en el bloque 3 (ya no hace falta).
-- MFA de la cuenta raíz activo y presupuesto mensual de US$5 creado ("My Monthly Cost Budget - Q-wallet"), confirmados el 30-oct por CLI en CloudShell (`AccountMFAEnabled = 1`; gasto US$0.0).
-- Evidencia EVD-1-03 (Entrega 1) quedó de la cuenta de Katherine; no se toca.
+## Qué dejó el bloque 3 (PR #36, 30-oct-2026)
+- **Código real de las 5 Lambdas** (`services/`, TypeScript estricto): módulo común con JWT verificado también en la Lambda (aws-jwt-verify), zod `.strict()`, logs con redacción, errores genéricos, auditoría y paginación con tope. PIN con scrypt y bloqueo atómico; transferencias con Idempotency-Key + transacción de DynamoDB; BOLA → 404; `/admin` exige grupo `admins` (CTRL-14) y motivo + canal de verificación (CTRL-23). **60 pruebas vitest, todas en verde.** Cada cuenta nueva empieza con Q1,000.00 simulados; tope Q5,000.00 por transferencia.
+- **Flujo `devsecops.yml`**: pruebas, Semgrep (608 reglas + 7 propias, `semgrep --test` 7/7), CodeQL (103 reglas), npm audit con compuerta y excepciones con vencimiento, Trivy + SBOM, gitleaks (89 commits). Todo en 0 hallazgos graves. Corre en cada PR, en main y cada lunes. Resultados en el comentario del PR y en el issue "Evidencias DevSecOps".
+- **`infra.yml`**: construye las 5 imágenes reales, prueba de humo con el runtime real (GET /me sin token → 401) y Trivy (24 HIGH → 0). Checkov: Terraform 282 pasan, Dockerfile 295 pasan, 0 fallan.
+- **Hallazgos**: HAL-01 zod 4.6.5 (corregido a 4.6.7), HAL-02 y HAL-03 (dependencias de Expo, aceptadas hasta 28-nov), HAL-04 textos falsos de Welcome (corregido), HAL-05 imagen base (corregido). EVD-3-10: PR #37 demostró que la compuerta bloquea zod 4.6.5 (cerrado sin merge, rama conservada).
+- **App**: minSdk 29, R8 y shrink en release, sin tráfico en claro, inspector de red apagado. **Validado el 30-oct** con build de release desde la rama del PR: `app-release.apk` instalado y bienvenida con el texto corregido (EVD-3-17).
+- **IAM**: svc-profile puede crear la cuenta inicial (PutItem en `cuentas` y `movimientos`). Lambdas con `COGNITO_CLIENT_ID` y `API_SCOPE`. Cambios en sitio, sin destrucciones.
+- **Word** `docs/entregas/Final_Secciones_3-4_3-5_4-3_4-4_4-6_DevSecOps.docx` (12 págs., Tablas 30–37, Figura 8, validado y renderizado). Script `scripts/bloque3_word.py`.
 
-## Qué dejó el bloque 2
-- Presentación Claude Slides "Q-Wallet — Entrega 2 (Fase 2)" en claude.ai, 5 diapositivas (~5 min), letra Inter y paleta de la app, notas del orador en cada una: (1) portada y resumen ejecutivo, (2) flujo de datos en 9 pasos con la Figura 7, (3) Zero Trust y matriz de menor privilegio, (4) cifrado AES-256 y TLS 1.3, (5) cómo se comprueba (Checkov 282/0, 11 de 14 requisitos, 3 pruebas automáticas) y Fase 3.
-- Todas las cifras salen del Word de la sección 4. Si el despliegue corre antes del 7-nov, la diapositiva 5 se puede cambiar a resultados reales.
+## Lo que Daniel hace a mano (bloque 3)
+1. Revisar y dar **Merge al PR #36**. El despliegue publica las imágenes reales y verifica AWS (issue "Evidencias AWS").
+2. ~~Validar la app desde la rama del PR~~ Hecho (EVD-3-17). Para volver a `main` después del merge: `git checkout main; git pull`.
 
-## Qué dejó el bloque 1
-- `/infra`: KMS (AES-256, rotación anual), 8 tablas DynamoDB (una por tipo de dato), Cognito (PKCE, MFA TOTP, tokens de 15 min), API Gateway solo TLS 1.3 con authorizer en las 18 rutas, 5 Lambdas en contenedor (imagen provisional `services/hola`, responde 501) con un rol IAM por función, ECR, CloudTrail, WAF apagable (`WAF_HABILITADO`).
-- `infra/bootstrap/bootstrap.sh`: bucket del estado, OIDC, límite de permisos y los roles `qwallet-gha-plan` y `qwallet-gha-despliegue` (este último no puede borrar la llave, tablas, user pool, buckets ni la auditoría).
-- `.github/workflows/infra.yml`: en cada PR fmt, validate, Checkov y plan; al hacer merge, despliegue (se detiene si el plan borra algo no aprobado en `infra/destrucciones_aprobadas.txt`) y verificación automática (EVD-3-11, 3-12, 3-13, 5-04) publicada en el issue "Evidencias AWS".
-- Word `docs/entregas/Entrega2_Seccion_4_Arquitectura_Controles.docx` (13 págs.): 4.1, 4.2 y 4.5, Figura 7 y Tablas 24 a 29 (numeración provisional). Faltan las evidencias del despliegue (marcadas `[EVIDENCIA PENDIENTE]`) . Títulos corregidos con el enunciado ("4. Mitigación y ciberseguridad", "4.5 Hardening de infraestructura cloud").
-
-## Lo que Daniel hace a mano (una sola vez, después del merge del PR #22)
-0. Merge del PR #22 primero y después el del bloque 2.
-1. GitHub → Settings → Environments → New environment `dev` → Deployment branches: "Selected branches" → agregar `main`.
-2. Consola de AWS en **us-east-1** con el usuario administrador → abrir CloudShell → pegar:
-   `curl -fsSLO https://raw.githubusercontent.com/dbarrios95/q-wallet/main/infra/bootstrap/bootstrap.sh && bash bootstrap.sh`
-   Resultado esperado: termina con "Listo." y muestra el número de cuenta.
-3. GitHub → Settings → Secrets and variables → Actions → New repository secret `AWS_ACCOUNT_ID` con ese número (no pegarlo en el chat).
-4. GitHub → Actions → infra → Run workflow (rama main). Ese es el primer despliegue.
-5. Confirmar en la consola que el plan gratuito permite AWS WAF y ECR (si ECR falla, el paso 4 lo muestra).
+## Antes (bloques 1 y 2, detalle en BITÁCORA)
+- Cuenta AWS de Daniel (`qwallet-umg`, us-east-1, Free plan, US$100 de crédito). Bootstrap OIDC hecho; MFA raíz y presupuesto de US$5 confirmados. Primer despliegue completo y verificado el 30-oct (EVD-3-11, 3-12, 3-13, 5-04 en el issue "Evidencias AWS", #28).
+- Word de la Entrega 2: `docs/entregas/Entrega2_Seccion_4_Arquitectura_Controles.docx` (4.1, 4.2, 4.5). Presentación del 7-nov en Claude Slides (privada).
 
 ## Decisiones tomadas (29-oct-2026)
 - El merge del PR cuenta como aprobación del despliegue (sin aprobación manual en el entorno `dev`). En el Word final, ajustar el texto del plan de RSK-32 (sección 2.5.5) a "PR revisado y aprobado por merge + revisión automática de destrucciones".
@@ -61,9 +47,17 @@
 - Ensayar la presentación con cronómetro (notas del orador en cada diapositiva) y descargarla como PDF de respaldo.
 - La presentación es privada: si el catedrático necesita el enlace, compartirla desde el menú Compartir; si no, presentar desde la pantalla o el PDF.
 
+## Decisiones tomadas por Daniel (30-oct-2026, bloque 3)
+- Tope por transferencia Q5,000.00; saldo inicial simulado Q1,000.00.
+- Excepciones SCA de HAL-02 y HAL-03 aprobadas hasta el 28-nov-2026.
+- Dependency-Check y Snyk quedan opcionales (sin llaves).
+- Borrar `services/hola` en el bloque 4, con respaldo en la rama `respaldo/services-hola` y nota en BITÁCORA.
+
 ## Decisiones pendientes
+- Integración de la app con la API (PKCE, Keystore, pinning, freeRASP): ¿en el bloque 4 o en el 5?
 - SIEM (bloque 5): Wazuh necesita 4 GB+ de RAM y no cabe en US$5; opción: CloudWatch + alarmas + CloudTrail.
 - Pruebas en el teléfono (Frida, freeRASP): emulador en la computadora de Daniel o intento en GitHub Actions.
+- Al ensamblar el Word final: el Word de la Entrega 2 puede tener `w:tblLayout` duplicado en las tablas (se corrigió en el script del bloque 3; revisar con el validador).
 
 ## Recursos AWS
-Cuenta de Daniel, us-east-1: bootstrap y toda la arquitectura desplegada el 30-oct (WAF apagado). Gasto esperado ~US$1 al mes (llave KMS); WAF ~US$8 al mes solo encendido.
+Cuenta de Daniel, us-east-1: bootstrap y toda la arquitectura desplegada el 30-oct (WAF apagado). Las Lambdas todavía corren la imagen provisional hasta el merge del PR #36. Gasto esperado ~US$1 al mes (llave KMS); WAF ~US$8 al mes solo encendido.

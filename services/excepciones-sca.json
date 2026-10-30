@@ -1,0 +1,4 @@
+{
+  "_nota": "Excepciones de SCA de los microservicios (CTRL-10). Vacío: cualquier aviso High o Critical detiene el flujo.",
+  "excepciones": []
+}

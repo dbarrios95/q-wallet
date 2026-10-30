@@ -72,7 +72,7 @@ export default function WelcomeScreen() {
         {/* Security badge at bottom */}
         <View style={styles.footer}>
           <Text style={[styles.footerText, { color: colors.textSubtle }]}>
-            Cifrado de extremo a extremo · Cumplimiento JM-104-2021
+            Conexión cifrada TLS 1.3 · Diseñada con referencia a la JM-98-2025
           </Text>
         </View>
       </View>

@@ -41,6 +41,10 @@ resource "aws_lambda_function" "servicio" {
       TABLA_PRESUPUESTOS   = aws_dynamodb_table.tabla["presupuestos"].name
       TABLA_AUDITORIA      = aws_dynamodb_table.tabla["auditoria"].name
       USER_POOL_ID         = aws_cognito_user_pool.usuarios.id
+
+      # La Lambda vuelve a verificar el access token (firma, cliente y scope): CTRL-18.
+      COGNITO_CLIENT_ID = aws_cognito_user_pool_client.app_android.id
+      API_SCOPE         = "${aws_cognito_resource_server.api.identifier}/api"
     }
   }
 
