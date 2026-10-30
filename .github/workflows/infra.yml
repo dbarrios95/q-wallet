@@ -106,6 +106,8 @@ jobs:
           {
             echo "== EVD-3-15 Prueba de humo: runtime de Lambda de la imagen + handler, sin AWS · $(date -u '+%Y-%m-%d %H:%M UTC') · commit ${GITHUB_SHA::7}"
             echo "Evento: GET /me sin token. Esperado: 401 no_autenticado con cabeceras de seguridad."
+            docker run --rm --entrypoint /bin/sh qwallet-svc-profile:prueba -c \
+              'echo "entrypoint: $(head -c 600 /lambda-entrypoint.sh | tr "\n" " ")"; echo "runtime: $(ls /var/runtime | tr "\n" " ")"; ls /var/runtime/node_modules 2>&1 | head; id' 2>&1 | sed 's/^/   diag: /' 
             p=9101
             for s in svc-profile svc-accounts svc-transfers svc-budgets svc-admin; do
               python3 scripts/humo_lambda.py "$p" "$s" & srv=$!
@@ -118,7 +120,9 @@ jobs:
                 -e TABLA_PERFILES=t -e TABLA_PIN=t -e TABLA_CUENTAS=t -e TABLA_MOVIMIENTOS=t -e TABLA_TRANSFERENCIAS=t \
                 -e TABLA_BENEFICIARIOS=t -e TABLA_PRESUPUESTOS=t -e TABLA_AUDITORIA=t \
                 "qwallet-${s}:prueba" >/dev/null
-              wait "$srv" || { estado=1; docker logs "humo-${s}" 2>&1 | tail -20; }
+              wait "$srv" || estado=1
+              echo "   contenedor: $(docker inspect -f '{{.State.Status}} salida={{.State.ExitCode}}' "humo-${s}")"
+              docker logs "humo-${s}" 2>&1 | tail -15 | sed 's/^/   log: /' 
               docker rm -f "humo-${s}" >/dev/null
               p=$((p + 1))
             done

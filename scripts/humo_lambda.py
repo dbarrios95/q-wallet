@@ -31,8 +31,8 @@ entregado = False
 
 
 class Api(BaseHTTPRequestHandler):
-    def log_message(self, *a):
-        pass
+    def log_message(self, formato, *a):
+        print(f"{SERVICIO}: runtime pidió {self.command} {self.path}", file=sys.stderr, flush=True)
 
     def do_GET(self):
         global entregado
