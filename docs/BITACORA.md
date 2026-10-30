@@ -3,6 +3,18 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-10-30 — Daniel — Claude (claude.ai), fallo de OIDC en el primer despliegue
+- Qué se hizo: se revisó el "Run workflow" de `infra` (ejecución 41082898147). Falló el paso `configure-aws-credentials` del trabajo de despliegue: `Not authorized to perform sts:AssumeRoleWithWebIdentity` (12 intentos). Revisado desde GitHub: el entorno se llama `dev`, la ejecución fue de `main` y la confianza de `infra/bootstrap/politicas/confianza-despliegue.json` espera `repo:dbarrios95/q-wallet:environment:dev`, que es lo que manda GitHub. No se pudo ver la cuenta de AWS ni el valor del secreto.
+- Causas posibles, en orden: (1) `AWS_ACCOUNT_ID` con guiones o espacios (la consola muestra la cuenta como 1234-5678-9012) o de otra cuenta (la de Katherine o la descartada); (2) el rol o el proveedor OIDC no existen en esa cuenta; (3) la confianza del rol no quedó como la del repo.
+- Cambio: paso "Diagnóstico OIDC (sin secretos)" en los trabajos de plan y despliegue de `.github/workflows/infra.yml`. Revisa que el secreto tenga 12 dígitos (muestra solo los últimos 4) y muestra `aud`, `sub`, `environment` y `ref` del token de GitHub (no el token). Probado localmente con un token falso.
+- Revisión manual en CloudShell (us-east-1, con el usuario administrador):
+  - `aws sts get-caller-identity --query Account --output text` → los últimos 4 deben coincidir con los que muestra el diagnóstico.
+  - `aws iam list-open-id-connect-providers` → debe aparecer `token.actions.githubusercontent.com`.
+  - `aws iam get-role --role-name qwallet-gha-despliegue --query Role.AssumeRolePolicyDocument` → debe tener `repo:dbarrios95/q-wallet:environment:dev`.
+  - Si algo falta, volver a correr el bootstrap (no borra nada).
+- Archivos modificados: `.github/workflows/infra.yml`, `docs/ESTADO.md`, `docs/CONTEXTO.md` (sección 11), `docs/BITACORA.md`.
+- Siguiente paso: merge, revisión en CloudShell, corregir el secreto si hace falta y volver a correr el flujo.
+
 ### 2026-10-30 — Daniel — Claude (claude.ai), cuenta AWS y primer despliegue
 - Qué se hizo: Daniel creó su propia cuenta AWS (registro clásico, Free plan, us-east-1) en lugar de usar la de Katherine (tarjeta y MFA de ella). Una primera cuenta de la "nueva experiencia" se descartó: sus SCP prohíben crear proveedores OIDC (`iam:*Provider*`). Bootstrap en CloudShell completo. Primer despliegue desde Actions: falló (pendiente de diagnóstico).
 - Archivos modificados: `docs/ESTADO.md`, `docs/BITACORA.md`.
