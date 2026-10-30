@@ -430,13 +430,13 @@ GEMINI.md
 
 | Campo | Valor |
 |---|---|
-| Última actualización | 30-oct-2026 (Claude: diagnóstico del primer despliegue, fallo de OIDC) |
+| Última actualización | 30-oct-2026 (Claude: primer despliegue, permisos del rol de despliegue) |
 | Fase actual | Entrega 2 (sáb 7-nov-2026) = Fase 2 del enunciado. **Arranque y plan por bloques en `docs/ESTADO.md`** |
 | Versión de la app | Expo SDK 57 (React Native 0.86.3, TS strict), NativeWind 4.2.7, Tailwind 3.4.19, Reanimated 4, expo-router, freeRASP 5.2.2, 8 pantallas simuladas |
 | Completado | Entrega 1 (17-oct). 28-oct: forma de trabajo por bloques. **29-oct, bloque 1 (PR #22):** Terraform de toda la arquitectura en `/infra` (KMS, 8 tablas DynamoDB, Cognito con PKCE y MFA, API Gateway solo TLS 1.3 con authorizer en 18 rutas, 5 Lambdas en contenedor con un rol por función, ECR, CloudTrail, WAF apagable); bootstrap OIDC para CloudShell; flujo `infra.yml` (fmt, validate, Checkov, plan en PR, despliegue con revisión de destrucciones, verificación automática de TLS, IAM y cifrado); imagen provisional `services/hola`; Word de las secciones 4.1, 4.2 y 4.5 (`docs/entregas/Entrega2_Seccion_4_Arquitectura_Controles.docx`, 13 págs.); figura EVD-3-08. Checkov: 282 pasan, 0 fallan, 39 omitidas con motivo. `terraform validate` en verde en GitHub Actions. **30-oct, bloque 2:** presentación de la Entrega 2 en Claude Slides (5 diapositivas, ~5 min, notas del orador; guion y cifras en `docs/entregas/Entrega2_Presentacion.md`) |
-| En curso | Bloques 1 y 2 cerrados. Primer despliegue fallido por el formato nuevo del `sub` de OIDC de GitHub (con números fijos del dueño y del repo); confianza de los roles corregida en el PR #30. Falta volver a correr el bootstrap y el flujo; luego ensayar la presentación del 7-nov y bloque 3 |
+| En curso | Bloques 1 y 2 cerrados. Primer despliegue: OIDC resuelto (PR #30); el apply creó casi toda la arquitectura y falló por dos permisos del rol de despliegue (rol vinculado de API Gateway y `DescribeUserPoolDomain`), corregidos en el PR fix/permisos-despliegue. Falta bootstrap otra vez y volver a correr; luego ensayar la presentación del 7-nov y bloque 3 |
 | Siguiente paso / Pendientes | Ver `docs/ESTADO.md`. Arrastrados: texto oficial de JM-98-2025; Findex 23 %; límite de monto por transferencia; textos falsos de la UI (Welcome); PR de Dependabot de versión; Decreto 57-2008 oficial |
 | Regla de trabajo | Claude hace rama, commit, push y PR; Daniel hace merge. Claude no borra nada sin preguntar y respaldar (`CLAUDE.md`) |
 | Bloqueos | Bootstrap en CloudShell y secreto `AWS_ACCOUNT_ID` (Daniel). Confirmar AWS WAF y ECR en el plan gratuito. Los logs y artefactos de Actions no se pueden leer desde las sesiones de Claude: el flujo publica los resultados como comentario del PR y en el issue "Evidencias AWS" |
-| Recursos AWS desplegados | Ninguno todavía |
+| Recursos AWS desplegados | Cuenta de Daniel (us-east-1): bootstrap y despliegue parcial del 30-oct (todo menos el stage `v1` de API Gateway y el dominio de Cognito) |
 | Gasto AWS acumulado | US$0. Costo esperado al desplegar: unos US$1 al mes (llave KMS) más centavos de uso; el WAF suma unos US$8 al mes solo mientras esté encendido. Se descuenta del crédito de US$100 (vence 15-abr-2027) |
