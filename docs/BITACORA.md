@@ -3,6 +3,12 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-10-30 — Daniel — Claude (claude.ai), cuenta AWS y primer despliegue
+- Qué se hizo: Daniel creó su propia cuenta AWS (registro clásico, Free plan, us-east-1) en lugar de usar la de Katherine (tarjeta y MFA de ella). Una primera cuenta de la "nueva experiencia" se descartó: sus SCP prohíben crear proveedores OIDC (`iam:*Provider*`). Bootstrap en CloudShell completo. Primer despliegue desde Actions: falló (pendiente de diagnóstico).
+- Archivos modificados: `docs/ESTADO.md`, `docs/BITACORA.md`.
+- Decisiones: cuenta propia de Daniel; no activar "advanced features" en la cuenta nueva-experiencia (irreversible y quita el límite de gasto).
+- Siguiente paso: diagnosticar el fallo del flujo `infra`.
+
 ### 2026-10-30 — Daniel — Claude (claude.ai), bloque 2
 - Fase / sección del informe: Fase 2. Presentación de la Entrega 2 (sáb 7-nov-2026: 5 min, cámara abierta, resumen ejecutivo).
 - Qué se hizo:
