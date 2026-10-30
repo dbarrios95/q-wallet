@@ -89,7 +89,7 @@ jobs:
           semgrep scan --metrics=off \
             --config p/owasp-top-ten --config p/nodejs --config p/typescript --config p/javascript \
             --config p/react --config p/secrets --config p/dockerfile --config .semgrep/qwallet.yml \
-            --exclude node_modules --exclude dist --exclude services/hola \
+            --exclude node_modules --exclude dist \
             --sarif-output=semgrep.sarif --text-output=semgrep.txt services mobile || true
           {
             echo "== EVD-3-02 Semgrep ${SEMGREP_VERSION} · $(date -u '+%Y-%m-%d %H:%M UTC') · commit ${GITHUB_SHA::7}"
@@ -135,7 +135,6 @@ jobs:
             paths-ignore:
               - "**/node_modules"
               - "**/dist"
-              - services/hola
       - uses: github/codeql-action/analyze@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
         with:
           category: codeql
@@ -356,6 +355,7 @@ jobs:
             echo "| Etapa | Herramienta | Resultado |"
             echo "|---|---|---|"
             echo "| Pruebas por control | vitest 5.0.3 + tsc 6.0.3 | ${R_PRUEBAS} |"
+            echo "| Pentest caja gris (casos de abuso + OWASP API Top 10) | arnés vitest contra los handlers reales | ${R_PRUEBAS} |"
             echo "| SAST | Semgrep ${SEMGREP_VERSION:-1.179.0} | ${R_SEMGREP} |"
             echo "| SAST | CodeQL (security-extended) | ${R_CODEQL} |"
             echo "| SCA | npm audit + compuerta / Trivy | ${R_SCA} |"
@@ -363,7 +363,7 @@ jobs:
             echo "| SCA (opcional) | OWASP Dependency-Check 12.1.0 | ${R_ODC} |"
             echo "| SCA (opcional) | Snyk CLI 1.1307.4 | ${R_SNYK} |"
             echo
-            echo "Evidencias (EVD-3-01 a EVD-3-04, EVD-3-09, EVD-3-14) en los artefactos de la ejecución y abajo."
+            echo "Evidencias (EVD-3-01 a EVD-3-04, EVD-3-09, EVD-3-14, y del bloque 4 EVD-4-12 OWASP API y EVD-4-13 casos de abuso) en los artefactos de la ejecución y abajo."
             for f in evd/evidencias/*.txt evd/*.txt; do
               [ -f "$f" ] || continue
               echo; echo "<details><summary>$(basename "$f")</summary>"; echo; echo '```'

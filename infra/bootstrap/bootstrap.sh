@@ -10,6 +10,9 @@
 #   3. Política qwallet-limite-permisos: techo de permisos de todo rol que cree Terraform.
 #   4. Rol qwallet-gha-plan: solo lectura, solo para pull requests de este repo.
 #   5. Rol qwallet-gha-despliegue: solo para el entorno "dev" de GitHub (rama main).
+#   6. Rol qwallet-gha-pentest: solo lectura (SecurityAudit + ViewOnlyAccess), rama main.
+#      Lo usa el flujo pentest.yml para Nmap/ZAP/Prowler. Va aquí porque el rol de
+#      despliegue tiene prohibido (Deny) tocar los roles qwallet-gha-*.
 #
 # Se puede correr más de una vez: si algo ya existe, lo deja y actualiza las políticas.
 # No borra nada.
@@ -25,7 +28,7 @@ BUCKET="qwallet-tfstate-${CUENTA}"
 echo "Cuenta: ****${CUENTA: -4}  Región: ${REGION}"
 
 # Descarga las políticas del repo y pone el número de cuenta.
-for f in limite-permisos confianza-plan confianza-despliegue lectura-plan despliegue-a despliegue-b; do
+for f in limite-permisos confianza-plan confianza-despliegue lectura-plan despliegue-a despliegue-b confianza-pentest; do
   curl -fsSL "${REPO_RAW}/${f}.json" | sed "s/__CUENTA__/${CUENTA}/g" > "${DIR}/${f}.json"
 done
 
@@ -111,6 +114,14 @@ for p in qwallet-gha-despliegue-a qwallet-gha-despliegue-b; do
   aws iam attach-role-policy --role-name qwallet-gha-despliegue \
     --policy-arn "arn:aws:iam::${CUENTA}:policy/${p}"
 done
+
+echo "== 6. Rol de pentest (solo lectura, rama main)"
+rol qwallet-gha-pentest "${DIR}/confianza-pentest.json" "GitHub Actions: pentest de caja negra y Prowler (solo lectura)"
+# Dos políticas administradas por AWS, ambas de solo lectura. attach-role-policy es idempotente.
+aws iam attach-role-policy --role-name qwallet-gha-pentest \
+  --policy-arn "arn:aws:iam::aws:policy/SecurityAudit"
+aws iam attach-role-policy --role-name qwallet-gha-pentest \
+  --policy-arn "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess"
 
 echo
 echo "Listo. Falta un paso en GitHub: crear el secreto AWS_ACCOUNT_ID con este valor."
