@@ -25,7 +25,8 @@ def main() -> int:
             for v in res.get("Vulnerabilities", []) or []:
                 sev = v.get("Severity", "UNKNOWN")
                 conteo[sev] += 1
-                clave = (sev, v.get("PkgName"), v.get("InstalledVersion"), v.get("FixedVersion") or "", v.get("VulnerabilityID"), destino)
+                lugar = v.get("PkgPath") or destino
+                clave = (sev, v.get("PkgName"), v.get("InstalledVersion"), v.get("FixedVersion") or "", v.get("VulnerabilityID"), lugar)
                 hallazgos[clave].add(imagen)
             for s in res.get("Secrets", []) or []:
                 secretos.append((imagen, destino, s.get("RuleID"), s.get("Severity")))
