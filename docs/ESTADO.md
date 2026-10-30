@@ -2,7 +2,7 @@
 
 > Punto de arranque de cada chat. Se reescribe al cerrar cada bloque. Máximo una página.
 
-**Actualizado:** 30-oct-2026 · **Hoy toca:** cerrar el primer despliegue (bootstrap otra vez y Run workflow, ver "Despliegue") y luego bloque 3
+**Actualizado:** 30-oct-2026 · **Hoy toca:** cerrar el primer despliegue (faltan 2 permisos; bootstrap otra vez y Run workflow, ver "Despliegue") y luego bloque 3
 
 ## Fechas
 | Hito | Fecha | Fase del enunciado |
@@ -25,7 +25,8 @@
 - **Cuenta AWS nueva de Daniel** (`qwallet-umg`, registro clásico "AWS (advanced)", Free plan con US$100 de crédito, us-east-1). Ya no se usa la cuenta de Katherine.
 - Se descartó una cuenta de la "nueva experiencia" de AWS (proyectos con Builder ID): sus SCP administradas por AWS prohíben `iam:*Provider*` (no se puede crear el OIDC) y bloquearon `s3:CreateBucket`. No se creó nada en ella.
 - Hecho por Daniel: bootstrap en CloudShell **OK** (bucket del estado, OIDC, límite de permisos, roles `qwallet-gha-plan` y `qwallet-gha-despliegue`). Secreto `AWS_ACCOUNT_ID` y entorno `dev` (solo `main`) configurados por Daniel [VERIFICAR que el entorno quedó limitado a `main`].
-- **El primer "Run workflow" de `infra` falló** porque GitHub ahora manda el `sub` del token OIDC con números fijos del dueño y del repo (`repo:dbarrios95@58736977/q-wallet@1403562245:...`) y la confianza de los roles esperaba el formato viejo. Corregido en el PR #30 (políticas de confianza + paso de diagnóstico). Después del merge, Daniel vuelve a correr el bootstrap en CloudShell y luego "Run workflow".
+- OIDC resuelto (PR #30: GitHub manda el `sub` con números fijos del dueño y del repo). El "Run workflow" del 30-oct ya entró a AWS y creó casi todo: imágenes en ECR, llave KMS, tablas, Cognito, las 5 Lambdas, las 18 rutas y CloudTrail.
+- **Falló al final por dos permisos** del rol `qwallet-gha-despliegue`: crear el rol vinculado de API Gateway (`AWSServiceRoleForAPIGateway`, se crea una sola vez por cuenta) y `cognito-idp:DescribeUserPoolDomain` (no acepta límite por recurso). Corregido en el PR "fix/permisos-despliegue". Después del merge: bootstrap otra vez en CloudShell y "Run workflow". Terraform sigue desde donde quedó; no borra nada.
 - Pendiente de Daniel: MFA de la cuenta raíz y presupuesto de US$5 en Budgets [VERIFICAR si ya se hicieron].
 - Evidencia EVD-1-03 (Entrega 1) quedó de la cuenta de Katherine; no se toca.
 
@@ -63,4 +64,4 @@
 - Pruebas en el teléfono (Frida, freeRASP): emulador en la computadora de Daniel o intento en GitHub Actions.
 
 ## Recursos AWS
-Cuenta de Daniel: solo lo del bootstrap (bucket del estado, OIDC, 3 políticas, 2 roles). Nada de Terraform todavía. Gasto US$0. Región us-east-1. Al desplegar: ~US$1 al mes (llave KMS); WAF ~US$8 al mes solo encendido.
+Cuenta de Daniel, us-east-1. Bootstrap (bucket del estado, OIDC, 4 políticas, 2 roles) y, desde el 30-oct, casi toda la arquitectura (despliegue parcial: falta el stage `v1` de API Gateway y el dominio de Cognito). Gasto esperado ~US$1 al mes (llave KMS); WAF ~US$8 al mes solo encendido.

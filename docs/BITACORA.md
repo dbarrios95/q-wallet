@@ -3,6 +3,15 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-10-30 — Daniel — Claude (claude.ai), permisos del rol de despliegue
+- Qué se hizo: con la confianza OIDC corregida (PR #30) y el bootstrap vuelto a correr, el "Run workflow" (ejecución 41087212029) pasó credenciales, ECR, publicación de imágenes y plan sin destrucciones. El apply creó casi toda la arquitectura y falló en dos recursos:
+  - `aws_api_gateway_stage.v1`: `Caller does not have permissions to create a Service Linked Role`. Al crear el primer stage con registro de acceso y X-Ray, API Gateway necesita su rol vinculado `AWSServiceRoleForAPIGateway` (se crea una vez por cuenta).
+  - `aws_cognito_user_pool_domain.login`: `AccessDeniedException` en `DescribeUserPoolDomain`. Esa acción no acepta límite por recurso y la política solo la permitía sobre `userpool/*`.
+- Cambio en `infra/bootstrap/politicas/despliegue-a.json`: `iam:CreateServiceLinkedRole` solo para ese rol y con la condición `iam:AWSServiceName = ops.apigateway.amazonaws.com` (menor privilegio), y `cognito-idp:DescribeUserPoolDomain` en la lectura general.
+- Archivos modificados: `infra/bootstrap/politicas/despliegue-a.json`, `docs/ESTADO.md`, `docs/CONTEXTO.md` (sección 11), `docs/BITACORA.md`.
+- Hallazgo para el informe (4.5): los errores de permisos confirman que el rol de despliegue es de menor privilegio (lo que no está permitido falla); el ajuste se hizo con acción y recurso exactos.
+- Siguiente paso: merge, bootstrap otra vez en CloudShell y "Run workflow". Terraform continúa desde el estado guardado.
+
 ### 2026-10-30 — Daniel — Claude (claude.ai), fallo de OIDC en el primer despliegue
 - Qué se hizo: el "Run workflow" de `infra` (ejecución 41082898147) y el plan del PR #30 fallaron en `configure-aws-credentials`: `Not authorized to perform sts:AssumeRoleWithWebIdentity`. Se agregó el paso "Diagnóstico OIDC (sin secretos)" a los trabajos de plan y despliegue de `.github/workflows/infra.yml` (formato de `AWS_ACCOUNT_ID`, solo los últimos 4 dígitos, y `aud`, `sub`, `environment` y `ref` del token, nunca el token).
 - Causa encontrada con el diagnóstico: el secreto está bien (12 dígitos). GitHub manda el `sub` con los identificadores fijos del dueño y del repo: `repo:dbarrios95@58736977/q-wallet@1403562245:pull_request`. Las políticas de confianza esperaban el formato viejo `repo:dbarrios95/q-wallet:pull_request` con `StringEquals`, y no coincidían.
