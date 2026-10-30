@@ -2,7 +2,7 @@
 
 > Punto de arranque de cada chat. Se reescribe al cerrar cada bloque. Máximo una página.
 
-**Actualizado:** 30-oct-2026 · **Hoy toca:** cerrar el primer despliegue (faltan 2 permisos; bootstrap otra vez y Run workflow, ver "Despliegue") y luego bloque 3
+**Actualizado:** 30-oct-2026 · **Hoy toca:** cerrar el primer despliegue (dominio de Cognito marcado como dañado, ver "Despliegue") y luego bloque 3
 
 ## Fechas
 | Hito | Fecha | Fase del enunciado |
@@ -26,7 +26,7 @@
 - Se descartó una cuenta de la "nueva experiencia" de AWS (proyectos con Builder ID): sus SCP administradas por AWS prohíben `iam:*Provider*` (no se puede crear el OIDC) y bloquearon `s3:CreateBucket`. No se creó nada en ella.
 - Hecho por Daniel: bootstrap en CloudShell **OK** (bucket del estado, OIDC, límite de permisos, roles `qwallet-gha-plan` y `qwallet-gha-despliegue`). Secreto `AWS_ACCOUNT_ID` y entorno `dev` (solo `main`) configurados por Daniel [VERIFICAR que el entorno quedó limitado a `main`].
 - OIDC resuelto (PR #30: GitHub manda el `sub` con números fijos del dueño y del repo). El "Run workflow" del 30-oct ya entró a AWS y creó casi todo: imágenes en ECR, llave KMS, tablas, Cognito, las 5 Lambdas, las 18 rutas y CloudTrail.
-- **Falló al final por dos permisos** del rol `qwallet-gha-despliegue`: crear el rol vinculado de API Gateway (`AWSServiceRoleForAPIGateway`, se crea una sola vez por cuenta) y `cognito-idp:DescribeUserPoolDomain` (no acepta límite por recurso). Corregido en el PR "fix/permisos-despliegue". Después del merge: bootstrap otra vez en CloudShell y "Run workflow". Terraform sigue desde donde quedó; no borra nada.
+- Permisos corregidos (PR #31). El siguiente despliegue se detuvo solo, como debe: Terraform quería borrar y recrear el dominio de Cognito porque quedó marcado como dañado ("tainted") en el intento anterior, aunque se creó bien. En lugar de borrarlo, el PR "fix/desmarcar-dominio-cognito" agrega `infra/desmarcar.txt` y un paso que lo marca como sano (`terraform untaint`, no toca AWS). Después del merge el despliegue corre solo.
 - Pendiente de Daniel: MFA de la cuenta raíz y presupuesto de US$5 en Budgets [VERIFICAR si ya se hicieron].
 - Evidencia EVD-1-03 (Entrega 1) quedó de la cuenta de Katherine; no se toca.
 
