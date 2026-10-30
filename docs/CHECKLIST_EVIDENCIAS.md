@@ -42,7 +42,7 @@ Como no hay demo en vivo, toda afirmación técnica del informe necesita una evi
 | ☑ | EVD-3-13 | Configuración desplegada de Cognito, API Gateway y CloudTrail (igual, automático) |
 | ☑ | EVD-3-14 | Pruebas unitarias por control (vitest): 60/60 |
 | ☑ | EVD-3-15 | Prueba de humo de cada imagen con el runtime real de Lambda (GET /me sin token → 401) |
-| ☑ | EVD-3-17 | App compilada en release (minSdk 29, R8) abriendo en el emulador (captura de Daniel, 30-oct) |
+| ☐ | EVD-3-17 | App compilada en release desde la rama del bloque 3 (minSdk 29, R8), bienvenida con el texto corregido (la captura del 30-oct salió de `main`; se reemplaza) |
 | ☑ | EVD-3-16 | Figura del flujo DevSecOps (Figura 8). Script `scripts/bloque3_diagrama_devsecops.py` |
 | ◐ | EVD-3-09 | gitleaks sobre todo el historial en cada PR (hecho); Prowler pendiente (bloque 4) |
 | ☑ | EVD-3-10 | PR #37 (cerrado sin merge): zod 4.6.5 en /services, la etapa SCA falla |
