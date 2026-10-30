@@ -118,9 +118,13 @@ jobs:
                 -e TABLA_PERFILES=t -e TABLA_PIN=t -e TABLA_CUENTAS=t -e TABLA_MOVIMIENTOS=t -e TABLA_TRANSFERENCIAS=t \
                 -e TABLA_BENEFICIARIOS=t -e TABLA_PRESUPUESTOS=t -e TABLA_AUDITORIA=t \
                 "qwallet-${s}:prueba" >/dev/null
-              wait "$srv" || estado=1
-              echo "   contenedor: $(docker inspect -f '{{.State.Status}} salida={{.State.ExitCode}}' "humo-${s}")"
-              docker logs "humo-${s}" 2>&1 | tail -15 | sed 's/^/   log: /' 
+              if wait "$srv"; then
+                # Log estructurado que dejó la Lambda (CTRL-09): sin cuerpo, sin cabeceras, con correlationId.
+                docker logs "humo-${s}" 2>&1 | grep -o '{"nivel".*' | head -2 | sed 's/^/   log: /'
+              else
+                estado=1
+                docker logs "humo-${s}" 2>&1 | tail -15 | sed 's/^/   log: /'
+              fi 
               docker rm -f "humo-${s}" >/dev/null
               p=$((p + 1))
             done

@@ -29,6 +29,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  NO_COLOR: "1" # evidencias en texto plano, sin códigos de color
+  FORCE_COLOR: "0"
   NODE_VERSION: "24.21.0"
   SEMGREP_VERSION: "1.179.0"
   TRIVY_VERSION: "0.75.0"
@@ -231,7 +233,7 @@ jobs:
           {
             echo "== EVD-3-09 gitleaks ${GITLEAKS_VERSION} · $(date -u '+%Y-%m-%d %H:%M UTC') · commit ${GITHUB_SHA::7}"
             echo "Commits revisados: $(git rev-list --count HEAD)"
-            ./gitleaks git --redact --no-banner -v .
+            ./gitleaks git --redact --no-banner --no-color -v .
           } 2>&1 | tee evidencias/EVD-3-09_gitleaks.txt
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()

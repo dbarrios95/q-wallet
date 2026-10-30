@@ -153,9 +153,7 @@ def tabla(nombre, encabezado, filas, anchos_pulg=None, tam=10, nota_txt=None, to
     t = doc.add_table(rows=1 + len(filas), cols=len(encabezado))
     t.autofit = False
     tbl_pr = t._tbl.tblPr
-    lay = OxmlElement("w:tblLayout")
-    lay.set(qn("w:type"), "fixed")
-    tbl_pr.append(lay)
+    # t.autofit = False ya deja w:tblLayout fijo; no se agrega otro (el esquema lo rechaza).
     grid = t._tbl.tblGrid
     for gc, w in zip(grid.findall(qn("w:gridCol")), anchos_pulg):
         gc.set(qn("w:w"), str(int(w * 1440)))
@@ -308,15 +306,18 @@ tabla(
         "vienen de 3 avisos distintos (Tabla 33). En las imágenes las cifras son por imagen "
         "(las cinco dan lo mismo) y la compuerta solo bloquea las altas o críticas que ya "
         "tienen corrección. La única media que queda es ca-certificates del sistema operativo "
-        "base (Amazon Linux 2023), que se corrige cuando AWS publique la imagen nueva. "
+        "base (Amazon Linux 2023), que se corrige cuando AWS publique la imagen nueva. Trivy, "
+        "como segunda opinión sobre las dependencias, coincide: 0 en los microservicios y 5 en "
+        "la app (2 altas: decode-uri-component y node-forge, las mismas de HAL-02 y HAL-03). "
         "Evidencias EVD-3-04 y EVD-3-05."
     ),
 )
 parrafo(
     "Todo hallazgo real se registró con un identificador HAL y su tratamiento (Tabla 33). "
-    "El más relevante fue HAL-01: la versión de zod que habíamos fijado el 3 de octubre "
-    "(4.6.5) quedó vulnerable el 1 de octubre, cuando se publicó el aviso "
-    "GHSA-mrhx-c7xc-m3w5 (agotamiento de memoria al validar listas muy grandes). La subimos a "
+    "El más relevante fue HAL-01: la versión de zod que fijamos el 3 de octubre (4.6.5) "
+    "está afectada por el aviso GHSA-mrhx-c7xc-m3w5 (agotamiento de memoria al validar listas "
+    "muy grandes), publicado el 1 de octubre; no lo notamos al fijarla y apareció al correr "
+    "npm audit para armar la compuerta. Es el caso que el análisis automático evita. La subimos a "
     "4.6.7 en la app y en los microservicios, y además todos nuestros esquemas limitan el "
     "tamaño del cuerpo y de las listas. Para demostrar que la compuerta funciona, abrimos un "
     "pull request de prueba (número 37) que volvía a poner zod 4.6.5 en los microservicios: "
@@ -488,8 +489,8 @@ tabla(
         ["SAST", "CodeQL (security-extended)", "Hallazgo grave", "EVD-3-03"],
         ["SCA", "npm audit + scripts/sca_compuerta.py", "Aviso alto o crítico sin excepción vigente", "EVD-3-04, EVD-3-10"],
         ["SCA e inventario", "Trivy 0.75.0 (SBOM CycloneDX)", "Informativa", "EVD-3-04"],
-        ["Secretos", "gitleaks 8.30.1 (todo el historial)", "Cualquier secreto", "EVD-3-09"],
-        ["IaC", "Checkov 3.3.22, terraform validate", "Control fallido sin excepción en el código", "EVD-3-06"],
+        ["Secretos", "gitleaks 8.30.1 (todo el historial: 89 commits, sin hallazgos)", "Cualquier secreto", "EVD-3-09"],
+        ["IaC", "Checkov 3.3.22 (Terraform: 282 pasan; Dockerfile: 295 pasan; 0 fallan)", "Control fallido sin excepción en el código", "EVD-3-06"],
         ["Contenedores", "Docker multi-etapa + prueba de humo", "Imagen que no arranca o no responde 401", "EVD-3-15"],
         ["Contenedores", "Trivy 0.75.0", "Vulnerabilidad alta o crítica con corrección", "EVD-3-05"],
         ["Despliegue", "Terraform 1.16.5 con OIDC", "Plan que borra o reemplaza algo no aprobado", "EVD-3-11"],
