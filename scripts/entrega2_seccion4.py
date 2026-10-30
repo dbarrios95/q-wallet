@@ -305,7 +305,7 @@ tabla(
     ["Identidad", "Quién la usa", "Condición para asumirla", "Qué puede hacer", "Qué tiene prohibido"],
     [
         ["qwallet-gha-plan", "GitHub Actions en cada pull request",
-         "Token OIDC del repositorio con sub repo:dbarrios95/q-wallet:pull_request",
+         "Token OIDC del repositorio con sub repo:dbarrios95@58736977/q-wallet@1403562245:pull_request",
          "Solo leer la configuración y el estado para calcular el plan", "Escribir cualquier recurso; leer datos de las tablas"],
         ["qwallet-gha-despliegue", "GitHub Actions al hacer merge a main",
          "Token OIDC con sub del entorno dev (el entorno solo acepta la rama main)",
