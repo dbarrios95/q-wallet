@@ -3,6 +3,14 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-10-30 — Daniel — Claude (claude.ai), primer despliegue completo
+- Qué se hizo: después del merge del PR #32, el despliegue (ejecución 41092259904) desmarcó el dominio de Cognito, aplicó el plan sin destrucciones y terminó el apply. Toda la arquitectura de `/infra` quedó en la cuenta de Daniel (WAF apagado). Evidencias publicadas en el issue "Evidencias AWS" (#28), sin número de cuenta.
+- Resultado de la verificación: EVD-3-11 bien (matriz rol x tabla, ninguna Lambda con Scan, límite de permisos en los 5 roles); EVD-5-04 bien (8 tablas y 6 grupos de log con la llave propia, rotación de 365 días); EVD-3-13 bien (MFA ON, solo flujo code, tokens de 15 min, las 18 rutas con authorizer, CloudTrail multirregión con validación). EVD-3-12: TLS 1.3 aceptado con política `SecurityPolicy_TLS13_1_3_2025_09` en modo STRICT.
+- Avisos del script: (1) "el endpoint aceptó TLS 1.2", falso positivo: openssl terminó sin error pero con `Cipher is (NONE)`, es decir, rechazo; (2) `GET /me` sin token respondió 403 y se esperaba 401; desde la sesión de Claude no se puede llegar a la API para revisarlo.
+- Cambio en `infra/scripts/verificar_aws.sh`: TLS 1.2 se da por aceptado solo si se acordó un cifrado; la prueba sin token guarda el código y `x-amzn-ErrorType` de `/me` y de una ruta inexistente, para saber quién rechaza.
+- Archivos: `infra/scripts/verificar_aws.sh`, `docs/ESTADO.md`, `docs/CONTEXTO.md` (sección 11), `docs/BITACORA.md`.
+- Siguiente paso: merge; el despliegue vuelve a correr (sin cambios en AWS) y se lee el tipo de error del 403.
+
 ### 2026-10-30 — Daniel — Claude (claude.ai), dominio de Cognito marcado como dañado
 - Qué se hizo: con los permisos del PR #31 y el bootstrap vuelto a correr, el despliegue del merge (ejecución 41088793070) se detuvo en "Plan completo y revisión de destrucciones": el plan reemplazaba `aws_cognito_user_pool_domain.login` porque Terraform lo dejó marcado como dañado ("tainted") cuando falló la verificación del intento anterior. El dominio sí se creó bien (ya tiene distribución de CloudFront). La revisión de destrucciones funcionó como se diseñó.
 - Decisión: no aprobar el reemplazo (borraría y volvería a crear un recurso sano). Se agregó `infra/desmarcar.txt` y el paso "Marcar como sanos los recursos de infra/desmarcar.txt" en el despliegue (`terraform untaint -allow-missing`, solo edita el estado; si el recurso no está marcado, sigue). Probado con un terraform falso en los tres casos (marcado, no marcado, error).

@@ -36,11 +36,14 @@ falla() { echo "FALLA: $1"; FALLAS=$((FALLAS + 1)); }
   fi
   echo
   echo "2) Conexión forzando TLS 1.2 (debe ser rechazada):"
-  if r=$(echo | timeout 20 openssl s_client -connect "${API_HOST}:443" -servername "$API_HOST" -tls1_2 2>&1); then
-    echo "$r" | grep -E "Protocol|Cipher" | sed 's/^/   /'; falla "el endpoint aceptó TLS 1.2"
+  # openssl puede terminar sin error aunque el servidor rechace el saludo; lo que cuenta
+  # es si se acordó un cifrado ("Cipher is (NONE)" = no hubo conexión TLS).
+  r=$(echo | timeout 20 openssl s_client -connect "${API_HOST}:443" -servername "$API_HOST" -tls1_2 2>&1)
+  echo "$r" | grep -E "^New,|alert|handshake failure" | head -3 | sed 's/^/   /'
+  if echo "$r" | grep -qE "^New, TLSv1\.2, Cipher is [A-Z0-9]"; then
+    falla "el endpoint aceptó TLS 1.2"
   else
-    echo "$r" | grep -iE "alert|error|handshake" | head -3 | sed 's/^/   /'
-    echo "   Resultado: RECHAZADA (correcto)"
+    echo "   Resultado: RECHAZADA (no se acordó ningún cifrado; correcto)"
   fi
   echo
   echo "3) Política de seguridad configurada en la API:"
@@ -48,9 +51,16 @@ falla() { echo "FALLA: $1"; FALLAS=$((FALLAS + 1)); }
     --query '{politica:securityPolicy,modo:endpointAccessMode,tipo:endpointConfiguration.types}' --output json | sed 's/^/   /'
   echo
   echo "4) Solicitud sin token (debe responder 401 del authorizer de Cognito):"
-  codigo=$(curl -s -o /dev/null -w '%{http_code}' --tlsv1.3 "${API_URL}/me")
-  echo "   GET /me sin Authorization -> HTTP ${codigo}"
-  [ "$codigo" = "401" ] || falla "GET /me sin token respondió ${codigo}"
+  # x-amzn-ErrorType dice quién rechazó: UnauthorizedException = authorizer de Cognito;
+  # MissingAuthenticationTokenException = la ruta no existe en la etapa.
+  for ruta in /me /ruta-que-no-existe; do
+    cab=$(curl -s -o /dev/null -D - --tlsv1.3 "${API_URL}${ruta}")
+    codigo=$(echo "$cab" | awk 'NR==1{print $2}')
+    tipo=$(echo "$cab" | grep -i '^x-amzn-errortype' | cut -d: -f2- | tr -d ' \r')
+    echo "   GET ${ruta} sin Authorization -> HTTP ${codigo} (${tipo:-sin tipo})"
+    [ "$ruta" = "/me" ] && { [ "$codigo" = "401" ] || falla "GET /me sin token respondió ${codigo} (${tipo:-sin tipo})"; }
+  done
+  echo "   URL de la etapa: ${API_URL}" | sed "s#https://[^.]*\.#https://<api>.#"
 } > "$SALIDA/EVD-3-12_tls13.txt" 2>&1
 
 # ---------- EVD-3-11: menor privilegio ----------
