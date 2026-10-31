@@ -76,7 +76,7 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 | Secretos | SSM Parameter Store SecureString | Sin costo en tier estándar |
 | WAF | **AWS WAF** (Core Rule Set, Known Bad Inputs, rate-based) | Se activa solo en días de prueba |
 | Logs/Auditoría | CloudWatch Logs + CloudTrail → S3 | Fuente del SIEM |
-| SIEM | **Wazuh** en Docker local (lee CloudTrail/CloudWatch) | Gratis |
+| SIEM | **CloudWatch** (decisión 31-oct-2026): CloudTrail → CloudWatch Logs, filtros de métrica como reglas de correlación, consultas de Logs Insights, alarmas → SNS cifrado → correo, tablero `qwallet-seguridad`. Wazuh (antes) pasa al roadmap: pide 4 GB+ de RAM y no cabe en US$5 | ~US$0–1 al mes |
 | IaC | Terraform; estado remoto en **S3 con bloqueo nativo** (`use_lockfile = true`, sin DynamoDB), SSE-KMS, versionado y Block Public Access (ACT-09) | Checkov/tfsec/Trivy; el estado lo comparten los 3 integrantes y el pipeline (OIDC) |
 | CI/CD | GitHub Actions (`.github/workflows/infra.yml`), despliegue a AWS vía **OIDC** (sin llaves estáticas). Roles `qwallet-gha-plan` (solo lectura, PR) y `qwallet-gha-despliegue` (entorno `dev`, rama `main`), creados por `infra/bootstrap/bootstrap.sh`; límite de permisos `qwallet-limite-permisos` para todo rol que crea Terraform. El despliegue se detiene si el plan destruye o reemplaza algo fuera de `infra/destrucciones_aprobadas.txt` (decisión 29-oct-2026) | |
 | Repositorio | `github.com/dbarrios95/q-wallet`, **público** desde 05-oct-2026. Ruleset `main-protegida`: sin commits directos a `main` (rama → PR → merge) | Rulesets, secret scanning, push protection y CodeQL gratis solo en repos públicos |
@@ -202,7 +202,7 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 | Frida / frida-tools | 17.22.0 / 14.11.0 | Instrumentación |
 | objection | 1.12.5 | Pentest móvil |
 | OWASP Threat Dragon | 2.6.2 | Threat modeling |
-| Wazuh | 4.14.8 (Docker single-node) | SIEM |
+| Wazuh | 4.14.8 (Docker single-node) | Roadmap (el SIEM es CloudWatch desde el 31-oct-2026) |
 | gitleaks | 8.30.1 | Detección de secretos |
 | Prowler | 5.44.0 | Auditoría de la cuenta AWS (CIS) |
 
@@ -237,7 +237,7 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
                                                  +--> svc-transfers  --+--> [SSM Parameter Store]
                                                  +--> svc-budgets    --+
                                                  +--> svc-admin      --+
-CloudWatch Logs / CloudTrail --> S3 --> [Wazuh local (SIEM)]
+CloudTrail --> S3 (archivo) y --> CloudWatch Logs --> reglas y alarmas (SIEM) --> SNS --> correo
 GitHub Actions --OIDC--> AWS (ECR, Lambda, Terraform)
 ```
 
@@ -261,7 +261,7 @@ Ocho tablas, una por tipo de dato, para dar permisos tabla por tabla (menor priv
 | TB3 | API Gateway ↔ Lambdas |
 | TB4 | Lambdas ↔ Datos (DynamoDB, KMS, SSM) |
 | TB5 | GitHub (CI/CD) ↔ AWS |
-| TB6 | AWS ↔ SIEM local |
+| TB6 | AWS ↔ SIEM local (desde el 31-oct-2026 el SIEM es CloudWatch, dentro de la cuenta: la frontera ya no tiene tráfico) |
 
 ---
 
@@ -294,10 +294,10 @@ Ocho tablas, una por tipo de dato, para dar permisos tabla por tabla (menor priv
 | CTRL-14 | Autorización por función: grupo Cognito `admins` validado en el authorizer **y** en el handler | BFLA / escalada de privilegios | API5:2023 | 2b |
 | CTRL-15 | freeRASP (root/hook/emulador/tampering) + Hermes bytecode + R8 | Ingeniería inversa / hooking | MASVS-RESILIENCE | 2a / 3 |
 | CTRL-16 | Cero secretos en el cliente; secretos en SSM; gitleaks en CI + Secret Protection y push protection de GitHub (historial escaneado sin hallazgos antes de publicar) | Secretos expuestos | CWE-798 | 2a / 7 |
-| CTRL-17 | AWS WAF: Core Rule Set + Known Bad Inputs + regla rate-based | OWASP Top 10 / DoS de capa 7 | — | 5 |
+| CTRL-17 | AWS WAF: Core Rule Set + SQLi (agregado en el bloque 5) + Known Bad Inputs + regla rate-based. Se enciende solo para pruebas por costo | OWASP Top 10 / DoS de capa 7 | — | 5 |
 | CTRL-18 | MFA TOTP obligatorio + OAuth2 Authorization Code + PKCE + tokens de corta vida | Suplantación | MASVS-AUTH | 2b |
 | CTRL-19 | DynamoDB, S3 y CloudWatch Logs cifrados con KMS CMK propia, con rotación anual | Divulgación en reposo | ISO 27001 A.8.24 | 1 |
-| CTRL-20 | CloudTrail multi-región + CloudWatch → Wazuh con reglas de alerta | Detección / repudio | ISO 27001 A.8.15–16 | 7 |
+| CTRL-20 | CloudTrail multi-región (con invocaciones de Lambda) + CloudWatch como SIEM: reglas de correlación, alarmas y aviso por correo | Detección / repudio | ISO 27001 A.8.15–16 | 7 |
 | CTRL-21 | Despliegue por OIDC GitHub → AWS (sin llaves estáticas); ruleset `main-protegida` (PR obligatorio, sin force push ni borrado, bypass vacío) | Compromiso de CI/CD | SLSA / A08 | 7 |
 | CTRL-22 | FLAG_SECURE en pantallas sensibles (`transfer`, `unlock`, `profile`), aplicado en runtime con `expo-screen-capture` (no es config plugin) | Exposición de saldo/PII en capturas y vista de apps recientes | MASVS-PLATFORM | 1 |
 | CTRL-23 | Procedimiento de soporte: verificación de identidad del cliente por un canal distinto al de la solicitud antes de bloquear, desbloquear o cambiar datos de una cuenta, más capacitación anual contra ingeniería social. Control de procedimiento: no se dibuja en la Figura 1 | Ingeniería social contra soporte (AME-03) | ISO 27001 A.5.16 / A.6.3 | 7 |

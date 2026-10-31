@@ -71,3 +71,15 @@ rules:
     paths:
       include: ["/services/"]
       exclude: ["*.test.ts"]
+
+  - id: qwallet-fetch-sin-pinning
+    message: "CTRL-08 / HAL-13: en Expo SDK 57 el fetch global es expo/fetch y NO pasa por el pinning. Llame a la API con llamarApi() de src/seguridad/red.ts (XMLHttpRequest de React Native, con pinning)."
+    severity: ERROR
+    languages: [typescript, javascript]
+    pattern-either:
+      - pattern: fetch(...)
+      - pattern: globalThis.fetch(...)
+    paths:
+      include: ["/mobile/app/", "/mobile/src/"]
+      exclude: ["/mobile/src/seguridad/red.ts"]
+

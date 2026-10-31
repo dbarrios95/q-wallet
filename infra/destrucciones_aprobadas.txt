@@ -8,6 +8,8 @@
 aws_wafv2_web_acl.api*
 aws_wafv2_web_acl_association.api*
 aws_wafv2_web_acl_logging_configuration.api*
+# Alarma de bloqueos del WAF (bloque 5): existe solo mientras el WAF está encendido.
+aws_cloudwatch_metric_alarm.waf_bloqueos*
 
 # Despliegue de API Gateway: cada cambio de rutas crea uno nuevo y retira el anterior
 # (create_before_destroy). No guarda datos.

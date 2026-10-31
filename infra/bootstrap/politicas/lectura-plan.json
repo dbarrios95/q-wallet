@@ -46,7 +46,14 @@
         "cloudtrail:ListTags",
         "wafv2:Get*",
         "wafv2:List*",
-        "cognito-idp:ListUserPools"
+        "cognito-idp:ListUserPools",
+        "sns:GetTopicAttributes",
+        "sns:ListTagsForResource",
+        "sns:GetSubscriptionAttributes",
+        "sns:ListSubscriptionsByTopic",
+        "cloudwatch:DescribeAlarms",
+        "cloudwatch:ListTagsForResource",
+        "cloudwatch:GetDashboard"
       ],
       "Resource": "*"
     },

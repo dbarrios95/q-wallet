@@ -1,0 +1,334 @@
+{
+  "_nota": "Verificación de los controles por amenaza (bloque 5, sección 5.6). Lo lee scripts/bloque5_residual.py. Estados: prueba (se ejecutó el ataque y quedó bloqueado), configuracion (se leyó la configuración desplegada o el código; no hay ataque posible o permitido), parcial (parte del control falta o no se pudo probar), aceptado, eliminado. Regla: prueba y configuracion conservan el residual proyectado; parcial sube un nivel de probabilidad (sin pasar del inherente); 'residual' explícito reemplaza el cálculo cuando el análisis cambió (se explica en 'nota').",
+  "amenazas": {
+    "AME-01": {
+      "estado": "aceptado",
+      "evidencias": [],
+      "nota": "Una sola región por costo (RSK-01, aceptado en la Entrega 1)."
+    },
+    "AME-02": {
+      "estado": "parcial",
+      "evidencias": [
+        "EVD-5-05"
+      ],
+      "nota": "MFA obligatorio verificado (CTRL-18). La app aún no guarda sesión, así que el desbloqueo biométrico con Keystore (CTRL-07) no se pudo probar con un token real."
+    },
+    "AME-03": {
+      "estado": "parcial",
+      "evidencias": [
+        "EVD-5-05",
+        "EVD-5-06a"
+      ],
+      "nota": "MFA y la regla del SIEM sobre acciones administrativas de Cognito verificadas; el procedimiento de verificación de identidad en soporte (CTRL-23) es organizativo y no se puede probar con herramientas."
+    },
+    "AME-04": {
+      "estado": "configuracion",
+      "evidencias": [
+        "EVD-3-13",
+        "EVD-5-05"
+      ],
+      "nota": "MFA TOTP obligatorio (MfaConfiguration ON) y contraseña de 14 caracteres. El login administrado de Cognito está fuera de la política de pentest de AWS."
+    },
+    "AME-05": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-3-12",
+        "EVD-4-08",
+        "EVD-4-08c"
+      ],
+      "nota": "TLS 1.3 obligatorio y pinning contra un MITM con la CA del atacante en el sistema."
+    },
+    "AME-06": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-3-12",
+        "EVD-4-05",
+        "EVD-4-08"
+      ],
+      "nota": "Enmascaramiento de datos (CA-03) y pinning (CA-08)."
+    },
+    "AME-07": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-4-10",
+        "EVD-5-03",
+        "EVD-5-11",
+        "EVD-3-07"
+      ],
+      "nota": "freeRASP detecta emulador/root/hooking; Hermes bytecode y R8."
+    },
+    "AME-08": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-4-11",
+        "EVD-3-07"
+      ],
+      "nota": "gitleaks y patrones sobre el APK de producción, MobSF."
+    },
+    "AME-09": {
+      "estado": "configuracion",
+      "evidencias": [
+        "EVD-3-17"
+      ],
+      "nota": "FLAG_SECURE en transfer, unlock y profile (revisión del código). En el emulador la app se bloquea por freeRASP antes de llegar a esas pantallas."
+    },
+    "AME-10": {
+      "estado": "parcial",
+      "evidencias": [
+        "EVD-4-08b",
+        "EVD-5-03"
+      ],
+      "nota": "No hay tokens guardados en esta versión (conexión mínima); el almacenamiento con Keystore queda por diseño. freeRASP sí bloquea en dispositivos con root."
+    },
+    "AME-11": {
+      "estado": "parcial",
+      "evidencias": [
+        "EVD-5-02"
+      ],
+      "nota": "El throttling de API Gateway (429) y el límite por IP del WAF funcionan en la prueba, pero el WAF solo se enciende para pruebas por presupuesto: en operación normal queda solo el throttling. Decisión de Daniel (31-oct-2026): el WAF sigue solo para pruebas por presupuesto; el residual Alto se acepta de forma temporal, con el plan de encenderlo de forma permanente si la app pasa a producción."
+    },
+    "AME-12": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-4-05",
+        "EVD-4-12",
+        "EVD-5-02"
+      ],
+      "nota": "Validación estricta con zod (siempre activa) y WAF con CRS, SQLi y Known Bad Inputs (en prueba)."
+    },
+    "AME-13": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-3-13",
+        "EVD-4-01"
+      ],
+      "nota": "Ningún método sin Cognito; todas las rutas dan 401 sin token."
+    },
+    "AME-14": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-4-02",
+        "EVD-4-12"
+      ],
+      "nota": "Errores genéricos con correlationId; ZAP sin alertas Medium/High."
+    },
+    "AME-15": {
+      "estado": "configuracion",
+      "evidencias": [
+        "EVD-5-05"
+      ],
+      "nota": "MFA obligatorio y contraseña de 14; no se ataca el login de Cognito (fuera de la política de AWS)."
+    },
+    "AME-16": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-4-13"
+      ],
+      "nota": "CA-13: token alterado rechazado."
+    },
+    "AME-17": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-4-03",
+        "EVD-4-13"
+      ],
+      "nota": "CA-01 BOLA bloqueado."
+    },
+    "AME-18": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-4-06"
+      ],
+      "nota": "CA-05 paginación con tope de 50."
+    },
+    "AME-19": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-3-11"
+      ],
+      "nota": "Simulador de políticas: cada Lambda solo toca sus tablas."
+    },
+    "AME-20": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-4-05",
+        "EVD-5-02"
+      ],
+      "nota": "Teléfono enmascarado y throttling."
+    },
+    "AME-21": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-4-05"
+      ],
+      "nota": "CA-04 mass assignment rechazado."
+    },
+    "AME-22": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-4-13"
+      ],
+      "nota": "Presupuestos de otro usuario: no encontrado."
+    },
+    "AME-23": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-4-09"
+      ],
+      "nota": "CA-09 /admin rechazado para cliente."
+    },
+    "AME-24": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-5-05",
+        "EVD-5-06a",
+        "EVD-5-06c"
+      ],
+      "nota": "Auditoría en DynamoDB, CloudTrail con invocaciones de Lambda y regla del SIEM sobre acciones administrativas."
+    },
+    "AME-25": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-3-14"
+      ],
+      "nota": "Pruebas unitarias de la redacción de tokens y PII en los logs."
+    },
+    "AME-26": {
+      "estado": "configuracion",
+      "evidencias": [
+        "EVD-5-04",
+        "EVD-3-11"
+      ],
+      "nota": "CMK propia con rotación; sin permiso de exportación."
+    },
+    "AME-27": {
+      "estado": "configuracion",
+      "evidencias": [
+        "EVD-3-11"
+      ],
+      "nota": "Solo el rol de cada Lambda lee sus parámetros."
+    },
+    "AME-28": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-5-06a",
+        "EVD-5-06b"
+      ],
+      "nota": "Deny explícito en el rol de despliegue y alarma crítica ante DisableKey o ScheduleKeyDeletion."
+    },
+    "AME-29": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-5-06a",
+        "EVD-5-06b"
+      ],
+      "nota": "Validación de integridad de CloudTrail y alarma crítica ante StopLogging o DeleteTrail."
+    },
+    "AME-30": {
+      "estado": "configuracion",
+      "evidencias": [
+        "EVD-3-09"
+      ],
+      "nota": "Block Public Access por bucket y, desde el bloque 5, a nivel de cuenta."
+    },
+    "AME-31": {
+      "estado": "prueba",
+      "residual": [
+        2,
+        3
+      ],
+      "tratamiento": "Mitigar",
+      "evidencias": [
+        "EVD-5-05",
+        "EVD-5-06b"
+      ],
+      "nota": "Re-evaluada: el SIEM pasó de Wazuh local (riesgo aceptado) a CloudWatch administrado, y borrar sus alarmas, filtros o logs dispara una alarma crítica. Tratamiento: de Aceptar a Mitigar."
+    },
+    "AME-32": {
+      "estado": "configuracion",
+      "residual": [
+        1,
+        5
+      ],
+      "evidencias": [
+        "EVD-1-06",
+        "EVD-3-01",
+        "EVD-5-12"
+      ],
+      "nota": "OIDC solo para el entorno dev y la rama main, sin llaves; ruleset main-protegida; el despliegue se detiene ante destrucciones; y, desde el 31-oct-2026 (decisión de Daniel), cada despliegue al entorno dev espera la aprobación manual del responsable. Era el refuerzo de CTRL-21 planeado en la sección 2.5.5 (con un solo integrante, el aprobador es él)."
+    },
+    "AME-33": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-3-04",
+        "EVD-3-10"
+      ],
+      "nota": "La compuerta detectó avisos nuevos de node-forge el 31-oct y bloqueó main hasta corregirlos (HAL-06)."
+    },
+    "AME-34": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-1-07",
+        "EVD-3-09"
+      ],
+      "nota": "gitleaks sobre todo el historial en cada PR; push protection."
+    },
+    "AME-35": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-3-05",
+        "EVD-3-15"
+      ],
+      "nota": "Trivy 0 HIGH; imagen base por digest."
+    },
+    "AME-36": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-4-13"
+      ],
+      "nota": "Montos negativos o con decimales rechazados."
+    },
+    "AME-37": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-4-13"
+      ],
+      "nota": "Cuenta origen ajena rechazada."
+    },
+    "AME-38": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-4-04",
+        "EVD-5-06a"
+      ],
+      "nota": "CA-02 PIN bloqueado tras 5 intentos; alarma pin-bloqueado."
+    },
+    "AME-39": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-4-07"
+      ],
+      "nota": "CA-06 una sola transferencia aplicada."
+    },
+    "AME-40": {
+      "estado": "prueba",
+      "evidencias": [
+        "EVD-5-05",
+        "EVD-4-13"
+      ],
+      "nota": "PIN + auditoría + CloudTrail con invocaciones de Lambda."
+    },
+    "AME-41": {
+      "estado": "eliminado",
+      "residual": [
+        1,
+        3
+      ],
+      "tratamiento": "Eliminar",
+      "evidencias": [
+        "EVD-5-05"
+      ],
+      "nota": "Ya no hay SIEM local con credenciales de AWS: CloudWatch lee los logs dentro de la cuenta. Se elimina la fuente del riesgo."
+    }
+  }
+}
