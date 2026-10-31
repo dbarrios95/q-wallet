@@ -1,0 +1,15 @@
+# Falsos positivos confirmados de gitleaks (decisión de Daniel, 31-oct-2026, bloque 5).
+# Rama evidencias-ci: registro completo de las pruebas del emulador. Lo marcado son huellas
+# SHA-256 de llaves públicas de certificados (pinning, EVD-4-08c), no secretos. Desde el
+# commit que deja de publicar ese registro (scripts/publicar_evidencias.sh) no se generan más.
+# Formato: commit:archivo:regla:línea. Solo estas 10; cualquier hallazgo nuevo sigue fallando.
+161192e4e0c733cfb3af4e9adc795e5312944a0a:movil/2026-10-31_1710_41221009080/registro_dispositivo.txt:generic-api-key:153
+161192e4e0c733cfb3af4e9adc795e5312944a0a:movil/2026-10-31_1710_41221009080/registro_dispositivo.txt:generic-api-key:431
+161192e4e0c733cfb3af4e9adc795e5312944a0a:movil/2026-10-31_1710_41221009080/registro_dispositivo.txt:generic-api-key:709
+ce07487471f3217e342f03e2184e24564d3d3834:movil/2026-10-31_1804_41225457952/registro_dispositivo.txt:generic-api-key:152
+ce07487471f3217e342f03e2184e24564d3d3834:movil/2026-10-31_1804_41225457952/registro_dispositivo.txt:generic-api-key:431
+ce07487471f3217e342f03e2184e24564d3d3834:movil/2026-10-31_1804_41225457952/registro_dispositivo.txt:generic-api-key:710
+ce07487471f3217e342f03e2184e24564d3d3834:movil/2026-10-31_1804_41225457952/registro_dispositivo.txt:generic-api-key:989
+ce07487471f3217e342f03e2184e24564d3d3834:movil/2026-10-31_1804_41225457952/registro_dispositivo.txt:generic-api-key:1268
+5b06d5fb3b97cf2195493b01fe18bb8a1086c9b5:movil/2026-10-31_1736_41223482574/registro_dispositivo.txt:generic-api-key:143
+5b06d5fb3b97cf2195493b01fe18bb8a1086c9b5:movil/2026-10-31_1736_41223482574/registro_dispositivo.txt:generic-api-key:411
