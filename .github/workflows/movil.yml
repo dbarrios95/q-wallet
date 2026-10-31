@@ -184,17 +184,17 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
+      - name: Arrancar el emulador (Android 13, API 33, con root)
+        if: hashFiles('evidencias/app-release.apk') != ''
+        timeout-minutes: 20
+        run: bash mobile/pruebas/emulador.sh evidencias
+
       - name: Pruebas en el emulador
         if: hashFiles('evidencias/app-release.apk') != ''
-        uses: reactivecircus/android-emulator-runner@e93c997dcab69054e999e3924af3d21c4a736e13 # v2.9.0
-        with:
-          api-level: 33
-          target: google_apis
-          arch: x86_64
-          profile: pixel_6
-          disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
-          script: bash mobile/pruebas/dispositivo.sh evidencias/app-release.apk evidencias
+        timeout-minutes: 25
+        run: |
+          export PATH="$ANDROID_HOME/platform-tools:$PATH"
+          bash mobile/pruebas/dispositivo.sh evidencias/app-release.apk evidencias
 
       - name: Publicar evidencias
         if: always()
