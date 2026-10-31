@@ -75,14 +75,22 @@ jobs:
       - name: Compilar APK release (Hermes + R8)
         working-directory: mobile/android
         run: |
-          set -o pipefail
-          if ! ./gradlew assembleRelease --no-daemon --console=plain 2>&1 | tee /tmp/gradle.log; then
+          set +e
+          ./gradlew assembleRelease --no-daemon --console=plain > /tmp/gradle.log 2>&1
+          rc=$?
+          tail -60 /tmp/gradle.log
+          if [ "$rc" -ne 0 ]; then
             # Las anotaciones se pueden leer por la API aunque los logs no (sesiones de Claude).
-            grep -n -E "FAILURE|What went wrong|error:|Error:|> |Caused by|Exception" /tmp/gradle.log | head -40 \
-              | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}' | sed 's/^/::error title=Gradle::/'
-            echo
-            tail -25 /tmp/gradle.log | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}' | sed 's/^/::error title=Gradle (final)::/'
-            echo
+            python3 - <<'PY'
+          import re
+          lineas = open("/tmp/gradle.log", encoding="utf-8", errors="replace").read().splitlines()
+          clave = [l for l in lineas if re.search(r"What went wrong|error:|^e: |Caused by|FAILURE|Could not|not found|failed|Execution failed|Exception", l) and not l.startswith("> Task")]
+          def anotar(titulo, texto):
+              texto = texto.replace("%", "%25").replace("\r", "").replace("\n", "%0A")
+              print(f"::error title={titulo}::{texto[:8000]}")
+          anotar("Gradle error", "\n".join(clave[:40]) or "(sin líneas de error reconocibles)")
+          anotar("Gradle final", "\n".join(lineas[-40:]))
+          PY
             exit 1
           fi
 
