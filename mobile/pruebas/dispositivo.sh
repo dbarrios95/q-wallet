@@ -126,16 +126,21 @@ kill "$MITM" 2>/dev/null; sleep 2
   echo "Marcas de la app con el proxy activo:"
   marcas | sed 's/^/   /'
   echo
-  leidas=$(grep -c 'execute-api' /tmp/mitm.log || true)
+  leidas=$(grep -c -E '(GET|POST) https://[^ ]*execute-api' /tmp/mitm.log || true)
   echo "Solicitudes a la API que el proxy pudo leer en claro: ${leidas} (1 es el control con curl)"
   grep -E 'execute-api|TLS|certificate|disconnect' /tmp/mitm.log | grep -v -E 'google|gstatic' | sed 's/^/   /' | head -12
   echo
-  if marcas | grep -q 'error=pinning' && [ "$leidas" -le 1 ]; then
-    echo "Resultado: BLOQUEADO. La app rechazó el certificado del proxy (pinning) y no envió la solicitud;"
-    echo "el proxy solo leyó la solicitud de control."
-  else
-    echo "Resultado: INTERCEPTADA. El proxy leyó la solicitud de la app: el pinning no se aplicó."
-  fi
+  for via in fetch xhr; do
+    if marcas | grep "via=${via}" | grep -q 'estado=sin_conexion'; then
+      echo "Resultado ${via}: BLOQUEADO (la app cortó la conexión con el proxy)."
+    elif marcas | grep "via=${via}" | grep -q 'estado=401'; then
+      echo "Resultado ${via}: INTERCEPTADO (la solicitud llegó a la API pasando por el proxy)."
+    else
+      echo "Resultado ${via}: sin marca de la app."
+    fi
+  done
+  marcas | grep -q 'error=pinning' && echo "La librería de pinning reportó el rechazo del certificado del proxy (error=pinning)."
+  echo "Solicitudes de la app leídas por el proxy: $(( leidas > 0 ? leidas - 1 : 0 )) (se descuenta el control)."
 } > "$OUT/EVD-4-08_mitm_pinning.txt"
 
 # Vuelve a abrir sin proxy: la conexión legítima sigue funcionando (401 esperado).

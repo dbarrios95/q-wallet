@@ -35,15 +35,37 @@ export function iniciarPinning(): Promise<boolean> {
   return iniciado;
 }
 
-/** Sonda: GET /me sin token. Resultado esperado: estado=401 con pinning activo. */
+/** GET /me sin token por XMLHttpRequest: siempre pasa por el cliente de red de React Native. */
+function pedirXhr(url: string): Promise<number> {
+  return new Promise((resolver, rechazar) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+    xhr.setRequestHeader("Accept", "application/json");
+    xhr.onload = () => resolver(xhr.status);
+    xhr.onerror = () => rechazar(new Error("xhr_error"));
+    xhr.send();
+  });
+}
+
+/**
+ * Sonda: GET /me sin token. Resultado esperado: estado=401 con pinning activo.
+ * Se prueba por los dos caminos de red de la app (fetch y XMLHttpRequest) porque Expo
+ * SDK 57 puede reemplazar el fetch global (HAL-13).
+ */
 export async function sondaApi(): Promise<void> {
   const pinning = await iniciarPinning();
-  const inicio = Date.now();
-  try {
-    const r = await fetch(`${API_URL}/me`, { method: "GET", headers: { Accept: "application/json" } });
-    marcaSeguridad("API", { sonda: "GET_/me", estado: r.status, pinning: pinning ? "activo" : "inactivo", ms: Date.now() - inicio });
-  } catch (e) {
-    const tipo = e instanceof Error ? e.name : "desconocido";
-    marcaSeguridad("API", { sonda: "GET_/me", estado: "sin_conexion", motivo: tipo, ms: Date.now() - inicio });
+  const caminos: [string, () => Promise<number>][] = [
+    ["fetch", async () => (await fetch(`${API_URL}/me`, { headers: { Accept: "application/json" } })).status],
+    ["xhr", () => pedirXhr(`${API_URL}/me`)],
+  ];
+  for (const [via, pedir] of caminos) {
+    const inicio = Date.now();
+    try {
+      const estado = await pedir();
+      marcaSeguridad("API", { sonda: "GET_/me", via, estado, pinning: pinning ? "activo" : "inactivo", ms: Date.now() - inicio });
+    } catch (e) {
+      const tipo = e instanceof Error ? e.message || e.name : "desconocido";
+      marcaSeguridad("API", { sonda: "GET_/me", via, estado: "sin_conexion", motivo: tipo, ms: Date.now() - inicio });
+    }
   }
 }
