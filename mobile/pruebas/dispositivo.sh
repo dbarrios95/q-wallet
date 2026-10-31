@@ -18,6 +18,9 @@ OUT="$2"
 PKG="gt.qwallet.app"
 FRIDA_VER="17.22.0"
 mkdir -p "$OUT"
+# Todo lo que pasa queda en un registro que se publica (los logs de Actions no se leen desde Claude).
+exec > >(tee -a "$OUT/registro_dispositivo.txt") 2>&1
+echo "Inicio: $(date -u '+%H:%M:%S')"
 FECHA="$(date -u '+%Y-%m-%d %H:%M:%S UTC')"
 
 marcas() { adb logcat -d 2>/dev/null | grep -o 'QWALLET_[A-Z]* .*' | sed 's/[[:space:]]*$//' | sort -u; }

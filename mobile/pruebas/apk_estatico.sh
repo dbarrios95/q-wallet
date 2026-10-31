@@ -21,9 +21,11 @@ falla() { echo "FALLA: $1"; FALLAS=$((FALLAS + 1)); }
   echo "APK: $(basename "$APK"), $(du -h "$APK" | cut -f1)"
   echo
   echo "1) gitleaks 8.30.1 sobre el contenido del APK descomprimido:"
-  docker run --rm -v "$TMP/apk:/apk:ro" zricethezav/gitleaks:v8.30.1 dir /apk --no-banner --redact \
-    --report-format json --report-path /dev/stdout 2>/dev/null > "$TMP/gitleaks.json" || true
-  n=$(python3 -c "import json,sys;print(len(json.load(open('$TMP/gitleaks.json'))))" 2>/dev/null || echo "?")
+  mkdir -p "$TMP/gl"; chmod 777 "$TMP/gl"
+  docker run --rm -v "$TMP/apk:/apk:ro" -v "$TMP/gl:/out" zricethezav/gitleaks:v8.30.1 dir /apk --no-banner --redact \
+    --exit-code 0 --report-format json --report-path /out/gitleaks.json > "$TMP/gl/salida.txt" 2>&1
+  n=$(python3 -c "import json;print(len(json.load(open('$TMP/gl/gitleaks.json'))))" 2>/dev/null || echo "?")
+  [ "$n" = "?" ] && sed 's/^/   /' "$TMP/gl/salida.txt" | tail -5
   echo "   Hallazgos: ${n}"
   [ "$n" = "0" ] || falla "gitleaks encontró ${n} posibles secretos"
   echo
@@ -69,11 +71,16 @@ falla() { echo "FALLA: $1"; FALLAS=$((FALLAS + 1)); }
     echo "   -> NO es Hermes bytecode"
   fi
   echo
-  echo "2) R8: nombres de clases de la app en classes*.dex"
-  total=$(cat "$TMP"/apk/classes*.dex | grep -a -o 'Lgt/qwallet/app/[A-Za-z0-9_$/]*;' | sort -u | wc -l)
-  cortos=$(cat "$TMP"/apk/classes*.dex | grep -a -o 'L[a-z]\{1,2\}/[a-z]\{1,2\}/[A-Za-z]\{1,2\};' | sort -u | wc -l)
-  echo "   Clases con el paquete de la app: ${total}"
-  echo "   Clases con nombres ofuscados de 1-2 letras (R8): ${cortos}"
+  echo "2) R8: archivo de mapeo de la compilación (nombre original -> nombre ofuscado)"
+  MAPA="${MAPA_R8:-}"
+  if [ -n "$MAPA" ] && [ -f "$MAPA" ]; then
+    clases=$(grep -c -E '^[^ #].* -> .*:$' "$MAPA" || true)
+    renombradas=$(grep -E '^[^ #].* -> .*:$' "$MAPA" | awk '{n=$1; o=$3; sub(/:$/,"",o); if (n!=o) c++} END{print c+0}')
+    echo "   Clases en el mapeo: ${clases}; renombradas por R8: ${renombradas}"
+    echo "   Ejemplos:"; grep -E '^[^ #].* -> .*:$' "$MAPA" | awk '{o=$3; sub(/:$/,"",o); if ($1!=o) print "     " $1 " -> " o}' | grep -v '^     android\.' | head -5
+  else
+    echo "   (no se encontró mapping.txt: R8 no corrió)"
+  fi
   echo
   echo "3) Firma (apksigner):"
   "$BT/apksigner" verify --verbose --print-certs "$APK" 2>&1 | grep -E 'Verified using|Signer #1 certificate (DN|SHA-256)' | sed 's/^/   /'

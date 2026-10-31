@@ -76,7 +76,8 @@ jobs:
         working-directory: mobile/android
         run: |
           set +e
-          ./gradlew assembleRelease --no-daemon --console=plain > /tmp/gradle.log 2>&1
+          # Solo x86_64 (emulador) y arm64-v8a (teléfonos actuales): la mitad del tiempo y del tamaño.
+          ./gradlew assembleRelease --no-daemon --console=plain -PreactNativeArchitectures=x86_64,arm64-v8a > /tmp/gradle.log 2>&1
           rc=$?
           tail -60 /tmp/gradle.log
           if [ "$rc" -ne 0 ]; then
@@ -132,7 +133,8 @@ jobs:
       - name: Secretos, manifiesto, ofuscación y firma (EVD-4-11, EVD-5-11)
         run: |
           cp mobile/android/app/build/outputs/apk/release/app-release.apk evidencias/
-          bash mobile/pruebas/apk_estatico.sh evidencias/app-release.apk evidencias
+          MAPA_R8=mobile/android/app/build/outputs/mapping/release/mapping.txt \
+            bash mobile/pruebas/apk_estatico.sh evidencias/app-release.apk evidencias
 
       - name: MobSF 4.5.3 (EVD-3-07)
         env:
