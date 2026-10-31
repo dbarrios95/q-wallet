@@ -130,7 +130,7 @@ kill "$MITM" 2>/dev/null; sleep 2
   echo "Solicitudes a la API que el proxy pudo leer en claro: ${leidas} (1 es el control con curl)"
   grep -E 'execute-api|TLS|certificate|disconnect' /tmp/mitm.log | grep -v -E 'google|gstatic' | sed 's/^/   /' | head -12
   echo
-  for via in fetch xhr; do
+  for via in cliente_api fetch_global_diagnostico; do
     if marcas | grep "via=${via}" | grep -q 'estado=sin_conexion'; then
       echo "Resultado ${via}: BLOQUEADO (la app cortó la conexión con el proxy)."
     elif marcas | grep "via=${via}" | grep -q 'estado=401'; then

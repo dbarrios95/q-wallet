@@ -7,6 +7,7 @@ declare const event: { body: string; headers: Record<string, string> };
 declare const guardado: { pin: string; hash: string };
 declare class ScanCommand { constructor(x: unknown) }
 declare class QueryCommand { constructor(x: unknown) }
+declare function llamarApi(ruta: string): Promise<unknown>;
 
 export async function pruebas(pin: string) {
   // ruleid: qwallet-dynamodb-scan
@@ -40,4 +41,9 @@ export async function pruebas(pin: string) {
   // ruleid: qwallet-access-control-allow-origin
   const cabeceras = { "Access-Control-Allow-Origin": "*" };
   return { id, datos, flojo, estricto, cabeceras };
+
+  // ruleid: qwallet-fetch-sin-pinning
+  await fetch("https://api.example/me");
+  // ok: qwallet-fetch-sin-pinning
+  await llamarApi("/me");
 }

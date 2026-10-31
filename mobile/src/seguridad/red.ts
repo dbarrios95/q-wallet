@@ -35,28 +35,41 @@ export function iniciarPinning(): Promise<boolean> {
   return iniciado;
 }
 
-/** GET /me sin token por XMLHttpRequest: siempre pasa por el cliente de red de React Native. */
-function pedirXhr(url: string): Promise<number> {
+/**
+ * Cliente de la API de Q-Wallet. Usa XMLHttpRequest, que en React Native pasa por el
+ * cliente OkHttp de NetworkingModule, donde la librería instala el CertificatePinner.
+ * HAL-13: en Expo SDK 57 el fetch global es expo/fetch (otro cliente, sin pinning); por eso
+ * la app no usa fetch para la API (regla Semgrep qwallet-fetch-sin-pinning).
+ */
+export async function llamarApi(
+  ruta: string,
+  opciones: { metodo?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE"; token?: string; cuerpo?: unknown } = {},
+): Promise<{ estado: number; cuerpo: string }> {
+  await iniciarPinning();
   return new Promise((resolver, rechazar) => {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", url);
+    xhr.open(opciones.metodo ?? "GET", `${API_URL}${ruta}`);
     xhr.setRequestHeader("Accept", "application/json");
-    xhr.onload = () => resolver(xhr.status);
-    xhr.onerror = () => rechazar(new Error("xhr_error"));
-    xhr.send();
+    if (opciones.token) xhr.setRequestHeader("Authorization", `Bearer ${opciones.token}`);
+    if (opciones.cuerpo !== undefined) xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.timeout = 15000;
+    xhr.onload = () => resolver({ estado: xhr.status, cuerpo: xhr.responseText });
+    xhr.onerror = () => rechazar(new Error("conexion_rechazada"));
+    xhr.ontimeout = () => rechazar(new Error("tiempo_agotado"));
+    xhr.send(opciones.cuerpo === undefined ? null : JSON.stringify(opciones.cuerpo));
   });
 }
 
 /**
- * Sonda: GET /me sin token. Resultado esperado: estado=401 con pinning activo.
- * Se prueba por los dos caminos de red de la app (fetch y XMLHttpRequest) porque Expo
- * SDK 57 puede reemplazar el fetch global (HAL-13).
+ * Sonda al arrancar: GET /me sin token por el cliente de la API (esperado: 401 con pinning).
+ * También registra, solo como diagnóstico de HAL-13, qué pasa con el fetch global de Expo;
+ * la app no lo usa para hablar con la API.
  */
 export async function sondaApi(): Promise<void> {
   const pinning = await iniciarPinning();
   const caminos: [string, () => Promise<number>][] = [
-    ["fetch", async () => (await fetch(`${API_URL}/me`, { headers: { Accept: "application/json" } })).status],
-    ["xhr", () => pedirXhr(`${API_URL}/me`)],
+    ["cliente_api", async () => (await llamarApi("/me")).estado],
+    ["fetch_global_diagnostico", async () => (await fetch(`${API_URL}/me`, { headers: { Accept: "application/json" } })).status],
   ];
   for (const [via, pedir] of caminos) {
     const inicio = Date.now();
