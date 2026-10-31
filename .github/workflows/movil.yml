@@ -97,7 +97,7 @@ jobs:
       - name: Verificar los pines contra la cadena real del endpoint (CTRL-08)
         run: |
           mkdir -p evidencias
-          host=$(grep -o 'https://[^"]*execute-api[^"/]*' mobile/src/seguridad/config.ts | head -1 | sed 's#https://##')
+          host=$(grep -o '[a-z0-9]*\.execute-api\.[a-z0-9-]*\.amazonaws\.com' mobile/src/seguridad/config.ts | head -1)
           spki() { openssl x509 -in "$1" -pubkey -noout | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | base64; }
           {
             echo "Pines configurados en la app vs. cadena real de ${host}"

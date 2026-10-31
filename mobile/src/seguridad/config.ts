@@ -3,8 +3,9 @@
 // los pines son huellas de llaves públicas. No hay secretos en el cliente (CTRL-16).
 
 /** Etapa v1 de la API (API Gateway regional, solo TLS 1.3). */
-export const API_URL = "https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/v1";
-export const API_HOST = new URL(API_URL).host;
+export const API_HOST = "dk1m3avi8i.execute-api.us-east-1.amazonaws.com";
+// Se arma con texto: el URL de React Native no implementa .host (lanza error).
+export const API_URL = `https://${API_HOST}/v1`;
 
 /**
  * CTRL-08: pinning por llave pública (SHA-256 del SubjectPublicKeyInfo, en base64)

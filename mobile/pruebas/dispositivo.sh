@@ -105,7 +105,7 @@ adb shell "mkdir -p -m 700 /data/local/tmp/ca && cp /system/etc/security/cacerts
   && chmod 644 /system/etc/security/cacerts/* && chcon u:object_r:system_file:s0 /system/etc/security/cacerts/*"
 ca_instalada=$(adb shell "ls /system/etc/security/cacerts/${HASH}.0 2>/dev/null" | tr -d '\r')
 adb shell settings put global http_proxy 10.0.2.2:8080
-API_HOST=$(grep -o 'https://[^"]*execute-api[^"/]*' mobile/src/seguridad/config.ts | head -1)
+API_HOST="https://$(grep -o '[a-z0-9]*\.execute-api\.[a-z0-9-]*\.amazonaws\.com' mobile/src/seguridad/config.ts | head -1)"
 # Control: un cliente que confía en la CA del atacante y NO fija llaves sí es interceptado.
 control=$(curl -sS -o /dev/null -w '%{http_code}' --proxy http://127.0.0.1:8080 --cacert "$CA" "${API_HOST}/v1/me" 2>&1)
 abrir 30
