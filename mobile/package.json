@@ -51,5 +51,8 @@
     "lint": "eslint .",
     "type-check": "tsc --noEmit"
   },
-  "private": true
+  "private": true,
+  "overrides": {
+    "node-forge": "1.4.2"
+  }
 }

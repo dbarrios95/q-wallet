@@ -68,6 +68,22 @@ data "aws_iam_policy_document" "kms_datos" {
     }
   }
 
+  # 4. Las alarmas de CloudWatch publican en el tema SNS cifrado (bloque 5).
+  statement {
+    sid       = "AlarmasPublicanEnSns"
+    actions   = ["kms:Decrypt", "kms:GenerateDataKey*"]
+    resources = ["*"]
+    principals {
+      type        = "Service"
+      identifiers = ["cloudwatch.amazonaws.com"]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [local.cuenta]
+    }
+  }
+
   statement {
     sid       = "CloudTrailDescribe"
     actions   = ["kms:DescribeKey"]

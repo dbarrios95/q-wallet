@@ -12,6 +12,9 @@ import {
 } from "@expo-google-fonts/inter";
 import { useColorScheme } from "react-native";
 import { theme } from "../src/theme/colors";
+import { useProteccionRasp } from "../src/seguridad/rasp";
+import { sondaApi } from "../src/seguridad/red";
+import { PantallaBloqueo } from "../src/seguridad/PantallaBloqueo";
 
 // Prevent auto-hiding splash screen until fonts are loaded
 SplashScreen.preventAutoHideAsync();
@@ -20,6 +23,12 @@ export default function RootLayout() {
   const scheme = useColorScheme();
   const isDark = scheme === "dark";
   const colors = isDark ? theme.dark : theme.light;
+
+  // CTRL-15: freeRASP corre desde el arranque. CTRL-08: pinning + sonda a la API.
+  const rasp = useProteccionRasp();
+  useEffect(() => {
+    void sondaApi();
+  }, []);
 
   const [fontsLoaded, fontError] = useFonts({
     Inter_400Regular,
@@ -36,6 +45,15 @@ export default function RootLayout() {
 
   if (!fontsLoaded && !fontError) {
     return null;
+  }
+
+  if (rasp.bloqueada) {
+    return (
+      <>
+        <StatusBar style="light" />
+        <PantallaBloqueo amenazas={rasp.amenazas} />
+      </>
+    );
   }
 
   return (

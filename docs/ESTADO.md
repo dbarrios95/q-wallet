@@ -20,7 +20,7 @@
 | 2 | Presentación del 7-nov (5 diapositivas) | 2 | — | ☑ Lista (Claude Slides; guion en `docs/entregas/Entrega2_Presentacion.md`). Falta ensayarla |
 | 3 | Lambdas con código seguro + SAST/SCA + minSdk 29 | 3 | 3.4, 3.5, 4.3, 4.4, 4.6 | ☑ Merge (PR #36) y desplegado el código real |
 | 4 | Pentest caja negra y gris, OWASP API Top 10, casos de abuso, perímetro | 4 | 3.1, 3.2, 3.3, 3.6 | ☑ Merge (PR #40) + fix EVD-3-09 (PR #42); evidencias generadas |
-| 5 | WAF, RASP, SIEM, alertas, tratamiento, mapa de calor "después" | 6 | 5.1 a 5.6 | ☐ Siguiente |
+| 5 | WAF, RASP, SIEM, alertas, tratamiento, mapa de calor "después" | 6 | 5.1 a 5.6 | ◐ En curso: PR de código (`feat/bloque5-operaciones`) → bootstrap con la rama → merge → flujos `movil`, `waf-siem` → PR de cierre con el Word |
 | 6 | Word final, dictamen, presentación final | Todas | 0, 6 | ☐ |
 
 ## Qué dejó el bloque 4 (este PR, 30-oct-2026)

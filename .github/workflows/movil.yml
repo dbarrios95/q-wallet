@@ -1,0 +1,192 @@
+# App móvil en producción (bloque 5): compilación, análisis estático y pruebas en emulador.
+# No usa AWS: solo llama a la API pública sin token (espera 401).
+#   apk ........ APK release (Hermes + R8), verificación de los pines contra la cadena
+#                real, secretos y manifiesto (EVD-4-11), ofuscación y firma (EVD-5-11),
+#                MobSF 4.5.3 (EVD-3-07)
+#   dispositivo  emulador Android 13 (API 33, Google APIs, x86_64, con root):
+#                freeRASP (EVD-5-03), CA-10 Frida (EVD-4-10), CA-08 MITM (EVD-4-08),
+#                CA-07 almacenamiento (EVD-4-08b)
+# Las evidencias van al issue "Evidencias Móvil", al PR y a la rama evidencias-ci.
+name: movil
+
+on:
+  pull_request:
+    paths:
+      - "mobile/**"
+      - "scripts/mobsf_resumen.py"
+      - "scripts/publicar_evidencias.sh"
+      - ".github/workflows/movil.yml"
+  push:
+    branches: [main]
+    paths:
+      - "mobile/**"
+      - ".github/workflows/movil.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: movil-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FRIDA_VERSION: "17.22.0"
+  FRIDA_TOOLS_VERSION: "14.11.0"
+  MITMPROXY_VERSION: "12.3.1"
+
+jobs:
+  apk:
+    name: APK release + análisis estático + MobSF
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.21.0
+
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Dependencias (npm ci)
+        working-directory: mobile
+        run: npm ci --legacy-peer-deps --no-audit --no-fund
+
+      - name: Generar el proyecto nativo (expo prebuild)
+        working-directory: mobile
+        run: npx expo prebuild --platform android --no-install --clean
+
+      - name: Huella del certificado de firma para freeRASP (CTRL-15)
+        working-directory: mobile
+        run: |
+          # Certificado de depuración de la plantilla (ver nota en EVD-5-11).
+          hex=$(keytool -list -v -keystore android/app/debug.keystore -storepass android -alias androiddebugkey \
+            | grep -m1 'SHA256:' | sed 's/.*SHA256: //' | tr -d ':')
+          h=$(echo "$hex" | xxd -r -p | base64)
+          echo "Huella (base64): $h"
+          echo "EXPO_PUBLIC_RASP_CERT_HASH=$h" >> "$GITHUB_ENV"
+
+      - name: Compilar APK release (Hermes + R8)
+        working-directory: mobile/android
+        run: ./gradlew assembleRelease --no-daemon --stacktrace -q
+
+      - name: Verificar los pines contra la cadena real del endpoint (CTRL-08)
+        run: |
+          mkdir -p evidencias
+          host=$(grep -o 'https://[^"]*execute-api[^"/]*' mobile/src/seguridad/config.ts | head -1 | sed 's#https://##')
+          spki() { openssl x509 -in "$1" -pubkey -noout | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | base64; }
+          {
+            echo "Pines configurados en la app vs. cadena real de ${host}"
+            echo "Fecha: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+            echo
+            echo | openssl s_client -connect "${host}:443" -servername "$host" -showcerts 2>/dev/null \
+              | awk '/-----BEGIN CERTIFICATE-----/{n++; f=1} f{print > ("/tmp/cadena" n ".pem")} /-----END CERTIFICATE-----/{f=0}'
+            aciertos=0
+            for c in $(ls /tmp/cadena*.pem | sort -V); do
+              p=$(spki "$c")
+              marca="no fijado"; grep -q -- "$p" mobile/src/seguridad/config.ts && { marca="FIJADO en la app"; aciertos=$((aciertos+1)); }
+              echo "Servidor envía: $(openssl x509 -in "$c" -noout -subject | sed 's/subject=//')"
+              echo "   pin ${p} -> ${marca}"
+            done
+            ultimo=$(ls /tmp/cadena*.pem | sort -V | tail -1)
+            raiz=$(openssl x509 -in "$ultimo" -noout -issuer | sed -n 's/.*CN *= *//p')
+            f="/etc/ssl/certs/$(echo "$raiz" | tr ' ' '_').pem"
+            if [ -f "$f" ]; then
+              p=$(spki "$f")
+              marca="no fijado"; grep -q -- "$p" mobile/src/seguridad/config.ts && { marca="FIJADO en la app"; aciertos=$((aciertos+1)); }
+              echo "Raíz de confianza (almacén del sistema): ${raiz}"
+              echo "   pin ${p} -> ${marca}"
+            fi
+            echo
+            if [ "$aciertos" -gt 0 ]; then
+              echo "Resultado: la cadena real pasa por ${aciertos} llave(s) fijada(s). Correcto."
+            else
+              echo "Resultado: FALLA, ninguna llave de la cadena real está fijada."; exit 1
+            fi
+          } 2>&1 | tee evidencias/EVD-4-08c_pines_vs_cadena.txt
+
+      - name: Secretos, manifiesto, ofuscación y firma (EVD-4-11, EVD-5-11)
+        run: |
+          cp mobile/android/app/build/outputs/apk/release/app-release.apk evidencias/
+          bash mobile/pruebas/apk_estatico.sh evidencias/app-release.apk evidencias
+
+      - name: MobSF 4.5.3 (EVD-3-07)
+        env:
+          MOBSF_API_KEY: ${{ github.run_id }}-${{ github.run_attempt }}-qwallet
+        run: |
+          docker run -d --name mobsf -p 8000:8000 -e MOBSF_API_KEY="$MOBSF_API_KEY" \
+            opensecurity/mobile-security-framework-mobsf:v4.5.3
+          python3 scripts/mobsf_resumen.py evidencias/app-release.apk evidencias/EVD-3-07_mobsf.txt
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: movil-apk
+          path: evidencias/
+          retention-days: 30
+
+  dispositivo:
+    name: Emulador (freeRASP, Frida, MITM, almacenamiento)
+    needs: apk
+    if: always() && needs.apk.result != 'cancelled'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: movil-apk
+          path: evidencias
+
+      - name: Herramientas del atacante (Frida, mitmproxy)
+        run: |
+          pip install --quiet --break-system-packages "frida==${FRIDA_VERSION}" \
+            "frida-tools==${FRIDA_TOOLS_VERSION}" "mitmproxy==${MITMPROXY_VERSION}"
+          frida --version
+          mitmdump --version | head -1
+
+      - name: Activar KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Pruebas en el emulador
+        if: hashFiles('evidencias/app-release.apk') != ''
+        uses: reactivecircus/android-emulator-runner@e93c997dcab69054e999e3924af3d21c4a736e13 # v2.9.0
+        with:
+          api-level: 33
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: bash mobile/pruebas/dispositivo.sh evidencias/app-release.apk evidencias
+
+      - name: Publicar evidencias
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          rm -f evidencias/app-release.apk
+          bash scripts/publicar_evidencias.sh evidencias "Evidencias Móvil" movil "${{ job.status }}"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: movil-evidencias
+          path: evidencias/
+          retention-days: 90

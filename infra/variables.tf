@@ -45,3 +45,10 @@ variable "retencion_logs_dias" {
   type        = number
   default     = 365
 }
+
+variable "correo_alertas" {
+  description = "Correo que recibe las alarmas de seguridad (secreto ALERTAS_CORREO de GitHub; no va en el repo)."
+  type        = string
+  default     = ""
+  sensitive   = true
+}

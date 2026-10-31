@@ -10,14 +10,6 @@
       "soloIndirecta": true
     },
     {
-      "aviso": "GHSA-86w9-cpqp-85rv",
-      "paquete": "node-forge",
-      "via": "expo -> @expo/cli (herramienta de compilación)",
-      "motivo": "Solo lo usa la herramienta de línea de comandos de Expo en la computadora de desarrollo (firma de actualizaciones OTA, que Q-Wallet no usa). No va dentro del APK.",
-      "revisarAntesDe": "2026-11-28",
-      "soloIndirecta": true
-    },
-    {
       "aviso": "GHSA-mrhx-c7xc-m3w5",
       "paquete": "zod",
       "via": "expo -> @expo/cli -> zod 3.25.76",

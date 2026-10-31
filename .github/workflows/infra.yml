@@ -36,6 +36,8 @@ env:
   AWS_REGION: us-east-1
   # El WAF se enciende o apaga con la variable de repositorio WAF_HABILITADO (true/false).
   TF_VAR_waf_habilitado: ${{ vars.WAF_HABILITADO == 'true' }}
+  # Correo de las alarmas (bloque 5). Va como secreto porque el repo es público.
+  TF_VAR_correo_alertas: ${{ secrets.ALERTAS_CORREO }}
 
 jobs:
   revisar:

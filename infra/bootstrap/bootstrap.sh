@@ -13,13 +13,20 @@
 #   6. Rol qwallet-gha-pentest: solo lectura (SecurityAudit + ViewOnlyAccess), rama main.
 #      Lo usa el flujo pentest.yml para Nmap/ZAP/Prowler. Va aquí porque el rol de
 #      despliegue tiene prohibido (Deny) tocar los roles qwallet-gha-*.
+#   7. Endurecimiento de la cuenta (bloque 5, hallazgos de Prowler EVD-3-09):
+#      Block Public Access de S3 a nivel de cuenta y política de contraseñas de IAM.
+#      Son ajustes de toda la cuenta: van aquí y no en el rol de despliegue.
+#
+# Uso: bash bootstrap.sh [rama]   (sin rama usa main; con rama, lee las políticas
+# de esa rama, para preparar los permisos antes de hacer merge del PR).
 #
 # Se puede correr más de una vez: si algo ya existe, lo deja y actualiza las políticas.
 # No borra nada.
 set -euo pipefail
 
 REGION="us-east-1"
-REPO_RAW="https://raw.githubusercontent.com/dbarrios95/q-wallet/main/infra/bootstrap/politicas"
+REF="${1:-main}"
+REPO_RAW="https://raw.githubusercontent.com/dbarrios95/q-wallet/${REF}/infra/bootstrap/politicas"
 DIR="$(mktemp -d)"
 trap 'rm -rf "$DIR"' EXIT
 
@@ -28,7 +35,8 @@ BUCKET="qwallet-tfstate-${CUENTA}"
 echo "Cuenta: ****${CUENTA: -4}  Región: ${REGION}"
 
 # Descarga las políticas del repo y pone el número de cuenta.
-for f in limite-permisos confianza-plan confianza-despliegue lectura-plan despliegue-a despliegue-b confianza-pentest; do
+echo "Políticas desde la rama: ${REF}"
+for f in limite-permisos confianza-plan confianza-despliegue lectura-plan despliegue-a despliegue-b despliegue-c confianza-pentest; do
   curl -fsSL "${REPO_RAW}/${f}.json" | sed "s/__CUENTA__/${CUENTA}/g" > "${DIR}/${f}.json"
 done
 
@@ -109,8 +117,9 @@ aws iam attach-role-policy --role-name qwallet-gha-plan \
 echo "== 5. Rol de despliegue (entorno dev, rama main)"
 politica qwallet-gha-despliegue-a "${DIR}/despliegue-a.json"
 politica qwallet-gha-despliegue-b "${DIR}/despliegue-b.json"
+politica qwallet-gha-despliegue-c "${DIR}/despliegue-c.json"
 rol qwallet-gha-despliegue "${DIR}/confianza-despliegue.json" "GitHub Actions: terraform apply en main (entorno dev)"
-for p in qwallet-gha-despliegue-a qwallet-gha-despliegue-b; do
+for p in qwallet-gha-despliegue-a qwallet-gha-despliegue-b qwallet-gha-despliegue-c; do
   aws iam attach-role-policy --role-name qwallet-gha-despliegue \
     --policy-arn "arn:aws:iam::${CUENTA}:policy/${p}"
 done
@@ -122,6 +131,15 @@ aws iam attach-role-policy --role-name qwallet-gha-pentest \
   --policy-arn "arn:aws:iam::aws:policy/SecurityAudit"
 aws iam attach-role-policy --role-name qwallet-gha-pentest \
   --policy-arn "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess"
+
+echo "== 7. Endurecimiento de la cuenta (Prowler)"
+aws s3control put-public-access-block --account-id "$CUENTA" --public-access-block-configuration \
+  BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true
+echo "   S3 Block Public Access de la cuenta: activo"
+aws iam update-account-password-policy --minimum-password-length 14 \
+  --require-symbols --require-numbers --require-uppercase-characters --require-lowercase-characters \
+  --allow-users-to-change-password --max-password-age 90 --password-reuse-prevention 24
+echo "   Política de contraseñas de IAM: 14 caracteres, 4 tipos, 90 días, sin repetir las últimas 24"
 
 echo
 echo "Listo. Falta un paso en GitHub: crear el secreto AWS_ACCOUNT_ID con este valor."

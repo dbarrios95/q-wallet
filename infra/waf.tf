@@ -55,6 +55,27 @@ resource "aws_wafv2_web_acl" "api" {
     }
   }
 
+  # Bloque 5: la regla común (CRS) no trae firmas de inyección SQL; sin este grupo
+  # el WAF no cubría A05:2025 (Inyección). Agrega 200 WCU (total 1102 de 1500).
+  rule {
+    name     = "inyeccion-sql"
+    priority = 15
+    override_action {
+      none {}
+    }
+    statement {
+      managed_rule_group_statement {
+        vendor_name = "AWS"
+        name        = "AWSManagedRulesSQLiRuleSet"
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "${local.prefijo}-inyeccion-sql"
+      sampled_requests_enabled   = true
+    }
+  }
+
   # Límite por IP: 100 solicitudes en 5 minutos. Las pruebas de 429 usan ráfagas
   # cortas contra este umbral bajo (política de pentest de AWS, sin inundación).
   rule {
