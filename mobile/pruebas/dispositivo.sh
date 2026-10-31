@@ -153,6 +153,12 @@ marcas | grep 'QWALLET_API' | sed 's/^/   /' >> "$OUT/EVD-4-08_mitm_pinning.txt"
   echo
   jwt=$(adb shell "grep -rl 'eyJ' /data/data/${PKG} 2>/dev/null" | tr -d '\r')
   echo "Archivos con algo parecido a un JWT: ${jwt:-ninguno}"
+  for f in $jwt; do
+    # Solo los NOMBRES de los campos del primer bloque base64 (no los valores): para saber de quién es.
+    trozo=$(adb shell "su 0 cat $f 2>/dev/null || cat $f" | grep -a -o 'eyJ[A-Za-z0-9_=-]*' | head -1)
+    campos=$(printf '%s' "$trozo" | tr '_-' '/+' | base64 -d 2>/dev/null | grep -a -o '"[A-Za-z_]*":' | tr -d '":' | head -12 | tr '\n' ' ')
+    echo "   ${f}: campos del contenido -> ${campos:-no decodificable}"
+  done
   echo "allowBackup del paquete: $(adb shell dumpsys package ${PKG} | grep -o 'ALLOW_BACKUP' | head -1 || true)"
   echo "(vacío = allowBackup desactivado; ver también el manifiesto en EVD-4-11)"
   echo
