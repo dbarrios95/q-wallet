@@ -1,0 +1,69 @@
+EVD-3-07 MobSF 4.5.3: análisis estático del APK de producción
+Fecha: 2026-10-31 17:05:01 UTC
+App: Q-Wallet · paquete gt.qwallet.app · versión 1.0.0 · minSdk 29 · targetSdk 36
+
+Puntaje de seguridad de MobSF: 49/100
+Hallazgos por nivel: high 3, warning 12, info 1, secure 2, hotspot 0
+
+HIGH (3):
+   - [certificate] Application signed with debug certificate
+   - [certificate] Certificate algorithm vulnerable to hash collision
+   - [code] The App uses the encryption mode CBC with PKCS5/PKCS7 padding. This configuration is vulnerable to padding oracle attacks.
+
+WARNING (12):
+   - [manifest] TaskAffinity is set for activity (expo.modules.webbrowser.BrowserProxyActivity)
+   - [manifest] Broadcast Receiver (androidx.profileinstaller.ProfileInstallReceiver) is Protected by a permission, but the protection level of the permission should be checked. Permission: android.permission.DUMP [android:exported=true]
+   - [code] Files may contain hardcoded sensitive information like usernames, passwords, keys etc.
+   - [code] App creates temp file. Sensitive information should never be written into a temp file.
+   - [code] SHA-1 is a weak hash known to have hash collisions.
+   - [code] The App uses an insecure Random Number Generator.
+   - [code] App can read/write to External Storage. Any App can read data written to External Storage.
+   - [code] MD5 is a weak hash known to have hash collisions.
+   - [code] IP Address disclosure
+   - [code] Insecure WebView Implementation. Execution of user controlled code in WebView is a critical Security Hole.
+   - [code] Ensure that user controlled URLs never reaches the Webview. Enabling file access from URLs in WebView can leak sensitive information from the file system.
+   - [secrets] This app may contain hardcoded secrets
+
+Secretos que MobSF cree ver en el código:
+   - 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff0001020304050607101112131415161720212223242526273031323334353637404142434445464750515253545556576061626364656667707172737475767700010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 00010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 000102030405060708091011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798990123456789abcdef
+   - 0001020304050607101112131415161720212223242526273031323334353637404142434445464750515253545556576061626364656667707172737475767700010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 0123456789abcdef012345670123456789
+   - 0123456789abcdefABCDEF
+   - 0123456789abcdefABCDEFxX+
+   - 0clERN8facebook3jsi7RuntimeEENKUlRKNS2
+   - 0clERN8facebook3jsi7RuntimeEENKUlRKNS5
+   - 0clERN8facebook3jsi7RuntimeEEUlRKNS2
+   - 0clERN8facebook3jsi7RuntimeEEUlRKNS5
+   - 117HermesRuntimeImpl12ManagedValueIN6hermes2vm8WeakRootINS5
+   - 117HermesRuntimeImplC1ERKN6hermes2vm13RuntimeConfigEEUlPNS4
+   - 117HermesRuntimeImplC1ERKN6hermes2vm13RuntimeConfigEEUlPNS7
+   - 11HybridClassIN4expo10JSIContextENS5
+   - 143JavaTurboModuleInvalidArgumentTypeExceptionE
+   - 14WorkletRuntimeEEERN8facebook3jsi7RuntimeERKNS8
+   - 14WorkletRuntimeEEERN8facebook3jsi7RuntimeERKNSA
+   - 15JavaTurboModule10InitParamsEENSA
+   - 21ReanimatedModuleProxy17toOptimizedObjectERN8facebook3jsi7RuntimeEE3
+
+Dominios que contacta la app (análisis de cadenas):
+   - www.css
+   - www.years
+   - www.in
+   - xml.org
+   - www.hortcut
+   - www.language
+   - www.wencodeuricomponent
+   - www.manifestations
+   - www.text-decoration
+   - xmlpull.org
+   - .css
+   - www.c
+   - www.icon
+   - github.com
+   - filesystem.local
+   - www.recent
+   - goo.gle
+   - youtrack.jetbrains.com
+   - reactnative.dev
+   - .jpg

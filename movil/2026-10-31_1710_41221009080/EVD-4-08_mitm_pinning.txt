@@ -1,0 +1,44 @@
+EVD-4-08 CA-08 intercepción MITM contra la app (CTRL-08, pinning)
+Fecha: 2026-10-31 17:07:30 UTC
+Ataque: proxy mitmproxy en 10.0.2.2:8080 con su CA instalada como CA del SISTEMA (con root).
+CA del atacante en el almacén del sistema: /system/etc/security/cacerts/c8750f0d.0
+
+Control (curl confiando en la CA del atacante, sin pinning): HTTP 401
+   -> el proxy SÍ puede descifrar a un cliente sin pinning.
+
+Marcas de la app con el proxy activo:
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me estado=401 pinning=activo ms=1024
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=privilegedAccess reaccion=bloquear
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Lo que vio el proxy (solicitudes que pudo leer en claro):
+   127.0.0.1:48260: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [17:09:36.155][127.0.0.1:48260] client disconnect
+   127.0.0.1:48272: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   127.0.0.1:38542: POST https://www.googleapis.com/experimentsandconfigs/v1/get… HTTP/2.0
+   127.0.0.1:38548: POST https://android.googleapis.com/auth/devicekey HTTP/2.0
+   127.0.0.1:54442: GET https://www.gstatic.com/federated_assistant/policy_conf… HTTP/2.0
+   127.0.0.1:54442: GET https://www.gstatic.com/assistant/appintegration/models… HTTP/2.0
+   127.0.0.1:54442: GET https://www.gstatic.com/assistant/appintegration/models… HTTP/2.0
+   [17:10:02.906][127.0.0.1:57416] client disconnect
+   127.0.0.1:57410: GET https://dl.google.com/assistant/nga/1/4bce3720332aff952… HTTP/2.0
+   127.0.0.1:57410: GET https://dl.google.com/assistant/nga/1/17d453d07f334b7d8… HTTP/2.0
+   127.0.0.1:57410: GET https://dl.google.com/assistant/nga/1/c11ffd9ddd4f0c643… HTTP/2.0
+   127.0.0.1:57410: GET https://dl.google.com/assistant/nga/1/1658155c551c182a9… HTTP/2.0
+   [17:10:04.312][127.0.0.1:57432] client disconnect
+   127.0.0.1:57436: GET http://connectivitycheck.gstatic.com/generate_204
+   [17:10:06.311][127.0.0.1:57436] client disconnect
+   127.0.0.1:57442: GET https://www.google.com/generate_204
+   [17:10:06.833][127.0.0.1:57442] client disconnect
+   127.0.0.1:57430: POST https://www.google.com/m/voice-search/down?pair=abcfdc0… HTTP/2.0
+
+Resultado: la app no reportó error de pinning en esta ejecución (ver marcas). Se registra tal cual.
+Sin proxy, de nuevo:
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me estado=401 pinning=activo ms=874
