@@ -2,14 +2,16 @@
 
 > Punto de arranque de cada chat. Se reescribe al cerrar cada bloque. Máximo una página.
 
-**Actualizado:** 30-oct-2026 · **Hoy toca:** merge del PR del bloque 4 + bootstrap del rol de pentest
+**Actualizado:** 31-oct-2026 · **Hoy toca:** bloque 5 (WAF, RASP, SIEM, alertas, tratamiento, mapa de calor "después")
 
 ## Fechas
 | Hito | Fecha | Fase del enunciado |
 |---|---|---|
 | Entrega 1 | 17-oct-2026 ✔ | Fase 1 |
-| **Entrega 2** (presentación de 5 min, cámara abierta, resumen ejecutivo, sin generalidades) | **sáb 7-nov-2026** | Fase 2 |
-| Entrega final | sáb 28-nov-2026 `[VERIFICAR]` con el catedrático | Fases 3 a 6 + informe completo |
+| **Entrega 2** (presentación de 5 min, cámara abierta, resumen ejecutivo, sin generalidades) | **sáb 7-nov-2026 (tentativo; podría correrse a la semana siguiente)** | Fase 2 |
+| **Entrega final** (incluye la presentación final) | **sáb 28-nov-2026** (confirmada) | Fases 3 a 6 + informe completo |
+
+> Las entregas son **por fases/partes**: cada fase se entrega suelta y **sin portada ni índice**; la portada y el índice se agregan solo en el **informe final** (bloque 6). Por eso cada bloque tiene su propio Word y no se pegan entre sí hasta el final.
 
 ## Bloques
 | # | Bloque | Fases | Secciones del informe | Estado |
@@ -17,7 +19,7 @@
 | 1 | Terraform de toda la arquitectura + despliegue automático con OIDC + 4.1, 4.2 y 4.5 | 2 y 5 | 4.1, 4.2, 4.5 | ☑ Desplegado y verificado |
 | 2 | Presentación del 7-nov (5 diapositivas) | 2 | — | ☑ Lista (Claude Slides; guion en `docs/entregas/Entrega2_Presentacion.md`). Falta ensayarla |
 | 3 | Lambdas con código seguro + SAST/SCA + minSdk 29 | 3 | 3.4, 3.5, 4.3, 4.4, 4.6 | ☑ Merge (PR #36) y desplegado el código real |
-| 4 | Pentest caja negra y gris, OWASP API Top 10, casos de abuso, perímetro | 4 | 3.1, 3.2, 3.3, 3.6 | ☑ PR abierto (falta merge) |
+| 4 | Pentest caja negra y gris, OWASP API Top 10, casos de abuso, perímetro | 4 | 3.1, 3.2, 3.3, 3.6 | ☑ Merge (PR #40) + fix EVD-3-09 (PR #42); evidencias generadas |
 | 5 | WAF, RASP, SIEM, alertas, tratamiento, mapa de calor "después" | 6 | 5.1 a 5.6 | ☐ Siguiente |
 | 6 | Word final, dictamen, presentación final | Todas | 0, 6 | ☐ |
 
@@ -29,15 +31,10 @@
 - **Word** `docs/entregas/Final_Secciones_3-1_3-2_3-3_3-6_Pentest.docx` (11 págs., Tablas 38–41, Figura 9; Arial 12 / 1.5, render revisado).
 - **Borrado de `services/hola`** (imagen provisional, ya no se usa). Respaldo en la rama `respaldo/services-hola`; se quitaron sus exclusiones en `devsecops.yml` e `infra.yml`.
 
-## Lo que Daniel hace a mano (bloque 4)
-1. Revisar y dar **Merge al PR** del bloque 4.
-2. **Después del merge, en AWS CloudShell** (us-east-1, bash), re-correr el bootstrap para crear el rol de pentest:
-   ```bash
-   curl -fsSL https://raw.githubusercontent.com/dbarrios95/q-wallet/main/infra/bootstrap/bootstrap.sh | bash
-   ```
-   Resultado esperado: entre otras líneas, "== 6. Rol de pentest (solo lectura, rama main)" y "qwallet-gha-pentest: creado". No borra nada; es idempotente.
-3. En GitHub, pestaña Actions → flujo **pentest** → **Run workflow** (rama main) para generar EVD-4-01 (perímetro/Nmap), EVD-4-02 (ZAP) y EVD-3-09 (Prowler). Quedan en el issue "Evidencias Pentest". (También corre solo tras cada despliegue.)
-   - **Hecho (30-oct):** merge del bloque 4 (PR #40) y bootstrap del rol de pentest. La corrida #1 de `pentest.yml` dejó EVD-4-01 y EVD-4-02 correctas; EVD-3-09 (Prowler) salió vacío por un bug del flujo, corregido en el PR `fix/pentest-prowler-evidencia`. Al mergear ese fix y volver a correr `pentest.yml`, EVD-3-09 trae el resumen de Prowler.
+## Bloque 4 — cerrado (31-oct-2026)
+- Merge del bloque 4 (PR #40) y del fix de Prowler (PR #42). Bootstrap re-corrido en CloudShell: rol `qwallet-gha-pentest` creado.
+- `pentest.yml` ya corrió en `main`. En el issue "Evidencias Pentest": **EVD-4-01** (perímetro: solo 443, TLS 1.3, 1.2 rechazado, todas las rutas 401 sin token), **EVD-4-02** (ZAP baseline: 0 High, 0 Medium, 1 Low = falta la cabecera HSTS) y **EVD-3-09** (Prowler: 244 checks, 182 PASS / 60 FAIL — 1 critical, 1 high, 34 medium, 24 low).
+- Hallazgos de Prowler a tratar en el bloque 5 (sección 3.6 + mapa "después"): *quick wins* gratis (S3 Block Public Access de cuenta, política de contraseñas IAM, logging de API Gateway y CloudTrail→CloudWatch); aceptados por presupuesto (WAF apagado, backup plans de DynamoDB, DLQ de Lambda, MFA de hardware en root); y **verificar el MFA real de Cognito** (Prowler lo marca como no requerido).
 
 ## Antes (bloques 1 a 3, detalle en BITÁCORA)
 - Cuenta AWS de Daniel (`qwallet-umg`, us-east-1, Free plan, US$100 de crédito). Bootstrap OIDC hecho; MFA raíz y presupuesto de US$5 confirmados. Toda la arquitectura desplegada y verificada (EVD-3-11, 3-12, 3-13, 5-04 en el issue "Evidencias AWS"). Código real de las 5 Lambdas en producción (PR #36 merge).
@@ -52,6 +49,8 @@
 - SIEM: Wazuh necesita 4 GB+ de RAM y no cabe en US$5; opción CloudWatch + alarmas + CloudTrail.
 - Pruebas en el teléfono (Frida, freeRASP): emulador en la computadora de Daniel o intento en GitHub Actions.
 - Al ensamblar el Word final: revisar `w:tblLayout` duplicado del Word de la Entrega 2 con el validador; integrar EVD-4-01/4-02/3-09 (salida de pentest.yml) a la sección 3.1 y 3.6.
+- *Quick wins* gratis que sugiere Prowler para mostrar mejora en el mapa "después": S3 Block Public Access de cuenta, política de contraseñas IAM, logging de API Gateway y CloudTrail→CloudWatch.
+- Verificar el MFA de Cognito: Prowler lo marca como **no requerido**; ESTADO/CONTEXTO lo daban por activo. Probablemente está en OPTIONAL y no en REQUIRED.
 
 ## Recursos AWS
 Cuenta de Daniel, us-east-1: toda la arquitectura desplegada, WAF apagado. Lambdas con el código real (post PR #36). Gasto esperado ~US$1 al mes (llave KMS); el WAF ~US$8 al mes solo encendido. El pentest en vivo (Nmap/TLS/ZAP/Prowler) es de solo lectura y cuesta centavos.
