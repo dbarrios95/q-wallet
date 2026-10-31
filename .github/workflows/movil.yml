@@ -74,7 +74,17 @@ jobs:
 
       - name: Compilar APK release (Hermes + R8)
         working-directory: mobile/android
-        run: ./gradlew assembleRelease --no-daemon --stacktrace -q
+        run: |
+          set -o pipefail
+          if ! ./gradlew assembleRelease --no-daemon --console=plain 2>&1 | tee /tmp/gradle.log; then
+            # Las anotaciones se pueden leer por la API aunque los logs no (sesiones de Claude).
+            grep -n -E "FAILURE|What went wrong|error:|Error:|> |Caused by|Exception" /tmp/gradle.log | head -40 \
+              | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}' | sed 's/^/::error title=Gradle::/'
+            echo
+            tail -25 /tmp/gradle.log | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}' | sed 's/^/::error title=Gradle (final)::/'
+            echo
+            exit 1
+          fi
 
       - name: Verificar los pines contra la cadena real del endpoint (CTRL-08)
         run: |
