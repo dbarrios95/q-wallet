@@ -1,0 +1,1532 @@
+Inicio: 18:01:56
+Dispositivo: sdk_gphone64_x86_64 · Android 13 (API 33) · userdebug
+Performing Streamed Install
+Success
+/tmp/frida-server: 1 file pushed, 0 skipped. 164.1 MB/s (116322680 bytes in 0.676s)
+/tmp/c8750f0d.0: 1 file pushed, 0 skipped. 9.9 MB/s (1172 bytes in 0.000s)
+==== EVD-3-07_mobsf.txt
+EVD-3-07 MobSF 4.5.3: análisis estático del APK de producción
+Fecha: 2026-10-31 17:59:39 UTC
+App: Q-Wallet · paquete gt.qwallet.app · versión 1.0.0 · minSdk 29 · targetSdk 36
+
+Puntaje de seguridad de MobSF: 49/100
+Hallazgos por nivel: high 3, warning 12, info 1, secure 2, hotspot 0
+
+HIGH (3):
+   - [certificate] Application signed with debug certificate
+   - [certificate] Certificate algorithm vulnerable to hash collision
+   - [code] The App uses the encryption mode CBC with PKCS5/PKCS7 padding. This configuration is vulnerable to padding oracle attacks.
+
+WARNING (12):
+   - [manifest] TaskAffinity is set for activity (expo.modules.webbrowser.BrowserProxyActivity)
+   - [manifest] Broadcast Receiver (androidx.profileinstaller.ProfileInstallReceiver) is Protected by a permission, but the protection level of the permission should be checked. Permission: android.permission.DUMP [android:exported=true]
+   - [code] The App uses an insecure Random Number Generator.
+   - [code] Files may contain hardcoded sensitive information like usernames, passwords, keys etc.
+   - [code] MD5 is a weak hash known to have hash collisions.
+   - [code] SHA-1 is a weak hash known to have hash collisions.
+   - [code] App can read/write to External Storage. Any App can read data written to External Storage.
+   - [code] App creates temp file. Sensitive information should never be written into a temp file.
+   - [code] IP Address disclosure
+   - [code] Insecure WebView Implementation. Execution of user controlled code in WebView is a critical Security Hole.
+   - [code] Ensure that user controlled URLs never reaches the Webview. Enabling file access from URLs in WebView can leak sensitive information from the file system.
+   - [secrets] This app may contain hardcoded secrets
+
+Secretos que MobSF cree ver en el código:
+   - 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff0001020304050607101112131415161720212223242526273031323334353637404142434445464750515253545556576061626364656667707172737475767700010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 00010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 000102030405060708091011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798990123456789abcdef
+   - 0001020304050607101112131415161720212223242526273031323334353637404142434445464750515253545556576061626364656667707172737475767700010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 0123456789abcdef012345670123456789
+   - 0123456789abcdefABCDEF
+   - 0123456789abcdefABCDEFxX+
+   - 0clERN8facebook3jsi7RuntimeEENKUlRKNS2
+   - 0clERN8facebook3jsi7RuntimeEENKUlRKNS5
+   - 0clERN8facebook3jsi7RuntimeEEUlRKNS2
+   - 0clERN8facebook3jsi7RuntimeEEUlRKNS5
+   - 117HermesRuntimeImpl12ManagedValueIN6hermes2vm8WeakRootINS5
+   - 117HermesRuntimeImplC1ERKN6hermes2vm13RuntimeConfigEEUlPNS4
+   - 117HermesRuntimeImplC1ERKN6hermes2vm13RuntimeConfigEEUlPNS7
+   - 11HybridClassIN4expo10JSIContextENS5
+   - 143JavaTurboModuleInvalidArgumentTypeExceptionE
+   - 14WorkletRuntimeEEERN8facebook3jsi7RuntimeERKNS8
+   - 14WorkletRuntimeEEERN8facebook3jsi7RuntimeERKNSA
+   - 15JavaTurboModule10InitParamsEENSA
+   - 21ReanimatedModuleProxy17toOptimizedObjectERN8facebook3jsi7RuntimeEE3
+
+Dominios que contacta la app (análisis de cadenas):
+   - www.a
+   - docs.swmansion.com
+   - schemas.android.com
+   - www.recent
+   - xml.org
+   - www.hortcut
+   - www.c
+   - www.w3.org
+   - www.in
+   - goo.gle
+   - youtrack.jetbrains.com
+   - reactnative.dev
+   - .jpg
+   - github.com
+   - www.language
+   - www.interpretation
+   - www.manifestations
+   - www.years
+   - www.googleorganizationautocompleterequirementsconservative
+   - www.icon
+==== EVD-4-08_mitm_pinning.txt
+EVD-4-08 CA-08 intercepción MITM contra la app (CTRL-08, pinning)
+Fecha: 2026-10-31 18:01:56 UTC
+Ataque: proxy mitmproxy en 10.0.2.2:8080 con su CA instalada como CA del SISTEMA (con root).
+CA del atacante en el almacén del sistema: /system/etc/security/cacerts/c8750f0d.0
+
+Control (curl confiando en la CA del atacante, sin pinning): HTTP 401
+   -> el proxy SÍ puede descifrar a un cliente sin pinning.
+
+Marcas de la app con el proxy activo:
+   QWALLET_API error=pinning host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=784
+   QWALLET_API sonda=GET_/me via=xhr estado=sin_conexion motivo=xhr_error ms=645
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=privilegedAccess reaccion=bloquear
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Solicitudes a la API que el proxy pudo leer en claro: 2 (1 es el control con curl)
+   [18:04:03.022][127.0.0.1:54444] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   127.0.0.1:54444: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [18:04:03.203][127.0.0.1:54444] client disconnect
+   [18:04:03.204][127.0.0.1:54444] server disconnect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:06.322][127.0.0.1:33300] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   127.0.0.1:33300: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [18:04:06.872][127.0.0.1:33304] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:07.368][127.0.0.1:33304] client disconnect
+   [18:04:07.369][127.0.0.1:33304] server disconnect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:22.681][127.0.0.1:53910] client disconnect
+   [18:04:22.911][127.0.0.1:53934] client disconnect
+
+Resultado fetch: INTERCEPTADO (la solicitud llegó a la API pasando por el proxy).
+Resultado xhr: BLOQUEADO (la app cortó la conexión con el proxy).
+La librería de pinning reportó el rechazo del certificado del proxy (error=pinning).
+Solicitudes de la app leídas por el proxy: 1 (se descuenta el control).
+Sin proxy, de nuevo:
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=616
+   QWALLET_API sonda=GET_/me via=xhr estado=401 pinning=activo ms=447
+==== EVD-4-08b_almacenamiento.txt
+EVD-4-08b CA-07 datos de la app en el dispositivo (CTRL-07)
+Fecha: 2026-10-31 18:01:56 UTC
+Con root se listan los archivos privados de la app y se buscan tokens (JWT) o datos en claro.
+
+   /data/data/gt.qwallet.app/cache/ExponentAsset-51b6ad87261f18b6433ec52871ddfabc.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-a5f35888d2da465de352e0dcfaf33324.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-6e237de4f1f413afa2fcc45c77ac343a.ttf
+   /data/data/gt.qwallet.app/cache/http-cache/journal
+   /data/data/gt.qwallet.app/shared_prefs/expo.modules.kotlin.PersistentDataManager.xml
+   /data/data/gt.qwallet.app/shared_prefs/com3uiDo8WkyrKqT9F55Dye8Sc9tuAYjvxH7tnr0.xml
+   /data/data/gt.qwallet.app/shared_prefs/LPt9Olf8ogMI3AxLtWu6T61bGFwMV8AWeIe0guV8omDl.xml
+   /data/data/gt.qwallet.app/shared_prefs/WebViewChromiumPrefs.xml
+   /data/data/gt.qwallet.app/shared_prefs/rPT4MHwCbc75aRHdSgE0yBiD.xml
+   /data/data/gt.qwallet.app/shared_prefs/WLT1NDd2Fqvj26CNGUC80V3D2SjeHRv0mEcjzOcVcWdoUgIdmdeWy.xml
+   /data/data/gt.qwallet.app/shared_prefs/FVR43jFXmgP2hitXSjTyIScRrUsA7cK8RSCVk26.xml
+   /data/data/gt.qwallet.app/files/tcb
+   /data/data/gt.qwallet.app/files/profileinstaller_profileWrittenFor_lastUpdateTime.dat
+   /data/data/gt.qwallet.app/files/profileInstalled
+   /data/data/gt.qwallet.app/app_webview/variations_stamp
+   /data/data/gt.qwallet.app/app_webview/Default/Cookies
+   /data/data/gt.qwallet.app/app_webview/Default/Cookies-journal
+   /data/data/gt.qwallet.app/app_webview/variations_seed
+
+Archivos con algo parecido a un JWT: /data/data/gt.qwallet.app/files/tcb
+   /data/data/gt.qwallet.app/files/tcb: campos del contenido -> no decodificable
+allowBackup del paquete: 
+(vacío = allowBackup desactivado; ver también el manifiesto en EVD-4-11)
+
+Nota: en esta versión la app no inicia sesión (conexión mínima con la API, decisión del
+bloque 5), así que no hay tokens que guardar; el control CTRL-07 queda verificado por diseño
+y por configuración (expo-secure-store con Android Keystore), no por un token real.
+==== EVD-4-08c_pines_vs_cadena.txt
+Pines configurados en la app vs. cadena real de dk1m3avi8i.execute-api.us-east-1.amazonaws.com
+Fecha: 2026-10-31 17:56:26 UTC
+
+Servidor envía: CN = *.execute-api.us-east-1.amazonaws.com
+   pin NHxVuePyVU7argbdcWEdW2lDRqrfWOCTTBbcQpXVyMA= -> no fijado
+Servidor envía: C = US, O = Amazon, CN = Amazon RSA 2048 S21
+   pin 2PapRBB8oK8vWUGt2F5OvDkYXOCXOU4aHTiHNiWJbcs= -> no fijado
+Servidor envía: C = US, O = Amazon, CN = Amazon Root CA 1
+   pin ++MBgDH5WGvL9Bcn5Be30cRcL0f5O+NyoXuWtQdX1aI= -> FIJADO en la app
+Raíz de confianza (almacén del sistema): Starfield Services Root Certificate Authority - G2
+   pin KwccWaCgrnaw6tsrrSO61FgLacNgG2MMLq8GE6+oP5I= -> no fijado
+
+Resultado: la cadena real pasa por 1 llave(s) fijada(s). Correcto.
+==== EVD-4-10_frida.txt
+EVD-4-10 CA-10 instrumentación con Frida contra la app (CTRL-15)
+Fecha: 2026-10-31 18:01:56 UTC
+Ataque: frida-server 17.22.0 como root en el emulador + hook a getpid() en el proceso de la app.
+
+Salida de Frida (lado atacante):
+   QWALLET_FRIDA hook=instalado
+
+Marcas de la app después del ataque:
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=1715
+   QWALLET_API sonda=GET_/me via=xhr estado=401 pinning=activo ms=694
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=hooks reaccion=bloquear
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=privilegedAccess reaccion=bloquear
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Resultado: DETECTADO. freeRASP reportó 'hooks' y la app aplica la reacción indicada.
+==== EVD-4-11_apk_secretos_manifiesto.txt
+EVD-4-11 CA-11 secretos en el APK y manifiesto (CTRL-16)
+Fecha: 2026-10-31 17:56:27 UTC
+APK: app-release.apk, 117M
+
+1) gitleaks 8.30.1 sobre el contenido del APK descomprimido:
+   Hallazgos: 0
+
+2) Patrones de secretos en el código (classes*.dex y el bundle de Hermes):
+   AKIA[0-9A-Z]{16}                         0 coincidencias
+   ASIA[0-9A-Z]{16}                         0 coincidencias
+   -----BEGIN (RSA |EC |)PRIVATE KEY        0 coincidencias
+   aws_secret_access_key                    0 coincidencias
+   client_secret                            0 coincidencias
+   sk_live_[0-9a-zA-Z]{20,}                 0 coincidencias
+   xox[baprs]-[0-9A-Za-z-]{10,}             0 coincidencias
+   ghp_[0-9A-Za-z]{36}                      0 coincidencias
+
+3) Datos públicos que la app sí lleva (no son secretos):
+   execute-api.us-east-1.amazonaws.com      1
+   gt.qwallet.app                           1
+
+4) Manifiesto (aapt2):
+   allowBackup              false
+   debuggable               (no declarado)
+   usesCleartextTraffic     false
+   networkSecurityConfig    (no declarado)
+   minSdkVersion            29
+   targetSdkVersion         36
+
+   Permisos solicitados:
+     "android.permission.ACCESS_NETWORK_STATE"
+     "android.permission.ACCESS_WIFI_STATE"
+     "android.permission.DETECT_SCREEN_CAPTURE"
+     "android.permission.INTERNET"
+     "android.permission.USE_BIOMETRIC"
+     "android.permission.USE_FINGERPRINT"
+     "android.permission.VIBRATE"
+     "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE"
+     "com.google.android.providers.gsf.permission.READ_GSERVICES"
+
+Fallas: 0
+==== EVD-5-03_freerasp_arranque.txt
+EVD-5-03 freeRASP y pinning en el arranque de la app (CTRL-15, CTRL-08)
+Fecha: 2026-10-31 18:01:56 UTC
+Dispositivo: emulador Android 13, imagen userdebug
+APK: versión de producción (release, Hermes + R8), firmada; isProd = true
+
+Marcas de seguridad escritas por la app (logcat, etiqueta ReactNativeJS):
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=2155
+   QWALLET_API sonda=GET_/me via=xhr estado=401 pinning=activo ms=608
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Esperado: la sonda GET /me sin token responde 401 con el pinning activo, y freeRASP
+marca el emulador (simulator) y bloquea la app (pantalla EVD-5-03_bloqueo_rasp.png).
+==== EVD-5-11_ofuscacion_firma.txt
+EVD-5-11 Ofuscación, bytecode y firma del APK (CTRL-15, MASVS-RESILIENCE)
+Fecha: 2026-10-31 17:56:27 UTC
+
+1) Bundle de JavaScript: cabecera c61fbc03c103191f
+   -> Hermes bytecode (el código JS no va como texto legible)
+
+2) R8: archivo de mapeo de la compilación (nombre original -> nombre ofuscado)
+   Clases en el mapeo: 22027; renombradas por R8: 20836
+   Ejemplos:
+     _COROUTINE.ArtificialStackFrames -> a.a
+     _COROUTINE.CoroutineDebuggingKt -> a.b
+     _COROUTINE._BOUNDARY -> a.c
+     androidx.activity.Api34Impl -> androidx.activity.a
+     androidx.activity.BackEventCompat -> androidx.activity.b
+grep: write error: Broken pipe
+grep: write error: Broken pipe
+
+3) Firma (apksigner):
+   Verified using v1 scheme (JAR signing): false
+   Verified using v2 scheme (APK Signature Scheme v2): true
+   Verified using v3 scheme (APK Signature Scheme v3): false
+   Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+   Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+   Verified using v4 scheme (APK Signature Scheme v4): false
+
+Nota: el APK de prueba se firma con el certificado de depuración de la plantilla de Expo.
+En producción se firmaría con el certificado de Google Play (Play App Signing) y freeRASP
+llevaría esa huella; la lógica de detección de re-firmado (appIntegrity) es la misma.
+==== registro_dispositivo.txt
+Inicio: 18:01:56
+Dispositivo: sdk_gphone64_x86_64 · Android 13 (API 33) · userdebug
+Performing Streamed Install
+Success
+/tmp/frida-server: 1 file pushed, 0 skipped. 164.1 MB/s (116322680 bytes in 0.676s)
+/tmp/c8750f0d.0: 1 file pushed, 0 skipped. 9.9 MB/s (1172 bytes in 0.000s)
+==== EVD-3-07_mobsf.txt
+EVD-3-07 MobSF 4.5.3: análisis estático del APK de producción
+Fecha: 2026-10-31 17:59:39 UTC
+App: Q-Wallet · paquete gt.qwallet.app · versión 1.0.0 · minSdk 29 · targetSdk 36
+
+Puntaje de seguridad de MobSF: 49/100
+Hallazgos por nivel: high 3, warning 12, info 1, secure 2, hotspot 0
+
+HIGH (3):
+   - [certificate] Application signed with debug certificate
+   - [certificate] Certificate algorithm vulnerable to hash collision
+   - [code] The App uses the encryption mode CBC with PKCS5/PKCS7 padding. This configuration is vulnerable to padding oracle attacks.
+
+WARNING (12):
+   - [manifest] TaskAffinity is set for activity (expo.modules.webbrowser.BrowserProxyActivity)
+   - [manifest] Broadcast Receiver (androidx.profileinstaller.ProfileInstallReceiver) is Protected by a permission, but the protection level of the permission should be checked. Permission: android.permission.DUMP [android:exported=true]
+   - [code] The App uses an insecure Random Number Generator.
+   - [code] Files may contain hardcoded sensitive information like usernames, passwords, keys etc.
+   - [code] MD5 is a weak hash known to have hash collisions.
+   - [code] SHA-1 is a weak hash known to have hash collisions.
+   - [code] App can read/write to External Storage. Any App can read data written to External Storage.
+   - [code] App creates temp file. Sensitive information should never be written into a temp file.
+   - [code] IP Address disclosure
+   - [code] Insecure WebView Implementation. Execution of user controlled code in WebView is a critical Security Hole.
+   - [code] Ensure that user controlled URLs never reaches the Webview. Enabling file access from URLs in WebView can leak sensitive information from the file system.
+   - [secrets] This app may contain hardcoded secrets
+
+Secretos que MobSF cree ver en el código:
+   - 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff0001020304050607101112131415161720212223242526273031323334353637404142434445464750515253545556576061626364656667707172737475767700010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 00010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 000102030405060708091011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798990123456789abcdef
+   - 0001020304050607101112131415161720212223242526273031323334353637404142434445464750515253545556576061626364656667707172737475767700010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 0123456789abcdef012345670123456789
+   - 0123456789abcdefABCDEF
+   - 0123456789abcdefABCDEFxX+
+   - 0clERN8facebook3jsi7RuntimeEENKUlRKNS2
+   - 0clERN8facebook3jsi7RuntimeEENKUlRKNS5
+   - 0clERN8facebook3jsi7RuntimeEEUlRKNS2
+   - 0clERN8facebook3jsi7RuntimeEEUlRKNS5
+   - 117HermesRuntimeImpl12ManagedValueIN6hermes2vm8WeakRootINS5
+   - 117HermesRuntimeImplC1ERKN6hermes2vm13RuntimeConfigEEUlPNS4
+   - 117HermesRuntimeImplC1ERKN6hermes2vm13RuntimeConfigEEUlPNS7
+   - 11HybridClassIN4expo10JSIContextENS5
+   - 143JavaTurboModuleInvalidArgumentTypeExceptionE
+   - 14WorkletRuntimeEEERN8facebook3jsi7RuntimeERKNS8
+   - 14WorkletRuntimeEEERN8facebook3jsi7RuntimeERKNSA
+   - 15JavaTurboModule10InitParamsEENSA
+   - 21ReanimatedModuleProxy17toOptimizedObjectERN8facebook3jsi7RuntimeEE3
+
+Dominios que contacta la app (análisis de cadenas):
+   - www.a
+   - docs.swmansion.com
+   - schemas.android.com
+   - www.recent
+   - xml.org
+   - www.hortcut
+   - www.c
+   - www.w3.org
+   - www.in
+   - goo.gle
+   - youtrack.jetbrains.com
+   - reactnative.dev
+   - .jpg
+   - github.com
+   - www.language
+   - www.interpretation
+   - www.manifestations
+   - www.years
+   - www.googleorganizationautocompleterequirementsconservative
+   - www.icon
+==== EVD-4-08_mitm_pinning.txt
+EVD-4-08 CA-08 intercepción MITM contra la app (CTRL-08, pinning)
+Fecha: 2026-10-31 18:01:56 UTC
+Ataque: proxy mitmproxy en 10.0.2.2:8080 con su CA instalada como CA del SISTEMA (con root).
+CA del atacante en el almacén del sistema: /system/etc/security/cacerts/c8750f0d.0
+
+Control (curl confiando en la CA del atacante, sin pinning): HTTP 401
+   -> el proxy SÍ puede descifrar a un cliente sin pinning.
+
+Marcas de la app con el proxy activo:
+   QWALLET_API error=pinning host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=784
+   QWALLET_API sonda=GET_/me via=xhr estado=sin_conexion motivo=xhr_error ms=645
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=privilegedAccess reaccion=bloquear
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Solicitudes a la API que el proxy pudo leer en claro: 2 (1 es el control con curl)
+   [18:04:03.022][127.0.0.1:54444] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   127.0.0.1:54444: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [18:04:03.203][127.0.0.1:54444] client disconnect
+   [18:04:03.204][127.0.0.1:54444] server disconnect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:06.322][127.0.0.1:33300] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   127.0.0.1:33300: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [18:04:06.872][127.0.0.1:33304] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:07.368][127.0.0.1:33304] client disconnect
+   [18:04:07.369][127.0.0.1:33304] server disconnect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:22.681][127.0.0.1:53910] client disconnect
+   [18:04:22.911][127.0.0.1:53934] client disconnect
+
+Resultado fetch: INTERCEPTADO (la solicitud llegó a la API pasando por el proxy).
+Resultado xhr: BLOQUEADO (la app cortó la conexión con el proxy).
+La librería de pinning reportó el rechazo del certificado del proxy (error=pinning).
+Solicitudes de la app leídas por el proxy: 1 (se descuenta el control).
+Sin proxy, de nuevo:
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=616
+   QWALLET_API sonda=GET_/me via=xhr estado=401 pinning=activo ms=447
+==== EVD-4-08b_almacenamiento.txt
+EVD-4-08b CA-07 datos de la app en el dispositivo (CTRL-07)
+Fecha: 2026-10-31 18:01:56 UTC
+Con root se listan los archivos privados de la app y se buscan tokens (JWT) o datos en claro.
+
+   /data/data/gt.qwallet.app/cache/ExponentAsset-51b6ad87261f18b6433ec52871ddfabc.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-a5f35888d2da465de352e0dcfaf33324.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-6e237de4f1f413afa2fcc45c77ac343a.ttf
+   /data/data/gt.qwallet.app/cache/http-cache/journal
+   /data/data/gt.qwallet.app/shared_prefs/expo.modules.kotlin.PersistentDataManager.xml
+   /data/data/gt.qwallet.app/shared_prefs/com3uiDo8WkyrKqT9F55Dye8Sc9tuAYjvxH7tnr0.xml
+   /data/data/gt.qwallet.app/shared_prefs/LPt9Olf8ogMI3AxLtWu6T61bGFwMV8AWeIe0guV8omDl.xml
+   /data/data/gt.qwallet.app/shared_prefs/WebViewChromiumPrefs.xml
+   /data/data/gt.qwallet.app/shared_prefs/rPT4MHwCbc75aRHdSgE0yBiD.xml
+   /data/data/gt.qwallet.app/shared_prefs/WLT1NDd2Fqvj26CNGUC80V3D2SjeHRv0mEcjzOcVcWdoUgIdmdeWy.xml
+   /data/data/gt.qwallet.app/shared_prefs/FVR43jFXmgP2hitXSjTyIScRrUsA7cK8RSCVk26.xml
+   /data/data/gt.qwallet.app/files/tcb
+   /data/data/gt.qwallet.app/files/profileinstaller_profileWrittenFor_lastUpdateTime.dat
+   /data/data/gt.qwallet.app/files/profileInstalled
+   /data/data/gt.qwallet.app/app_webview/variations_stamp
+   /data/data/gt.qwallet.app/app_webview/Default/Cookies
+   /data/data/gt.qwallet.app/app_webview/Default/Cookies-journal
+   /data/data/gt.qwallet.app/app_webview/variations_seed
+
+Archivos con algo parecido a un JWT: /data/data/gt.qwallet.app/files/tcb
+   /data/data/gt.qwallet.app/files/tcb: campos del contenido -> no decodificable
+allowBackup del paquete: 
+(vacío = allowBackup desactivado; ver también el manifiesto en EVD-4-11)
+
+Nota: en esta versión la app no inicia sesión (conexión mínima con la API, decisión del
+bloque 5), así que no hay tokens que guardar; el control CTRL-07 queda verificado por diseño
+y por configuración (expo-secure-store con Android Keystore), no por un token real.
+==== EVD-4-08c_pines_vs_cadena.txt
+Pines configurados en la app vs. cadena real de dk1m3avi8i.execute-api.us-east-1.amazonaws.com
+Fecha: 2026-10-31 17:56:26 UTC
+
+Servidor envía: CN = *.execute-api.us-east-1.amazonaws.com
+   pin NHxVuePyVU7argbdcWEdW2lDRqrfWOCTTBbcQpXVyMA= -> no fijado
+Servidor envía: C = US, O = Amazon, CN = Amazon RSA 2048 S21
+   pin 2PapRBB8oK8vWUGt2F5OvDkYXOCXOU4aHTiHNiWJbcs= -> no fijado
+Servidor envía: C = US, O = Amazon, CN = Amazon Root CA 1
+   pin ++MBgDH5WGvL9Bcn5Be30cRcL0f5O+NyoXuWtQdX1aI= -> FIJADO en la app
+Raíz de confianza (almacén del sistema): Starfield Services Root Certificate Authority - G2
+   pin KwccWaCgrnaw6tsrrSO61FgLacNgG2MMLq8GE6+oP5I= -> no fijado
+
+Resultado: la cadena real pasa por 1 llave(s) fijada(s). Correcto.
+==== EVD-4-10_frida.txt
+EVD-4-10 CA-10 instrumentación con Frida contra la app (CTRL-15)
+Fecha: 2026-10-31 18:01:56 UTC
+Ataque: frida-server 17.22.0 como root en el emulador + hook a getpid() en el proceso de la app.
+
+Salida de Frida (lado atacante):
+   QWALLET_FRIDA hook=instalado
+
+Marcas de la app después del ataque:
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=1715
+   QWALLET_API sonda=GET_/me via=xhr estado=401 pinning=activo ms=694
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=hooks reaccion=bloquear
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=privilegedAccess reaccion=bloquear
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Resultado: DETECTADO. freeRASP reportó 'hooks' y la app aplica la reacción indicada.
+==== EVD-4-11_apk_secretos_manifiesto.txt
+EVD-4-11 CA-11 secretos en el APK y manifiesto (CTRL-16)
+Fecha: 2026-10-31 17:56:27 UTC
+APK: app-release.apk, 117M
+
+1) gitleaks 8.30.1 sobre el contenido del APK descomprimido:
+   Hallazgos: 0
+
+2) Patrones de secretos en el código (classes*.dex y el bundle de Hermes):
+   AKIA[0-9A-Z]{16}                         0 coincidencias
+   ASIA[0-9A-Z]{16}                         0 coincidencias
+   -----BEGIN (RSA |EC |)PRIVATE KEY        0 coincidencias
+   aws_secret_access_key                    0 coincidencias
+   client_secret                            0 coincidencias
+   sk_live_[0-9a-zA-Z]{20,}                 0 coincidencias
+   xox[baprs]-[0-9A-Za-z-]{10,}             0 coincidencias
+   ghp_[0-9A-Za-z]{36}                      0 coincidencias
+
+3) Datos públicos que la app sí lleva (no son secretos):
+   execute-api.us-east-1.amazonaws.com      1
+   gt.qwallet.app                           1
+
+4) Manifiesto (aapt2):
+   allowBackup              false
+   debuggable               (no declarado)
+   usesCleartextTraffic     false
+   networkSecurityConfig    (no declarado)
+   minSdkVersion            29
+   targetSdkVersion         36
+
+   Permisos solicitados:
+     "android.permission.ACCESS_NETWORK_STATE"
+     "android.permission.ACCESS_WIFI_STATE"
+     "android.permission.DETECT_SCREEN_CAPTURE"
+     "android.permission.INTERNET"
+     "android.permission.USE_BIOMETRIC"
+     "android.permission.USE_FINGERPRINT"
+     "android.permission.VIBRATE"
+     "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE"
+     "com.google.android.providers.gsf.permission.READ_GSERVICES"
+
+Fallas: 0
+==== EVD-5-03_freerasp_arranque.txt
+EVD-5-03 freeRASP y pinning en el arranque de la app (CTRL-15, CTRL-08)
+Fecha: 2026-10-31 18:01:56 UTC
+Dispositivo: emulador Android 13, imagen userdebug
+APK: versión de producción (release, Hermes + R8), firmada; isProd = true
+
+Marcas de seguridad escritas por la app (logcat, etiqueta ReactNativeJS):
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=2155
+   QWALLET_API sonda=GET_/me via=xhr estado=401 pinning=activo ms=608
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Esperado: la sonda GET /me sin token responde 401 con el pinning activo, y freeRASP
+marca el emulador (simulator) y bloquea la app (pantalla EVD-5-03_bloqueo_rasp.png).
+==== EVD-5-11_ofuscacion_firma.txt
+EVD-5-11 Ofuscación, bytecode y firma del APK (CTRL-15, MASVS-RESILIENCE)
+Fecha: 2026-10-31 17:56:27 UTC
+
+1) Bundle de JavaScript: cabecera c61fbc03c103191f
+   -> Hermes bytecode (el código JS no va como texto legible)
+
+2) R8: archivo de mapeo de la compilación (nombre original -> nombre ofuscado)
+   Clases en el mapeo: 22027; renombradas por R8: 20836
+   Ejemplos:
+     _COROUTINE.ArtificialStackFrames -> a.a
+     _COROUTINE.CoroutineDebuggingKt -> a.b
+     _COROUTINE._BOUNDARY -> a.c
+     androidx.activity.Api34Impl -> androidx.activity.a
+     androidx.activity.BackEventCompat -> androidx.activity.b
+grep: write error: Broken pipe
+grep: write error: Broken pipe
+
+3) Firma (apksigner):
+   Verified using v1 scheme (JAR signing): false
+   Verified using v2 scheme (APK Signature Scheme v2): true
+   Verified using v3 scheme (APK Signature Scheme v3): false
+   Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+   Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+   Verified using v4 scheme (APK Signature Scheme v4): false
+
+Nota: el APK de prueba se firma con el certificado de depuración de la plantilla de Expo.
+En producción se firmaría con el certificado de Google Play (Play App Signing) y freeRASP
+llevaría esa huella; la lógica de detección de re-firmado (appIntegrity) es la misma.
+==== registro_dispositivo.txt
+Inicio: 18:01:56
+Dispositivo: sdk_gphone64_x86_64 · Android 13 (API 33) · userdebug
+Performing Streamed Install
+Success
+/tmp/frida-server: 1 file pushed, 0 skipped. 164.1 MB/s (116322680 bytes in 0.676s)
+/tmp/c8750f0d.0: 1 file pushed, 0 skipped. 9.9 MB/s (1172 bytes in 0.000s)
+==== EVD-3-07_mobsf.txt
+EVD-3-07 MobSF 4.5.3: análisis estático del APK de producción
+Fecha: 2026-10-31 17:59:39 UTC
+App: Q-Wallet · paquete gt.qwallet.app · versión 1.0.0 · minSdk 29 · targetSdk 36
+
+Puntaje de seguridad de MobSF: 49/100
+Hallazgos por nivel: high 3, warning 12, info 1, secure 2, hotspot 0
+
+HIGH (3):
+   - [certificate] Application signed with debug certificate
+   - [certificate] Certificate algorithm vulnerable to hash collision
+   - [code] The App uses the encryption mode CBC with PKCS5/PKCS7 padding. This configuration is vulnerable to padding oracle attacks.
+
+WARNING (12):
+   - [manifest] TaskAffinity is set for activity (expo.modules.webbrowser.BrowserProxyActivity)
+   - [manifest] Broadcast Receiver (androidx.profileinstaller.ProfileInstallReceiver) is Protected by a permission, but the protection level of the permission should be checked. Permission: android.permission.DUMP [android:exported=true]
+   - [code] The App uses an insecure Random Number Generator.
+   - [code] Files may contain hardcoded sensitive information like usernames, passwords, keys etc.
+   - [code] MD5 is a weak hash known to have hash collisions.
+   - [code] SHA-1 is a weak hash known to have hash collisions.
+   - [code] App can read/write to External Storage. Any App can read data written to External Storage.
+   - [code] App creates temp file. Sensitive information should never be written into a temp file.
+   - [code] IP Address disclosure
+   - [code] Insecure WebView Implementation. Execution of user controlled code in WebView is a critical Security Hole.
+   - [code] Ensure that user controlled URLs never reaches the Webview. Enabling file access from URLs in WebView can leak sensitive information from the file system.
+   - [secrets] This app may contain hardcoded secrets
+
+Secretos que MobSF cree ver en el código:
+   - 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff0001020304050607101112131415161720212223242526273031323334353637404142434445464750515253545556576061626364656667707172737475767700010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 00010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 000102030405060708091011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798990123456789abcdef
+   - 0001020304050607101112131415161720212223242526273031323334353637404142434445464750515253545556576061626364656667707172737475767700010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 0123456789abcdef012345670123456789
+   - 0123456789abcdefABCDEF
+   - 0123456789abcdefABCDEFxX+
+   - 0clERN8facebook3jsi7RuntimeEENKUlRKNS2
+   - 0clERN8facebook3jsi7RuntimeEENKUlRKNS5
+   - 0clERN8facebook3jsi7RuntimeEEUlRKNS2
+   - 0clERN8facebook3jsi7RuntimeEEUlRKNS5
+   - 117HermesRuntimeImpl12ManagedValueIN6hermes2vm8WeakRootINS5
+   - 117HermesRuntimeImplC1ERKN6hermes2vm13RuntimeConfigEEUlPNS4
+   - 117HermesRuntimeImplC1ERKN6hermes2vm13RuntimeConfigEEUlPNS7
+   - 11HybridClassIN4expo10JSIContextENS5
+   - 143JavaTurboModuleInvalidArgumentTypeExceptionE
+   - 14WorkletRuntimeEEERN8facebook3jsi7RuntimeERKNS8
+   - 14WorkletRuntimeEEERN8facebook3jsi7RuntimeERKNSA
+   - 15JavaTurboModule10InitParamsEENSA
+   - 21ReanimatedModuleProxy17toOptimizedObjectERN8facebook3jsi7RuntimeEE3
+
+Dominios que contacta la app (análisis de cadenas):
+   - www.a
+   - docs.swmansion.com
+   - schemas.android.com
+   - www.recent
+   - xml.org
+   - www.hortcut
+   - www.c
+   - www.w3.org
+   - www.in
+   - goo.gle
+   - youtrack.jetbrains.com
+   - reactnative.dev
+   - .jpg
+   - github.com
+   - www.language
+   - www.interpretation
+   - www.manifestations
+   - www.years
+   - www.googleorganizationautocompleterequirementsconservative
+   - www.icon
+==== EVD-4-08_mitm_pinning.txt
+EVD-4-08 CA-08 intercepción MITM contra la app (CTRL-08, pinning)
+Fecha: 2026-10-31 18:01:56 UTC
+Ataque: proxy mitmproxy en 10.0.2.2:8080 con su CA instalada como CA del SISTEMA (con root).
+CA del atacante en el almacén del sistema: /system/etc/security/cacerts/c8750f0d.0
+
+Control (curl confiando en la CA del atacante, sin pinning): HTTP 401
+   -> el proxy SÍ puede descifrar a un cliente sin pinning.
+
+Marcas de la app con el proxy activo:
+   QWALLET_API error=pinning host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=784
+   QWALLET_API sonda=GET_/me via=xhr estado=sin_conexion motivo=xhr_error ms=645
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=privilegedAccess reaccion=bloquear
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Solicitudes a la API que el proxy pudo leer en claro: 2 (1 es el control con curl)
+   [18:04:03.022][127.0.0.1:54444] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   127.0.0.1:54444: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [18:04:03.203][127.0.0.1:54444] client disconnect
+   [18:04:03.204][127.0.0.1:54444] server disconnect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:06.322][127.0.0.1:33300] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   127.0.0.1:33300: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [18:04:06.872][127.0.0.1:33304] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:07.368][127.0.0.1:33304] client disconnect
+   [18:04:07.369][127.0.0.1:33304] server disconnect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:22.681][127.0.0.1:53910] client disconnect
+   [18:04:22.911][127.0.0.1:53934] client disconnect
+
+Resultado fetch: INTERCEPTADO (la solicitud llegó a la API pasando por el proxy).
+Resultado xhr: BLOQUEADO (la app cortó la conexión con el proxy).
+La librería de pinning reportó el rechazo del certificado del proxy (error=pinning).
+Solicitudes de la app leídas por el proxy: 1 (se descuenta el control).
+Sin proxy, de nuevo:
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=616
+   QWALLET_API sonda=GET_/me via=xhr estado=401 pinning=activo ms=447
+==== EVD-4-08b_almacenamiento.txt
+EVD-4-08b CA-07 datos de la app en el dispositivo (CTRL-07)
+Fecha: 2026-10-31 18:01:56 UTC
+Con root se listan los archivos privados de la app y se buscan tokens (JWT) o datos en claro.
+
+   /data/data/gt.qwallet.app/cache/ExponentAsset-51b6ad87261f18b6433ec52871ddfabc.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-a5f35888d2da465de352e0dcfaf33324.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-6e237de4f1f413afa2fcc45c77ac343a.ttf
+   /data/data/gt.qwallet.app/cache/http-cache/journal
+   /data/data/gt.qwallet.app/shared_prefs/expo.modules.kotlin.PersistentDataManager.xml
+   /data/data/gt.qwallet.app/shared_prefs/com3uiDo8WkyrKqT9F55Dye8Sc9tuAYjvxH7tnr0.xml
+   /data/data/gt.qwallet.app/shared_prefs/LPt9Olf8ogMI3AxLtWu6T61bGFwMV8AWeIe0guV8omDl.xml
+   /data/data/gt.qwallet.app/shared_prefs/WebViewChromiumPrefs.xml
+   /data/data/gt.qwallet.app/shared_prefs/rPT4MHwCbc75aRHdSgE0yBiD.xml
+   /data/data/gt.qwallet.app/shared_prefs/WLT1NDd2Fqvj26CNGUC80V3D2SjeHRv0mEcjzOcVcWdoUgIdmdeWy.xml
+   /data/data/gt.qwallet.app/shared_prefs/FVR43jFXmgP2hitXSjTyIScRrUsA7cK8RSCVk26.xml
+   /data/data/gt.qwallet.app/files/tcb
+   /data/data/gt.qwallet.app/files/profileinstaller_profileWrittenFor_lastUpdateTime.dat
+   /data/data/gt.qwallet.app/files/profileInstalled
+   /data/data/gt.qwallet.app/app_webview/variations_stamp
+   /data/data/gt.qwallet.app/app_webview/Default/Cookies
+   /data/data/gt.qwallet.app/app_webview/Default/Cookies-journal
+   /data/data/gt.qwallet.app/app_webview/variations_seed
+
+Archivos con algo parecido a un JWT: /data/data/gt.qwallet.app/files/tcb
+   /data/data/gt.qwallet.app/files/tcb: campos del contenido -> no decodificable
+allowBackup del paquete: 
+(vacío = allowBackup desactivado; ver también el manifiesto en EVD-4-11)
+
+Nota: en esta versión la app no inicia sesión (conexión mínima con la API, decisión del
+bloque 5), así que no hay tokens que guardar; el control CTRL-07 queda verificado por diseño
+y por configuración (expo-secure-store con Android Keystore), no por un token real.
+==== EVD-4-08c_pines_vs_cadena.txt
+Pines configurados en la app vs. cadena real de dk1m3avi8i.execute-api.us-east-1.amazonaws.com
+Fecha: 2026-10-31 17:56:26 UTC
+
+Servidor envía: CN = *.execute-api.us-east-1.amazonaws.com
+   pin NHxVuePyVU7argbdcWEdW2lDRqrfWOCTTBbcQpXVyMA= -> no fijado
+Servidor envía: C = US, O = Amazon, CN = Amazon RSA 2048 S21
+   pin 2PapRBB8oK8vWUGt2F5OvDkYXOCXOU4aHTiHNiWJbcs= -> no fijado
+Servidor envía: C = US, O = Amazon, CN = Amazon Root CA 1
+   pin ++MBgDH5WGvL9Bcn5Be30cRcL0f5O+NyoXuWtQdX1aI= -> FIJADO en la app
+Raíz de confianza (almacén del sistema): Starfield Services Root Certificate Authority - G2
+   pin KwccWaCgrnaw6tsrrSO61FgLacNgG2MMLq8GE6+oP5I= -> no fijado
+
+Resultado: la cadena real pasa por 1 llave(s) fijada(s). Correcto.
+==== EVD-4-10_frida.txt
+EVD-4-10 CA-10 instrumentación con Frida contra la app (CTRL-15)
+Fecha: 2026-10-31 18:01:56 UTC
+Ataque: frida-server 17.22.0 como root en el emulador + hook a getpid() en el proceso de la app.
+
+Salida de Frida (lado atacante):
+   QWALLET_FRIDA hook=instalado
+
+Marcas de la app después del ataque:
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=1715
+   QWALLET_API sonda=GET_/me via=xhr estado=401 pinning=activo ms=694
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=hooks reaccion=bloquear
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=privilegedAccess reaccion=bloquear
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Resultado: DETECTADO. freeRASP reportó 'hooks' y la app aplica la reacción indicada.
+==== EVD-4-11_apk_secretos_manifiesto.txt
+EVD-4-11 CA-11 secretos en el APK y manifiesto (CTRL-16)
+Fecha: 2026-10-31 17:56:27 UTC
+APK: app-release.apk, 117M
+
+1) gitleaks 8.30.1 sobre el contenido del APK descomprimido:
+   Hallazgos: 0
+
+2) Patrones de secretos en el código (classes*.dex y el bundle de Hermes):
+   AKIA[0-9A-Z]{16}                         0 coincidencias
+   ASIA[0-9A-Z]{16}                         0 coincidencias
+   -----BEGIN (RSA |EC |)PRIVATE KEY        0 coincidencias
+   aws_secret_access_key                    0 coincidencias
+   client_secret                            0 coincidencias
+   sk_live_[0-9a-zA-Z]{20,}                 0 coincidencias
+   xox[baprs]-[0-9A-Za-z-]{10,}             0 coincidencias
+   ghp_[0-9A-Za-z]{36}                      0 coincidencias
+
+3) Datos públicos que la app sí lleva (no son secretos):
+   execute-api.us-east-1.amazonaws.com      1
+   gt.qwallet.app                           1
+
+4) Manifiesto (aapt2):
+   allowBackup              false
+   debuggable               (no declarado)
+   usesCleartextTraffic     false
+   networkSecurityConfig    (no declarado)
+   minSdkVersion            29
+   targetSdkVersion         36
+
+   Permisos solicitados:
+     "android.permission.ACCESS_NETWORK_STATE"
+     "android.permission.ACCESS_WIFI_STATE"
+     "android.permission.DETECT_SCREEN_CAPTURE"
+     "android.permission.INTERNET"
+     "android.permission.USE_BIOMETRIC"
+     "android.permission.USE_FINGERPRINT"
+     "android.permission.VIBRATE"
+     "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE"
+     "com.google.android.providers.gsf.permission.READ_GSERVICES"
+
+Fallas: 0
+==== EVD-5-03_freerasp_arranque.txt
+EVD-5-03 freeRASP y pinning en el arranque de la app (CTRL-15, CTRL-08)
+Fecha: 2026-10-31 18:01:56 UTC
+Dispositivo: emulador Android 13, imagen userdebug
+APK: versión de producción (release, Hermes + R8), firmada; isProd = true
+
+Marcas de seguridad escritas por la app (logcat, etiqueta ReactNativeJS):
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=2155
+   QWALLET_API sonda=GET_/me via=xhr estado=401 pinning=activo ms=608
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Esperado: la sonda GET /me sin token responde 401 con el pinning activo, y freeRASP
+marca el emulador (simulator) y bloquea la app (pantalla EVD-5-03_bloqueo_rasp.png).
+==== EVD-5-11_ofuscacion_firma.txt
+EVD-5-11 Ofuscación, bytecode y firma del APK (CTRL-15, MASVS-RESILIENCE)
+Fecha: 2026-10-31 17:56:27 UTC
+
+1) Bundle de JavaScript: cabecera c61fbc03c103191f
+   -> Hermes bytecode (el código JS no va como texto legible)
+
+2) R8: archivo de mapeo de la compilación (nombre original -> nombre ofuscado)
+   Clases en el mapeo: 22027; renombradas por R8: 20836
+   Ejemplos:
+     _COROUTINE.ArtificialStackFrames -> a.a
+     _COROUTINE.CoroutineDebuggingKt -> a.b
+     _COROUTINE._BOUNDARY -> a.c
+     androidx.activity.Api34Impl -> androidx.activity.a
+     androidx.activity.BackEventCompat -> androidx.activity.b
+grep: write error: Broken pipe
+grep: write error: Broken pipe
+
+3) Firma (apksigner):
+   Verified using v1 scheme (JAR signing): false
+   Verified using v2 scheme (APK Signature Scheme v2): true
+   Verified using v3 scheme (APK Signature Scheme v3): false
+   Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+   Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+   Verified using v4 scheme (APK Signature Scheme v4): false
+
+Nota: el APK de prueba se firma con el certificado de depuración de la plantilla de Expo.
+En producción se firmaría con el certificado de Google Play (Play App Signing) y freeRASP
+llevaría esa huella; la lógica de detección de re-firmado (appIntegrity) es la misma.
+==== registro_dispositivo.txt
+Inicio: 18:01:56
+Dispositivo: sdk_gphone64_x86_64 · Android 13 (API 33) · userdebug
+Performing Streamed Install
+Success
+/tmp/frida-server: 1 file pushed, 0 skipped. 164.1 MB/s (116322680 bytes in 0.676s)
+/tmp/c8750f0d.0: 1 file pushed, 0 skipped. 9.9 MB/s (1172 bytes in 0.000s)
+==== EVD-3-07_mobsf.txt
+EVD-3-07 MobSF 4.5.3: análisis estático del APK de producción
+Fecha: 2026-10-31 17:59:39 UTC
+App: Q-Wallet · paquete gt.qwallet.app · versión 1.0.0 · minSdk 29 · targetSdk 36
+
+Puntaje de seguridad de MobSF: 49/100
+Hallazgos por nivel: high 3, warning 12, info 1, secure 2, hotspot 0
+
+HIGH (3):
+   - [certificate] Application signed with debug certificate
+   - [certificate] Certificate algorithm vulnerable to hash collision
+   - [code] The App uses the encryption mode CBC with PKCS5/PKCS7 padding. This configuration is vulnerable to padding oracle attacks.
+
+WARNING (12):
+   - [manifest] TaskAffinity is set for activity (expo.modules.webbrowser.BrowserProxyActivity)
+   - [manifest] Broadcast Receiver (androidx.profileinstaller.ProfileInstallReceiver) is Protected by a permission, but the protection level of the permission should be checked. Permission: android.permission.DUMP [android:exported=true]
+   - [code] The App uses an insecure Random Number Generator.
+   - [code] Files may contain hardcoded sensitive information like usernames, passwords, keys etc.
+   - [code] MD5 is a weak hash known to have hash collisions.
+   - [code] SHA-1 is a weak hash known to have hash collisions.
+   - [code] App can read/write to External Storage. Any App can read data written to External Storage.
+   - [code] App creates temp file. Sensitive information should never be written into a temp file.
+   - [code] IP Address disclosure
+   - [code] Insecure WebView Implementation. Execution of user controlled code in WebView is a critical Security Hole.
+   - [code] Ensure that user controlled URLs never reaches the Webview. Enabling file access from URLs in WebView can leak sensitive information from the file system.
+   - [secrets] This app may contain hardcoded secrets
+
+Secretos que MobSF cree ver en el código:
+   - 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff0001020304050607101112131415161720212223242526273031323334353637404142434445464750515253545556576061626364656667707172737475767700010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 00010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 000102030405060708091011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798990123456789abcdef
+   - 0001020304050607101112131415161720212223242526273031323334353637404142434445464750515253545556576061626364656667707172737475767700010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 0123456789abcdef012345670123456789
+   - 0123456789abcdefABCDEF
+   - 0123456789abcdefABCDEFxX+
+   - 0clERN8facebook3jsi7RuntimeEENKUlRKNS2
+   - 0clERN8facebook3jsi7RuntimeEENKUlRKNS5
+   - 0clERN8facebook3jsi7RuntimeEEUlRKNS2
+   - 0clERN8facebook3jsi7RuntimeEEUlRKNS5
+   - 117HermesRuntimeImpl12ManagedValueIN6hermes2vm8WeakRootINS5
+   - 117HermesRuntimeImplC1ERKN6hermes2vm13RuntimeConfigEEUlPNS4
+   - 117HermesRuntimeImplC1ERKN6hermes2vm13RuntimeConfigEEUlPNS7
+   - 11HybridClassIN4expo10JSIContextENS5
+   - 143JavaTurboModuleInvalidArgumentTypeExceptionE
+   - 14WorkletRuntimeEEERN8facebook3jsi7RuntimeERKNS8
+   - 14WorkletRuntimeEEERN8facebook3jsi7RuntimeERKNSA
+   - 15JavaTurboModule10InitParamsEENSA
+   - 21ReanimatedModuleProxy17toOptimizedObjectERN8facebook3jsi7RuntimeEE3
+
+Dominios que contacta la app (análisis de cadenas):
+   - www.a
+   - docs.swmansion.com
+   - schemas.android.com
+   - www.recent
+   - xml.org
+   - www.hortcut
+   - www.c
+   - www.w3.org
+   - www.in
+   - goo.gle
+   - youtrack.jetbrains.com
+   - reactnative.dev
+   - .jpg
+   - github.com
+   - www.language
+   - www.interpretation
+   - www.manifestations
+   - www.years
+   - www.googleorganizationautocompleterequirementsconservative
+   - www.icon
+==== EVD-4-08_mitm_pinning.txt
+EVD-4-08 CA-08 intercepción MITM contra la app (CTRL-08, pinning)
+Fecha: 2026-10-31 18:01:56 UTC
+Ataque: proxy mitmproxy en 10.0.2.2:8080 con su CA instalada como CA del SISTEMA (con root).
+CA del atacante en el almacén del sistema: /system/etc/security/cacerts/c8750f0d.0
+
+Control (curl confiando en la CA del atacante, sin pinning): HTTP 401
+   -> el proxy SÍ puede descifrar a un cliente sin pinning.
+
+Marcas de la app con el proxy activo:
+   QWALLET_API error=pinning host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=784
+   QWALLET_API sonda=GET_/me via=xhr estado=sin_conexion motivo=xhr_error ms=645
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=privilegedAccess reaccion=bloquear
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Solicitudes a la API que el proxy pudo leer en claro: 2 (1 es el control con curl)
+   [18:04:03.022][127.0.0.1:54444] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   127.0.0.1:54444: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [18:04:03.203][127.0.0.1:54444] client disconnect
+   [18:04:03.204][127.0.0.1:54444] server disconnect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:06.322][127.0.0.1:33300] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   127.0.0.1:33300: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [18:04:06.872][127.0.0.1:33304] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:07.368][127.0.0.1:33304] client disconnect
+   [18:04:07.369][127.0.0.1:33304] server disconnect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:22.681][127.0.0.1:53910] client disconnect
+   [18:04:22.911][127.0.0.1:53934] client disconnect
+
+Resultado fetch: INTERCEPTADO (la solicitud llegó a la API pasando por el proxy).
+Resultado xhr: BLOQUEADO (la app cortó la conexión con el proxy).
+La librería de pinning reportó el rechazo del certificado del proxy (error=pinning).
+Solicitudes de la app leídas por el proxy: 1 (se descuenta el control).
+Sin proxy, de nuevo:
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=616
+   QWALLET_API sonda=GET_/me via=xhr estado=401 pinning=activo ms=447
+==== EVD-4-08b_almacenamiento.txt
+EVD-4-08b CA-07 datos de la app en el dispositivo (CTRL-07)
+Fecha: 2026-10-31 18:01:56 UTC
+Con root se listan los archivos privados de la app y se buscan tokens (JWT) o datos en claro.
+
+   /data/data/gt.qwallet.app/cache/ExponentAsset-51b6ad87261f18b6433ec52871ddfabc.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-a5f35888d2da465de352e0dcfaf33324.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-6e237de4f1f413afa2fcc45c77ac343a.ttf
+   /data/data/gt.qwallet.app/cache/http-cache/journal
+   /data/data/gt.qwallet.app/shared_prefs/expo.modules.kotlin.PersistentDataManager.xml
+   /data/data/gt.qwallet.app/shared_prefs/com3uiDo8WkyrKqT9F55Dye8Sc9tuAYjvxH7tnr0.xml
+   /data/data/gt.qwallet.app/shared_prefs/LPt9Olf8ogMI3AxLtWu6T61bGFwMV8AWeIe0guV8omDl.xml
+   /data/data/gt.qwallet.app/shared_prefs/WebViewChromiumPrefs.xml
+   /data/data/gt.qwallet.app/shared_prefs/rPT4MHwCbc75aRHdSgE0yBiD.xml
+   /data/data/gt.qwallet.app/shared_prefs/WLT1NDd2Fqvj26CNGUC80V3D2SjeHRv0mEcjzOcVcWdoUgIdmdeWy.xml
+   /data/data/gt.qwallet.app/shared_prefs/FVR43jFXmgP2hitXSjTyIScRrUsA7cK8RSCVk26.xml
+   /data/data/gt.qwallet.app/files/tcb
+   /data/data/gt.qwallet.app/files/profileinstaller_profileWrittenFor_lastUpdateTime.dat
+   /data/data/gt.qwallet.app/files/profileInstalled
+   /data/data/gt.qwallet.app/app_webview/variations_stamp
+   /data/data/gt.qwallet.app/app_webview/Default/Cookies
+   /data/data/gt.qwallet.app/app_webview/Default/Cookies-journal
+   /data/data/gt.qwallet.app/app_webview/variations_seed
+
+Archivos con algo parecido a un JWT: /data/data/gt.qwallet.app/files/tcb
+   /data/data/gt.qwallet.app/files/tcb: campos del contenido -> no decodificable
+allowBackup del paquete: 
+(vacío = allowBackup desactivado; ver también el manifiesto en EVD-4-11)
+
+Nota: en esta versión la app no inicia sesión (conexión mínima con la API, decisión del
+bloque 5), así que no hay tokens que guardar; el control CTRL-07 queda verificado por diseño
+y por configuración (expo-secure-store con Android Keystore), no por un token real.
+==== EVD-4-08c_pines_vs_cadena.txt
+Pines configurados en la app vs. cadena real de dk1m3avi8i.execute-api.us-east-1.amazonaws.com
+Fecha: 2026-10-31 17:56:26 UTC
+
+Servidor envía: CN = *.execute-api.us-east-1.amazonaws.com
+   pin NHxVuePyVU7argbdcWEdW2lDRqrfWOCTTBbcQpXVyMA= -> no fijado
+Servidor envía: C = US, O = Amazon, CN = Amazon RSA 2048 S21
+   pin 2PapRBB8oK8vWUGt2F5OvDkYXOCXOU4aHTiHNiWJbcs= -> no fijado
+Servidor envía: C = US, O = Amazon, CN = Amazon Root CA 1
+   pin ++MBgDH5WGvL9Bcn5Be30cRcL0f5O+NyoXuWtQdX1aI= -> FIJADO en la app
+Raíz de confianza (almacén del sistema): Starfield Services Root Certificate Authority - G2
+   pin KwccWaCgrnaw6tsrrSO61FgLacNgG2MMLq8GE6+oP5I= -> no fijado
+
+Resultado: la cadena real pasa por 1 llave(s) fijada(s). Correcto.
+==== EVD-4-10_frida.txt
+EVD-4-10 CA-10 instrumentación con Frida contra la app (CTRL-15)
+Fecha: 2026-10-31 18:01:56 UTC
+Ataque: frida-server 17.22.0 como root en el emulador + hook a getpid() en el proceso de la app.
+
+Salida de Frida (lado atacante):
+   QWALLET_FRIDA hook=instalado
+
+Marcas de la app después del ataque:
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=1715
+   QWALLET_API sonda=GET_/me via=xhr estado=401 pinning=activo ms=694
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=hooks reaccion=bloquear
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=privilegedAccess reaccion=bloquear
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Resultado: DETECTADO. freeRASP reportó 'hooks' y la app aplica la reacción indicada.
+==== EVD-4-11_apk_secretos_manifiesto.txt
+EVD-4-11 CA-11 secretos en el APK y manifiesto (CTRL-16)
+Fecha: 2026-10-31 17:56:27 UTC
+APK: app-release.apk, 117M
+
+1) gitleaks 8.30.1 sobre el contenido del APK descomprimido:
+   Hallazgos: 0
+
+2) Patrones de secretos en el código (classes*.dex y el bundle de Hermes):
+   AKIA[0-9A-Z]{16}                         0 coincidencias
+   ASIA[0-9A-Z]{16}                         0 coincidencias
+   -----BEGIN (RSA |EC |)PRIVATE KEY        0 coincidencias
+   aws_secret_access_key                    0 coincidencias
+   client_secret                            0 coincidencias
+   sk_live_[0-9a-zA-Z]{20,}                 0 coincidencias
+   xox[baprs]-[0-9A-Za-z-]{10,}             0 coincidencias
+   ghp_[0-9A-Za-z]{36}                      0 coincidencias
+
+3) Datos públicos que la app sí lleva (no son secretos):
+   execute-api.us-east-1.amazonaws.com      1
+   gt.qwallet.app                           1
+
+4) Manifiesto (aapt2):
+   allowBackup              false
+   debuggable               (no declarado)
+   usesCleartextTraffic     false
+   networkSecurityConfig    (no declarado)
+   minSdkVersion            29
+   targetSdkVersion         36
+
+   Permisos solicitados:
+     "android.permission.ACCESS_NETWORK_STATE"
+     "android.permission.ACCESS_WIFI_STATE"
+     "android.permission.DETECT_SCREEN_CAPTURE"
+     "android.permission.INTERNET"
+     "android.permission.USE_BIOMETRIC"
+     "android.permission.USE_FINGERPRINT"
+     "android.permission.VIBRATE"
+     "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE"
+     "com.google.android.providers.gsf.permission.READ_GSERVICES"
+
+Fallas: 0
+==== EVD-5-03_freerasp_arranque.txt
+EVD-5-03 freeRASP y pinning en el arranque de la app (CTRL-15, CTRL-08)
+Fecha: 2026-10-31 18:01:56 UTC
+Dispositivo: emulador Android 13, imagen userdebug
+APK: versión de producción (release, Hermes + R8), firmada; isProd = true
+
+Marcas de seguridad escritas por la app (logcat, etiqueta ReactNativeJS):
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=2155
+   QWALLET_API sonda=GET_/me via=xhr estado=401 pinning=activo ms=608
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Esperado: la sonda GET /me sin token responde 401 con el pinning activo, y freeRASP
+marca el emulador (simulator) y bloquea la app (pantalla EVD-5-03_bloqueo_rasp.png).
+==== EVD-5-11_ofuscacion_firma.txt
+EVD-5-11 Ofuscación, bytecode y firma del APK (CTRL-15, MASVS-RESILIENCE)
+Fecha: 2026-10-31 17:56:27 UTC
+
+1) Bundle de JavaScript: cabecera c61fbc03c103191f
+   -> Hermes bytecode (el código JS no va como texto legible)
+
+2) R8: archivo de mapeo de la compilación (nombre original -> nombre ofuscado)
+   Clases en el mapeo: 22027; renombradas por R8: 20836
+   Ejemplos:
+     _COROUTINE.ArtificialStackFrames -> a.a
+     _COROUTINE.CoroutineDebuggingKt -> a.b
+     _COROUTINE._BOUNDARY -> a.c
+     androidx.activity.Api34Impl -> androidx.activity.a
+     androidx.activity.BackEventCompat -> androidx.activity.b
+grep: write error: Broken pipe
+grep: write error: Broken pipe
+
+3) Firma (apksigner):
+   Verified using v1 scheme (JAR signing): false
+   Verified using v2 scheme (APK Signature Scheme v2): true
+   Verified using v3 scheme (APK Signature Scheme v3): false
+   Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+   Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+   Verified using v4 scheme (APK Signature Scheme v4): false
+
+Nota: el APK de prueba se firma con el certificado de depuración de la plantilla de Expo.
+En producción se firmaría con el certificado de Google Play (Play App Signing) y freeRASP
+llevaría esa huella; la lógica de detección de re-firmado (appIntegrity) es la misma.
+==== registro_dispositivo.txt
+Inicio: 18:01:56
+Dispositivo: sdk_gphone64_x86_64 · Android 13 (API 33) · userdebug
+Performing Streamed Install
+Success
+/tmp/frida-server: 1 file pushed, 0 skipped. 164.1 MB/s (116322680 bytes in 0.676s)
+/tmp/c8750f0d.0: 1 file pushed, 0 skipped. 9.9 MB/s (1172 bytes in 0.000s)
+==== EVD-3-07_mobsf.txt
+EVD-3-07 MobSF 4.5.3: análisis estático del APK de producción
+Fecha: 2026-10-31 17:59:39 UTC
+App: Q-Wallet · paquete gt.qwallet.app · versión 1.0.0 · minSdk 29 · targetSdk 36
+
+Puntaje de seguridad de MobSF: 49/100
+Hallazgos por nivel: high 3, warning 12, info 1, secure 2, hotspot 0
+
+HIGH (3):
+   - [certificate] Application signed with debug certificate
+   - [certificate] Certificate algorithm vulnerable to hash collision
+   - [code] The App uses the encryption mode CBC with PKCS5/PKCS7 padding. This configuration is vulnerable to padding oracle attacks.
+
+WARNING (12):
+   - [manifest] TaskAffinity is set for activity (expo.modules.webbrowser.BrowserProxyActivity)
+   - [manifest] Broadcast Receiver (androidx.profileinstaller.ProfileInstallReceiver) is Protected by a permission, but the protection level of the permission should be checked. Permission: android.permission.DUMP [android:exported=true]
+   - [code] The App uses an insecure Random Number Generator.
+   - [code] Files may contain hardcoded sensitive information like usernames, passwords, keys etc.
+   - [code] MD5 is a weak hash known to have hash collisions.
+   - [code] SHA-1 is a weak hash known to have hash collisions.
+   - [code] App can read/write to External Storage. Any App can read data written to External Storage.
+   - [code] App creates temp file. Sensitive information should never be written into a temp file.
+   - [code] IP Address disclosure
+   - [code] Insecure WebView Implementation. Execution of user controlled code in WebView is a critical Security Hole.
+   - [code] Ensure that user controlled URLs never reaches the Webview. Enabling file access from URLs in WebView can leak sensitive information from the file system.
+   - [secrets] This app may contain hardcoded secrets
+
+Secretos que MobSF cree ver en el código:
+   - 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff0001020304050607101112131415161720212223242526273031323334353637404142434445464750515253545556576061626364656667707172737475767700010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 00010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 000102030405060708091011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798990123456789abcdef
+   - 0001020304050607101112131415161720212223242526273031323334353637404142434445464750515253545556576061626364656667707172737475767700010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 0123456789abcdef012345670123456789
+   - 0123456789abcdefABCDEF
+   - 0123456789abcdefABCDEFxX+
+   - 0clERN8facebook3jsi7RuntimeEENKUlRKNS2
+   - 0clERN8facebook3jsi7RuntimeEENKUlRKNS5
+   - 0clERN8facebook3jsi7RuntimeEEUlRKNS2
+   - 0clERN8facebook3jsi7RuntimeEEUlRKNS5
+   - 117HermesRuntimeImpl12ManagedValueIN6hermes2vm8WeakRootINS5
+   - 117HermesRuntimeImplC1ERKN6hermes2vm13RuntimeConfigEEUlPNS4
+   - 117HermesRuntimeImplC1ERKN6hermes2vm13RuntimeConfigEEUlPNS7
+   - 11HybridClassIN4expo10JSIContextENS5
+   - 143JavaTurboModuleInvalidArgumentTypeExceptionE
+   - 14WorkletRuntimeEEERN8facebook3jsi7RuntimeERKNS8
+   - 14WorkletRuntimeEEERN8facebook3jsi7RuntimeERKNSA
+   - 15JavaTurboModule10InitParamsEENSA
+   - 21ReanimatedModuleProxy17toOptimizedObjectERN8facebook3jsi7RuntimeEE3
+
+Dominios que contacta la app (análisis de cadenas):
+   - www.a
+   - docs.swmansion.com
+   - schemas.android.com
+   - www.recent
+   - xml.org
+   - www.hortcut
+   - www.c
+   - www.w3.org
+   - www.in
+   - goo.gle
+   - youtrack.jetbrains.com
+   - reactnative.dev
+   - .jpg
+   - github.com
+   - www.language
+   - www.interpretation
+   - www.manifestations
+   - www.years
+   - www.googleorganizationautocompleterequirementsconservative
+   - www.icon
+==== EVD-4-08_mitm_pinning.txt
+EVD-4-08 CA-08 intercepción MITM contra la app (CTRL-08, pinning)
+Fecha: 2026-10-31 18:01:56 UTC
+Ataque: proxy mitmproxy en 10.0.2.2:8080 con su CA instalada como CA del SISTEMA (con root).
+CA del atacante en el almacén del sistema: /system/etc/security/cacerts/c8750f0d.0
+
+Control (curl confiando en la CA del atacante, sin pinning): HTTP 401
+   -> el proxy SÍ puede descifrar a un cliente sin pinning.
+
+Marcas de la app con el proxy activo:
+   QWALLET_API error=pinning host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=784
+   QWALLET_API sonda=GET_/me via=xhr estado=sin_conexion motivo=xhr_error ms=645
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=privilegedAccess reaccion=bloquear
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Solicitudes a la API que el proxy pudo leer en claro: 2 (1 es el control con curl)
+   [18:04:03.022][127.0.0.1:54444] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   127.0.0.1:54444: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [18:04:03.203][127.0.0.1:54444] client disconnect
+   [18:04:03.204][127.0.0.1:54444] server disconnect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:06.322][127.0.0.1:33300] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   127.0.0.1:33300: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [18:04:06.872][127.0.0.1:33304] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:07.368][127.0.0.1:33304] client disconnect
+   [18:04:07.369][127.0.0.1:33304] server disconnect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:22.681][127.0.0.1:53910] client disconnect
+   [18:04:22.911][127.0.0.1:53934] client disconnect
+
+Resultado fetch: INTERCEPTADO (la solicitud llegó a la API pasando por el proxy).
+Resultado xhr: BLOQUEADO (la app cortó la conexión con el proxy).
+La librería de pinning reportó el rechazo del certificado del proxy (error=pinning).
+Solicitudes de la app leídas por el proxy: 1 (se descuenta el control).
+Sin proxy, de nuevo:
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=616
+   QWALLET_API sonda=GET_/me via=xhr estado=401 pinning=activo ms=447
+==== EVD-4-08b_almacenamiento.txt
+EVD-4-08b CA-07 datos de la app en el dispositivo (CTRL-07)
+Fecha: 2026-10-31 18:01:56 UTC
+Con root se listan los archivos privados de la app y se buscan tokens (JWT) o datos en claro.
+
+   /data/data/gt.qwallet.app/cache/ExponentAsset-51b6ad87261f18b6433ec52871ddfabc.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-a5f35888d2da465de352e0dcfaf33324.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-6e237de4f1f413afa2fcc45c77ac343a.ttf
+   /data/data/gt.qwallet.app/cache/http-cache/journal
+   /data/data/gt.qwallet.app/shared_prefs/expo.modules.kotlin.PersistentDataManager.xml
+   /data/data/gt.qwallet.app/shared_prefs/com3uiDo8WkyrKqT9F55Dye8Sc9tuAYjvxH7tnr0.xml
+   /data/data/gt.qwallet.app/shared_prefs/LPt9Olf8ogMI3AxLtWu6T61bGFwMV8AWeIe0guV8omDl.xml
+   /data/data/gt.qwallet.app/shared_prefs/WebViewChromiumPrefs.xml
+   /data/data/gt.qwallet.app/shared_prefs/rPT4MHwCbc75aRHdSgE0yBiD.xml
+   /data/data/gt.qwallet.app/shared_prefs/WLT1NDd2Fqvj26CNGUC80V3D2SjeHRv0mEcjzOcVcWdoUgIdmdeWy.xml
+   /data/data/gt.qwallet.app/shared_prefs/FVR43jFXmgP2hitXSjTyIScRrUsA7cK8RSCVk26.xml
+   /data/data/gt.qwallet.app/files/tcb
+   /data/data/gt.qwallet.app/files/profileinstaller_profileWrittenFor_lastUpdateTime.dat
+   /data/data/gt.qwallet.app/files/profileInstalled
+   /data/data/gt.qwallet.app/app_webview/variations_stamp
+   /data/data/gt.qwallet.app/app_webview/Default/Cookies
+   /data/data/gt.qwallet.app/app_webview/Default/Cookies-journal
+   /data/data/gt.qwallet.app/app_webview/variations_seed
+
+Archivos con algo parecido a un JWT: /data/data/gt.qwallet.app/files/tcb
+   /data/data/gt.qwallet.app/files/tcb: campos del contenido -> no decodificable
+allowBackup del paquete: 
+(vacío = allowBackup desactivado; ver también el manifiesto en EVD-4-11)
+
+Nota: en esta versión la app no inicia sesión (conexión mínima con la API, decisión del
+bloque 5), así que no hay tokens que guardar; el control CTRL-07 queda verificado por diseño
+y por configuración (expo-secure-store con Android Keystore), no por un token real.
+==== EVD-4-08c_pines_vs_cadena.txt
+Pines configurados en la app vs. cadena real de dk1m3avi8i.execute-api.us-east-1.amazonaws.com
+Fecha: 2026-10-31 17:56:26 UTC
+
+Servidor envía: CN = *.execute-api.us-east-1.amazonaws.com
+   pin NHxVuePyVU7argbdcWEdW2lDRqrfWOCTTBbcQpXVyMA= -> no fijado
+Servidor envía: C = US, O = Amazon, CN = Amazon RSA 2048 S21
+   pin 2PapRBB8oK8vWUGt2F5OvDkYXOCXOU4aHTiHNiWJbcs= -> no fijado
+Servidor envía: C = US, O = Amazon, CN = Amazon Root CA 1
+   pin ++MBgDH5WGvL9Bcn5Be30cRcL0f5O+NyoXuWtQdX1aI= -> FIJADO en la app
+Raíz de confianza (almacén del sistema): Starfield Services Root Certificate Authority - G2
+   pin KwccWaCgrnaw6tsrrSO61FgLacNgG2MMLq8GE6+oP5I= -> no fijado
+
+Resultado: la cadena real pasa por 1 llave(s) fijada(s). Correcto.
+==== EVD-4-10_frida.txt
+EVD-4-10 CA-10 instrumentación con Frida contra la app (CTRL-15)
+Fecha: 2026-10-31 18:01:56 UTC
+Ataque: frida-server 17.22.0 como root en el emulador + hook a getpid() en el proceso de la app.
+
+Salida de Frida (lado atacante):
+   QWALLET_FRIDA hook=instalado
+
+Marcas de la app después del ataque:
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=1715
+   QWALLET_API sonda=GET_/me via=xhr estado=401 pinning=activo ms=694
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=hooks reaccion=bloquear
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=privilegedAccess reaccion=bloquear
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Resultado: DETECTADO. freeRASP reportó 'hooks' y la app aplica la reacción indicada.
+==== EVD-4-11_apk_secretos_manifiesto.txt
+EVD-4-11 CA-11 secretos en el APK y manifiesto (CTRL-16)
+Fecha: 2026-10-31 17:56:27 UTC
+APK: app-release.apk, 117M
+
+1) gitleaks 8.30.1 sobre el contenido del APK descomprimido:
+   Hallazgos: 0
+
+2) Patrones de secretos en el código (classes*.dex y el bundle de Hermes):
+   AKIA[0-9A-Z]{16}                         0 coincidencias
+   ASIA[0-9A-Z]{16}                         0 coincidencias
+   -----BEGIN (RSA |EC |)PRIVATE KEY        0 coincidencias
+   aws_secret_access_key                    0 coincidencias
+   client_secret                            0 coincidencias
+   sk_live_[0-9a-zA-Z]{20,}                 0 coincidencias
+   xox[baprs]-[0-9A-Za-z-]{10,}             0 coincidencias
+   ghp_[0-9A-Za-z]{36}                      0 coincidencias
+
+3) Datos públicos que la app sí lleva (no son secretos):
+   execute-api.us-east-1.amazonaws.com      1
+   gt.qwallet.app                           1
+
+4) Manifiesto (aapt2):
+   allowBackup              false
+   debuggable               (no declarado)
+   usesCleartextTraffic     false
+   networkSecurityConfig    (no declarado)
+   minSdkVersion            29
+   targetSdkVersion         36
+
+   Permisos solicitados:
+     "android.permission.ACCESS_NETWORK_STATE"
+     "android.permission.ACCESS_WIFI_STATE"
+     "android.permission.DETECT_SCREEN_CAPTURE"
+     "android.permission.INTERNET"
+     "android.permission.USE_BIOMETRIC"
+     "android.permission.USE_FINGERPRINT"
+     "android.permission.VIBRATE"
+     "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE"
+     "com.google.android.providers.gsf.permission.READ_GSERVICES"
+
+Fallas: 0
+==== EVD-5-03_freerasp_arranque.txt
+EVD-5-03 freeRASP y pinning en el arranque de la app (CTRL-15, CTRL-08)
+Fecha: 2026-10-31 18:01:56 UTC
+Dispositivo: emulador Android 13, imagen userdebug
+APK: versión de producción (release, Hermes + R8), firmada; isProd = true
+
+Marcas de seguridad escritas por la app (logcat, etiqueta ReactNativeJS):
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=2155
+   QWALLET_API sonda=GET_/me via=xhr estado=401 pinning=activo ms=608
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Esperado: la sonda GET /me sin token responde 401 con el pinning activo, y freeRASP
+marca el emulador (simulator) y bloquea la app (pantalla EVD-5-03_bloqueo_rasp.png).
+==== EVD-5-11_ofuscacion_firma.txt
+EVD-5-11 Ofuscación, bytecode y firma del APK (CTRL-15, MASVS-RESILIENCE)
+Fecha: 2026-10-31 17:56:27 UTC
+
+1) Bundle de JavaScript: cabecera c61fbc03c103191f
+   -> Hermes bytecode (el código JS no va como texto legible)
+
+2) R8: archivo de mapeo de la compilación (nombre original -> nombre ofuscado)
+   Clases en el mapeo: 22027; renombradas por R8: 20836
+   Ejemplos:
+     _COROUTINE.ArtificialStackFrames -> a.a
+     _COROUTINE.CoroutineDebuggingKt -> a.b
+     _COROUTINE._BOUNDARY -> a.c
+     androidx.activity.Api34Impl -> androidx.activity.a
+     androidx.activity.BackEventCompat -> androidx.activity.b
+grep: write error: Broken pipe
+grep: write error: Broken pipe
+
+3) Firma (apksigner):
+   Verified using v1 scheme (JAR signing): false
+   Verified using v2 scheme (APK Signature Scheme v2): true
+   Verified using v3 scheme (APK Signature Scheme v3): false
+   Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+   Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+   Verified using v4 scheme (APK Signature Scheme v4): false
+
+Nota: el APK de prueba se firma con el certificado de depuración de la plantilla de Expo.
+En producción se firmaría con el certificado de Google Play (Play App Signing) y freeRASP
+llevaría esa huella; la lógica de detección de re-firmado (appIntegrity) es la misma.
+==== registro_dispositivo.txt
+Inicio: 18:01:56
+Dispositivo: sdk_gphone64_x86_64 · Android 13 (API 33) · userdebug
+Performing Streamed Install
+Success
+/tmp/frida-server: 1 file pushed, 0 skipped. 164.1 MB/s (116322680 bytes in 0.676s)
+/tmp/c8750f0d.0: 1 file pushed, 0 skipped. 9.9 MB/s (1172 bytes in 0.000s)
+==== EVD-3-07_mobsf.txt
+EVD-3-07 MobSF 4.5.3: análisis estático del APK de producción
+Fecha: 2026-10-31 17:59:39 UTC
+App: Q-Wallet · paquete gt.qwallet.app · versión 1.0.0 · minSdk 29 · targetSdk 36
+
+Puntaje de seguridad de MobSF: 49/100
+Hallazgos por nivel: high 3, warning 12, info 1, secure 2, hotspot 0
+
+HIGH (3):
+   - [certificate] Application signed with debug certificate
+   - [certificate] Certificate algorithm vulnerable to hash collision
+   - [code] The App uses the encryption mode CBC with PKCS5/PKCS7 padding. This configuration is vulnerable to padding oracle attacks.
+
+WARNING (12):
+   - [manifest] TaskAffinity is set for activity (expo.modules.webbrowser.BrowserProxyActivity)
+   - [manifest] Broadcast Receiver (androidx.profileinstaller.ProfileInstallReceiver) is Protected by a permission, but the protection level of the permission should be checked. Permission: android.permission.DUMP [android:exported=true]
+   - [code] The App uses an insecure Random Number Generator.
+   - [code] Files may contain hardcoded sensitive information like usernames, passwords, keys etc.
+   - [code] MD5 is a weak hash known to have hash collisions.
+   - [code] SHA-1 is a weak hash known to have hash collisions.
+   - [code] App can read/write to External Storage. Any App can read data written to External Storage.
+   - [code] App creates temp file. Sensitive information should never be written into a temp file.
+   - [code] IP Address disclosure
+   - [code] Insecure WebView Implementation. Execution of user controlled code in WebView is a critical Security Hole.
+   - [code] Ensure that user controlled URLs never reaches the Webview. Enabling file access from URLs in WebView can leak sensitive information from the file system.
+   - [secrets] This app may contain hardcoded secrets
+
+Secretos que MobSF cree ver en el código:
+   - 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff0001020304050607101112131415161720212223242526273031323334353637404142434445464750515253545556576061626364656667707172737475767700010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 00010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 000102030405060708091011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798990123456789abcdef
+   - 0001020304050607101112131415161720212223242526273031323334353637404142434445464750515253545556576061626364656667707172737475767700010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+   - 0123456789abcdef012345670123456789
+   - 0123456789abcdefABCDEF
+   - 0123456789abcdefABCDEFxX+
+   - 0clERN8facebook3jsi7RuntimeEENKUlRKNS2
+   - 0clERN8facebook3jsi7RuntimeEENKUlRKNS5
+   - 0clERN8facebook3jsi7RuntimeEEUlRKNS2
+   - 0clERN8facebook3jsi7RuntimeEEUlRKNS5
+   - 117HermesRuntimeImpl12ManagedValueIN6hermes2vm8WeakRootINS5
+   - 117HermesRuntimeImplC1ERKN6hermes2vm13RuntimeConfigEEUlPNS4
+   - 117HermesRuntimeImplC1ERKN6hermes2vm13RuntimeConfigEEUlPNS7
+   - 11HybridClassIN4expo10JSIContextENS5
+   - 143JavaTurboModuleInvalidArgumentTypeExceptionE
+   - 14WorkletRuntimeEEERN8facebook3jsi7RuntimeERKNS8
+   - 14WorkletRuntimeEEERN8facebook3jsi7RuntimeERKNSA
+   - 15JavaTurboModule10InitParamsEENSA
+   - 21ReanimatedModuleProxy17toOptimizedObjectERN8facebook3jsi7RuntimeEE3
+
+Dominios que contacta la app (análisis de cadenas):
+   - www.a
+   - docs.swmansion.com
+   - schemas.android.com
+   - www.recent
+   - xml.org
+   - www.hortcut
+   - www.c
+   - www.w3.org
+   - www.in
+   - goo.gle
+   - youtrack.jetbrains.com
+   - reactnative.dev
+   - .jpg
+   - github.com
+   - www.language
+   - www.interpretation
+   - www.manifestations
+   - www.years
+   - www.googleorganizationautocompleterequirementsconservative
+   - www.icon
+==== EVD-4-08_mitm_pinning.txt
+EVD-4-08 CA-08 intercepción MITM contra la app (CTRL-08, pinning)
+Fecha: 2026-10-31 18:01:56 UTC
+Ataque: proxy mitmproxy en 10.0.2.2:8080 con su CA instalada como CA del SISTEMA (con root).
+CA del atacante en el almacén del sistema: /system/etc/security/cacerts/c8750f0d.0
+
+Control (curl confiando en la CA del atacante, sin pinning): HTTP 401
+   -> el proxy SÍ puede descifrar a un cliente sin pinning.
+
+Marcas de la app con el proxy activo:
+   QWALLET_API error=pinning host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=784
+   QWALLET_API sonda=GET_/me via=xhr estado=sin_conexion motivo=xhr_error ms=645
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=privilegedAccess reaccion=bloquear
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Solicitudes a la API que el proxy pudo leer en claro: 2 (1 es el control con curl)
+   [18:04:03.022][127.0.0.1:54444] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   127.0.0.1:54444: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [18:04:03.203][127.0.0.1:54444] client disconnect
+   [18:04:03.204][127.0.0.1:54444] server disconnect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:06.322][127.0.0.1:33300] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   127.0.0.1:33300: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [18:04:06.872][127.0.0.1:33304] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:07.368][127.0.0.1:33304] client disconnect
+   [18:04:07.369][127.0.0.1:33304] server disconnect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (18.211.173.202:443)
+   [18:04:22.681][127.0.0.1:53910] client disconnect
+   [18:04:22.911][127.0.0.1:53934] client disconnect
+
+Resultado fetch: INTERCEPTADO (la solicitud llegó a la API pasando por el proxy).
+Resultado xhr: BLOQUEADO (la app cortó la conexión con el proxy).
+La librería de pinning reportó el rechazo del certificado del proxy (error=pinning).
+Solicitudes de la app leídas por el proxy: 1 (se descuenta el control).
+Sin proxy, de nuevo:
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=fetch estado=401 pinning=activo ms=616
+   QWALLET_API sonda=GET_/me via=xhr estado=401 pinning=activo ms=447
+==== EVD-4-08b_almacenamiento.txt
+EVD-4-08b CA-07 datos de la app en el dispositivo (CTRL-07)
+Fecha: 2026-10-31 18:01:56 UTC
+Con root se listan los archivos privados de la app y se buscan tokens (JWT) o datos en claro.
+
+   /data/data/gt.qwallet.app/cache/ExponentAsset-51b6ad87261f18b6433ec52871ddfabc.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-137ab18bace28dd0bd83eb3b8ed==== registro_emulador.txt
+[18:00:10] SDK: /usr/local/lib/android/sdk · KVM: crw-rw-rw- 1 root kvm 10, 232 Oct 31 18:00 /dev/kvm
+[18:00:10] Licencias e imagen system-images;android-33;google_apis;x86_64
+yes: standard output: Broken pipe
+
+
+[18:01:05] Crear el dispositivo virtual
+qwallet-prueba
+[18:01:07] Arrancar el emulador
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+[18:01:51] Arrancó en 30 s: Android 13, userdebug

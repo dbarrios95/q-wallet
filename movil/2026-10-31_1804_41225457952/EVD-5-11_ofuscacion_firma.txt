@@ -1,0 +1,28 @@
+EVD-5-11 Ofuscación, bytecode y firma del APK (CTRL-15, MASVS-RESILIENCE)
+Fecha: 2026-10-31 17:56:27 UTC
+
+1) Bundle de JavaScript: cabecera c61fbc03c103191f
+   -> Hermes bytecode (el código JS no va como texto legible)
+
+2) R8: archivo de mapeo de la compilación (nombre original -> nombre ofuscado)
+   Clases en el mapeo: 22027; renombradas por R8: 20836
+   Ejemplos:
+     _COROUTINE.ArtificialStackFrames -> a.a
+     _COROUTINE.CoroutineDebuggingKt -> a.b
+     _COROUTINE._BOUNDARY -> a.c
+     androidx.activity.Api34Impl -> androidx.activity.a
+     androidx.activity.BackEventCompat -> androidx.activity.b
+grep: write error: Broken pipe
+grep: write error: Broken pipe
+
+3) Firma (apksigner):
+   Verified using v1 scheme (JAR signing): false
+   Verified using v2 scheme (APK Signature Scheme v2): true
+   Verified using v3 scheme (APK Signature Scheme v3): false
+   Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+   Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+   Verified using v4 scheme (APK Signature Scheme v4): false
+
+Nota: el APK de prueba se firma con el certificado de depuración de la plantilla de Expo.
+En producción se firmaría con el certificado de Google Play (Play App Signing) y freeRASP
+llevaría esa huella; la lógica de detección de re-firmado (appIntegrity) es la misma.
