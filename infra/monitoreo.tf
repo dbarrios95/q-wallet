@@ -73,8 +73,8 @@ locals {
       descripcion = "Inicio de sesión en la consola sin MFA (CIS 4.2)"
     }
     trail_auditoria_y_llaves = {
-      patron      = "{ $.eventName = \"StopLogging\" || $.eventName = \"DeleteTrail\" || $.eventName = \"UpdateTrail\" || $.eventName = \"PutEventSelectors\" || $.eventName = \"DisableKey\" || $.eventName = \"ScheduleKeyDeletion\" || $.eventName = \"PutKeyPolicy\" || $.eventName = \"DeleteUserPool\" || $.eventName = \"DeleteTable\" }"
-      descripcion = "Cambios a la auditoría, a la llave KMS o borrado de datos (CIS 4.5 y 4.7)"
+      patron      = "{ $.eventName = \"StopLogging\" || $.eventName = \"DeleteTrail\" || $.eventName = \"UpdateTrail\" || $.eventName = \"PutEventSelectors\" || $.eventName = \"DisableKey\" || $.eventName = \"ScheduleKeyDeletion\" || $.eventName = \"PutKeyPolicy\" || $.eventName = \"DeleteUserPool\" || $.eventName = \"DeleteTable\" || $.eventName = \"DeleteAlarms\" || $.eventName = \"DisableAlarmActions\" || $.eventName = \"DeleteMetricFilter\" || $.eventName = \"DeleteLogGroup\" || $.eventName = \"DeleteTopic\" || $.eventName = \"Unsubscribe\" }"
+      descripcion = "Cambios a la auditoría o al propio SIEM, a la llave KMS o borrado de datos (CIS 4.5 y 4.7, AME-31)"
     }
     trail_cambios_iam = {
       patron      = "{ $.eventSource = \"iam.amazonaws.com\" && ($.eventName = \"PutRolePolicy\" || $.eventName = \"PutUserPolicy\" || $.eventName = \"AttachRolePolicy\" || $.eventName = \"AttachUserPolicy\" || $.eventName = \"DetachRolePolicy\" || $.eventName = \"DetachUserPolicy\" || $.eventName = \"DeleteRolePolicy\" || $.eventName = \"CreatePolicyVersion\" || $.eventName = \"CreateRole\" || $.eventName = \"DeleteRole\" || $.eventName = \"UpdateAssumeRolePolicy\") }"
@@ -309,7 +309,7 @@ locals {
     aws-no-autorizado     = ["trail_no_autorizado", 5, 300, "5 o más llamadas a AWS negadas por IAM en 5 minutos (CIS 4.1).", "Alta"]
     uso-root              = ["trail_uso_root", 1, 300, "Se usó el usuario raíz de la cuenta (CIS 4.3).", "Crítica"]
     consola-sin-mfa       = ["trail_consola_sin_mfa", 1, 300, "Inicio de sesión en la consola sin MFA (CIS 4.2).", "Crítica"]
-    auditoria-y-llaves    = ["trail_auditoria_y_llaves", 1, 300, "Cambio a CloudTrail, a la llave KMS o borrado de datos (CIS 4.5, 4.7).", "Crítica"]
+    auditoria-y-llaves    = ["trail_auditoria_y_llaves", 1, 300, "Cambio a CloudTrail o al SIEM (alarmas, filtros, logs, avisos), a la llave KMS o borrado de datos (CIS 4.5, 4.7).", "Crítica"]
   }
 }
 
