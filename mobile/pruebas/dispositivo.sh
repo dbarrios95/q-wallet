@@ -126,13 +126,15 @@ kill "$MITM" 2>/dev/null; sleep 2
   echo "Marcas de la app con el proxy activo:"
   marcas | sed 's/^/   /'
   echo
-  echo "Lo que vio el proxy (solicitudes que pudo leer en claro):"
-  grep -E 'GET |POST |client disconnect|Client TLS|TLS handshake|certificate' /tmp/mitm.log | sed 's/^/   /' | head -20
+  leidas=$(grep -c 'execute-api' /tmp/mitm.log || true)
+  echo "Solicitudes a la API que el proxy pudo leer en claro: ${leidas} (1 es el control con curl)"
+  grep -E 'execute-api|TLS|certificate|disconnect' /tmp/mitm.log | grep -v -E 'google|gstatic' | sed 's/^/   /' | head -12
   echo
-  if marcas | grep -q 'error=pinning'; then
-    echo "Resultado: BLOQUEADO. La app rechazó el certificado del proxy (pinning) y no envió la solicitud."
+  if marcas | grep -q 'error=pinning' && [ "$leidas" -le 1 ]; then
+    echo "Resultado: BLOQUEADO. La app rechazó el certificado del proxy (pinning) y no envió la solicitud;"
+    echo "el proxy solo leyó la solicitud de control."
   else
-    echo "Resultado: la app no reportó error de pinning en esta ejecución (ver marcas). Se registra tal cual."
+    echo "Resultado: INTERCEPTADA. El proxy leyó la solicitud de la app: el pinning no se aplicó."
   fi
 } > "$OUT/EVD-4-08_mitm_pinning.txt"
 
