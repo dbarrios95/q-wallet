@@ -1,0 +1,32 @@
+EVD-4-08b CA-07 datos de la app en el dispositivo (CTRL-07)
+Fecha: 2026-10-31 17:33:04 UTC
+Con root se listan los archivos privados de la app y se buscan tokens (JWT) o datos en claro.
+
+   /data/data/gt.qwallet.app/cache/ExponentAsset-51b6ad87261f18b6433ec52871ddfabc.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-a5f35888d2da465de352e0dcfaf33324.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-6e237de4f1f413afa2fcc45c77ac343a.ttf
+   /data/data/gt.qwallet.app/cache/http-cache/journal
+   /data/data/gt.qwallet.app/shared_prefs/expo.modules.kotlin.PersistentDataManager.xml
+   /data/data/gt.qwallet.app/shared_prefs/COM2uiDo8WkyrKqT9F55Dye8Sc9tuAYjvxH7tnr0.xml
+   /data/data/gt.qwallet.app/shared_prefs/lpT8bkPsuUdwEpc29u1gLRB8rwFE7rJAGDTZR6FxVd7z.xml
+   /data/data/gt.qwallet.app/shared_prefs/WebViewChromiumPrefs.xml
+   /data/data/gt.qwallet.app/shared_prefs/RPT4mG4gBmmH55zzaicW9nBBC9AgQ2MtQTzg34CkfVsR.xml
+   /data/data/gt.qwallet.app/shared_prefs/Wlt4ZU1I8L1DwWmyTpvIyhI9aQbDIthNwKg8uhl1Vdwo.xml
+   /data/data/gt.qwallet.app/shared_prefs/fvr1a7x2j5ifIzbqbM4mEpH9wxbTvWFfM0gyfQO.xml
+   /data/data/gt.qwallet.app/files/tcb
+   /data/data/gt.qwallet.app/files/profileinstaller_profileWrittenFor_lastUpdateTime.dat
+   /data/data/gt.qwallet.app/files/profileInstalled
+   /data/data/gt.qwallet.app/app_webview/Default/Cookies
+   /data/data/gt.qwallet.app/app_webview/Default/Cookies-journal
+   /data/data/gt.qwallet.app/app_webview/variations_stamp
+   /data/data/gt.qwallet.app/app_webview/variations_seed
+
+Archivos con algo parecido a un JWT: /data/data/gt.qwallet.app/files/tcb
+   /data/data/gt.qwallet.app/files/tcb: campos del contenido -> no decodificable
+allowBackup del paquete: 
+(vacío = allowBackup desactivado; ver también el manifiesto en EVD-4-11)
+
+Nota: en esta versión la app no inicia sesión (conexión mínima con la API, decisión del
+bloque 5), así que no hay tokens que guardar; el control CTRL-07 queda verificado por diseño
+y por configuración (expo-secure-store con Android Keystore), no por un token real.
