@@ -1,0 +1,13 @@
+Pines configurados en la app vs. cadena real de dk1m3avi8i.execute-api.us-east-1.amazonaws.com
+Fecha: 2026-10-31 19:11:56 UTC
+
+Servidor envía: CN = *.execute-api.us-east-1.amazonaws.com
+   pin NHxVuePyVU7argbdcWEdW2lDRqrfWOCTTBbcQpXVyMA= -> no fijado
+Servidor envía: C = US, O = Amazon, CN = Amazon RSA 2048 S21
+   pin 2PapRBB8oK8vWUGt2F5OvDkYXOCXOU4aHTiHNiWJbcs= -> no fijado
+Servidor envía: C = US, O = Amazon, CN = Amazon Root CA 1
+   pin ++MBgDH5WGvL9Bcn5Be30cRcL0f5O+NyoXuWtQdX1aI= -> FIJADO en la app
+Raíz de confianza (almacén del sistema): Starfield Services Root Certificate Authority - G2
+   pin KwccWaCgrnaw6tsrrSO61FgLacNgG2MMLq8GE6+oP5I= -> no fijado
+
+Resultado: la cadena real pasa por 1 llave(s) fijada(s). Correcto.
