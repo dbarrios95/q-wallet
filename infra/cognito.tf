@@ -15,7 +15,7 @@ resource "aws_cognito_user_pool" "usuarios" {
   }
 
   password_policy {
-    minimum_length                   = 12
+    minimum_length                   = 14 # bloque 5: Prowler pide 14 o más
     require_lowercase                = true
     require_uppercase                = true
     require_numbers                  = true

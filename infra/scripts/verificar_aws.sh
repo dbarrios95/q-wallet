@@ -6,6 +6,7 @@
 #   EVD-3-12  Prueba de TLS: 1.3 aceptado, 1.2 rechazado (CTRL-08)
 #   EVD-5-04  Cifrado en reposo: DynamoDB con la CMK, rotación de la llave (CTRL-19)
 #   EVD-3-13  Configuración de identidad, API y auditoría (Cognito, API Gateway, CloudTrail)
+#   EVD-5-05  SIEM en CloudWatch: fuentes, reglas de correlación, alarmas, aviso y tablero (bloque 5)
 set -uo pipefail
 
 SALIDA="${SALIDA:-evidencias}"
@@ -185,6 +186,56 @@ falla() { echo "FALLA: $1"; FALLAS=$((FALLAS + 1)); }
     --query 'Trail.{multiregion:IsMultiRegionTrail,validacionIntegridad:LogFileValidationEnabled,cifrado:KmsKeyId!=null}' --output json | sed 's/^/   /'
   aws cloudtrail get-trail-status --name qwallet-auditoria --query '{registrando:IsLogging}' --output json | sed 's/^/   /'
 } > "$SALIDA/EVD-3-13_identidad_api_auditoria.txt" 2>&1
+
+# ---------- EVD-5-05: SIEM (bloque 5) ----------
+{
+  encabezado "EVD-5-05 SIEM en CloudWatch: fuentes, reglas, alarmas y aviso (CTRL-20)"
+  echo "1) CloudTrail -> CloudWatch Logs (fuente de auditoría de la cuenta):"
+  aws cloudtrail get-trail --name qwallet-auditoria \
+    --query 'Trail.{grupoDeLogs:CloudWatchLogsLogGroupArn!=null, rolDeEntrega:CloudWatchLogsRoleArn!=null}' --output json | sed 's/^/   /'
+  aws cloudtrail get-trail-status --name qwallet-auditoria \
+    --query '{ultimaEntregaACloudWatch:LatestCloudWatchLogsDeliveryTime, errorDeEntrega:LatestCloudWatchLogsDeliveryError}' --output json | sed 's/^/   /'
+  [ "$(aws cloudtrail get-trail --name qwallet-auditoria --query 'Trail.CloudWatchLogsLogGroupArn' --output text)" = "None" ] && falla "CloudTrail sin CloudWatch Logs"
+  echo "   Selectores de eventos:"
+  aws cloudtrail get-event-selectors --trail-name qwallet-auditoria \
+    --query 'AdvancedEventSelectors[].Name' --output text | tr '\t' '\n' | sed 's/^/     - /'
+  echo
+  echo "2) Reglas de correlación (filtros de métrica) por fuente:"
+  for g in /aws/cloudtrail/qwallet-auditoria /aws/apigateway/qwallet-api aws-waf-logs-qwallet \
+           /aws/lambda/qwallet-svc-profile /aws/lambda/qwallet-svc-accounts /aws/lambda/qwallet-svc-transfers \
+           /aws/lambda/qwallet-svc-budgets /aws/lambda/qwallet-svc-admin; do
+    n=$(aws logs describe-metric-filters --log-group-name "$g" --query 'length(metricFilters)' --output text 2>/dev/null || echo 0)
+    printf '   %-40s %s reglas\n' "$g" "$n"
+  done
+  echo "   Métricas que publican (espacio QWallet/Seguridad):"
+  aws logs describe-metric-filters --query 'metricFilters[?metricTransformations[0].metricNamespace==`QWallet/Seguridad`].metricTransformations[0].metricName' \
+    --output text | tr '\t' '\n' | sort -u | sed 's/^/     - /'
+  echo
+  echo "3) Consultas de correlación guardadas (Logs Insights):"
+  aws logs describe-query-definitions --query-definition-name-prefix qwallet/ --query 'queryDefinitions[].name' \
+    --output text | tr '\t' '\n' | sed 's/^/   - /'
+  echo
+  echo "4) Alarmas de seguridad (umbral, ventana y estado):"
+  aws cloudwatch describe-alarms --alarm-name-prefix qwallet- \
+    --query 'MetricAlarms[].[AlarmName, MetricName, Threshold, Period, StateValue]' --output text | sed 's/^/   /'
+  na=$(aws cloudwatch describe-alarms --alarm-name-prefix qwallet- --query 'length(MetricAlarms)' --output text)
+  [ "$na" -ge 9 ] || falla "se esperaban 9 alarmas o más y hay ${na}"
+  echo
+  echo "5) Aviso: tema SNS cifrado y suscripción por correo (sin mostrar el correo):"
+  TEMA=$(aws sns list-topics --query "Topics[?ends_with(TopicArn, ':qwallet-alertas')].TopicArn" --output text)
+  aws sns get-topic-attributes --topic-arn "$TEMA" --query '{cifradoConKms:Attributes.KmsMasterKeyId!=null, suscripcionesConfirmadas:Attributes.SubscriptionsConfirmed, suscripcionesPendientes:Attributes.SubscriptionsPending}' --output json | sed 's/^/   /'
+  aws sns list-subscriptions-by-topic --topic-arn "$TEMA" \
+    --query 'Subscriptions[].{protocolo:Protocol, estado:SubscriptionArn}' --output json \
+    | sed -E 's/arn:aws:sns:[^"]*/confirmada/; s/^/   /'
+  echo
+  echo "6) Tablero:"
+  aws cloudwatch list-dashboards --dashboard-name-prefix qwallet- --query 'DashboardEntries[].DashboardName' --output text | sed 's/^/   /'
+  echo
+  echo "7) MFA de Cognito leído con GetUserPoolMfaConfig (Prowler lo marcó como no requerido):"
+  aws cognito-idp get-user-pool-mfa-config --user-pool-id "$POOL" \
+    --query '{mfa:MfaConfiguration, totp:SoftwareTokenMfaConfiguration.Enabled, sms:SmsMfaConfiguration!=null}' --output json | sed 's/^/   /'
+  [ "$(aws cognito-idp get-user-pool-mfa-config --user-pool-id "$POOL" --query MfaConfiguration --output text)" = "ON" ] || falla "MFA de Cognito no es obligatorio"
+} > "$SALIDA/EVD-5-05_siem_cloudwatch.txt" 2>&1
 
 # Quita el número de cuenta de toda la evidencia (el repo es público).
 for f in "$SALIDA"/*.txt; do

@@ -126,8 +126,7 @@ resource "aws_s3_bucket_policy" "cloudtrail" {
 }
 
 resource "aws_cloudtrail" "auditoria" {
-  #checkov:skip=CKV2_AWS_10:La integración con CloudWatch Logs y el SIEM se decide en el bloque 5 (CTRL-20).
-  #checkov:skip=CKV_AWS_252:Las alertas se harán con el SIEM del bloque 5, no con un tema SNS por archivo entregado.
+  #checkov:skip=CKV_AWS_252:Las alertas salen de las alarmas de CloudWatch (monitoreo.tf), no de un aviso SNS por cada archivo entregado.
   name                          = "${local.prefijo}-auditoria"
   s3_bucket_name                = aws_s3_bucket.cloudtrail.id
   is_multi_region_trail         = true
@@ -135,5 +134,35 @@ resource "aws_cloudtrail" "auditoria" {
   enable_log_file_validation    = true
   kms_key_id                    = aws_kms_key.datos.arn
 
-  depends_on = [aws_s3_bucket_policy.cloudtrail]
+  # Bloque 5 (SIEM): copia de los eventos a CloudWatch Logs para las reglas y alarmas.
+  cloud_watch_logs_group_arn = "${aws_cloudwatch_log_group.cloudtrail.arn}:*"
+  cloud_watch_logs_role_arn  = aws_iam_role.cloudtrail_logs.arn
+
+  # Eventos de administración de toda la cuenta + invocaciones de las Lambdas de
+  # Q-Wallet (eventos de datos): deja rastro de quién invocó cada función (repudio).
+  advanced_event_selector {
+    name = "Eventos de administracion"
+    field_selector {
+      field  = "eventCategory"
+      equals = ["Management"]
+    }
+  }
+
+  advanced_event_selector {
+    name = "Invocaciones de las Lambdas de Q-Wallet"
+    field_selector {
+      field  = "eventCategory"
+      equals = ["Data"]
+    }
+    field_selector {
+      field  = "resources.type"
+      equals = ["AWS::Lambda::Function"]
+    }
+    field_selector {
+      field       = "resources.ARN"
+      starts_with = ["arn:${local.particion}:lambda:${local.region}:${local.cuenta}:function:${local.prefijo}-"]
+    }
+  }
+
+  depends_on = [aws_s3_bucket_policy.cloudtrail, aws_iam_role_policy.cloudtrail_logs]
 }

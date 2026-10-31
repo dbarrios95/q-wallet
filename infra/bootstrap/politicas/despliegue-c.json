@@ -1,0 +1,111 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "LecturaDeMonitoreo",
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:DescribeAlarms",
+        "cloudwatch:DescribeAlarmHistory",
+        "cloudwatch:GetMetricData",
+        "cloudwatch:GetMetricStatistics",
+        "cloudwatch:ListMetrics",
+        "cloudwatch:ListDashboards",
+        "logs:DescribeMetricFilters",
+        "logs:DescribeQueryDefinitions",
+        "logs:TestMetricFilter",
+        "logs:GetQueryResults",
+        "logs:StopQuery",
+        "sns:ListTopics",
+        "cloudwatch:GetMetricWidgetImage",
+        "wafv2:ListResourcesForWebACL"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "AlarmasDelProyecto",
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:PutMetricAlarm",
+        "cloudwatch:DeleteAlarms",
+        "cloudwatch:SetAlarmState",
+        "cloudwatch:TagResource",
+        "cloudwatch:UntagResource",
+        "cloudwatch:ListTagsForResource"
+      ],
+      "Resource": "arn:aws:cloudwatch:us-east-1:__CUENTA__:alarm:qwallet-*"
+    },
+    {
+      "Sid": "TableroDelProyecto",
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:PutDashboard",
+        "cloudwatch:GetDashboard",
+        "cloudwatch:DeleteDashboards"
+      ],
+      "Resource": "arn:aws:cloudwatch::__CUENTA__:dashboard/qwallet-*"
+    },
+    {
+      "Sid": "LogsDeMonitoreoDelProyecto",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:PutRetentionPolicy",
+        "logs:AssociateKmsKey",
+        "logs:TagResource",
+        "logs:UntagResource",
+        "logs:ListTagsForResource",
+        "logs:ListTagsLogGroup",
+        "logs:PutMetricFilter",
+        "logs:DeleteMetricFilter",
+        "logs:FilterLogEvents",
+        "logs:StartQuery"
+      ],
+      "Resource": [
+        "arn:aws:logs:us-east-1:__CUENTA__:log-group:/aws/cloudtrail/qwallet-*",
+        "arn:aws:logs:us-east-1:__CUENTA__:log-group:/aws/lambda/qwallet-*",
+        "arn:aws:logs:us-east-1:__CUENTA__:log-group:/aws/apigateway/qwallet-*",
+        "arn:aws:logs:us-east-1:__CUENTA__:log-group:aws-waf-logs-qwallet*"
+      ]
+    },
+    {
+      "Sid": "ConsultasGuardadas",
+      "Effect": "Allow",
+      "Action": [
+        "logs:PutQueryDefinition",
+        "logs:DeleteQueryDefinition"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "TemaDeAlertas",
+      "Effect": "Allow",
+      "Action": [
+        "sns:CreateTopic",
+        "sns:DeleteTopic",
+        "sns:GetTopicAttributes",
+        "sns:SetTopicAttributes",
+        "sns:TagResource",
+        "sns:UntagResource",
+        "sns:ListTagsForResource",
+        "sns:Subscribe",
+        "sns:Unsubscribe",
+        "sns:GetSubscriptionAttributes",
+        "sns:SetSubscriptionAttributes",
+        "sns:ListSubscriptionsByTopic"
+      ],
+      "Resource": "arn:aws:sns:us-east-1:__CUENTA__:qwallet-*"
+    },
+    {
+      "Sid": "PasarRolACloudTrail",
+      "Effect": "Allow",
+      "Action": "iam:PassRole",
+      "Resource": "arn:aws:iam::__CUENTA__:role/qwallet-cloudtrail-*",
+      "Condition": {
+        "StringEquals": {
+          "iam:PassedToService": "cloudtrail.amazonaws.com"
+        }
+      }
+    }
+  ]
+}
