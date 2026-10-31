@@ -61,7 +61,10 @@ else
   printf '# Evidencias de CI\n\nRama generada por los flujos de GitHub Actions (bloque 5). No se hace merge a main.\n' > "$TMPR/README.md"
 fi
 mkdir -p "$TMPR/$DESTINO"
-find "$DIR" -maxdepth 1 -type f \( -name '*.txt' -o -name '*.png' -o -name '*.json' \) -size -5M -exec cp {} "$TMPR/$DESTINO/" \;
+# Solo evidencias (EVD-*), imágenes y el registro del arranque del emulador. El registro completo
+# de las pruebas del dispositivo no se publica: duplica las evidencias y gitleaks marca como
+# posibles secretos las huellas de llaves públicas que contiene (falsos positivos).
+find "$DIR" -maxdepth 1 -type f \( -name 'EVD-*.txt' -o -name '*.png' -o -name '*.json' -o -name 'registro_emulador.txt' \) -size -5M -exec cp {} "$TMPR/$DESTINO/" \;
 git -C "$TMPR" add -A
 git -C "$TMPR" commit -q -m "evidencias: ${SUB} ${GITHUB_RUN_ID}" || { echo "Sin cambios que publicar"; exit 0; }
 for i in 1 2 3; do
