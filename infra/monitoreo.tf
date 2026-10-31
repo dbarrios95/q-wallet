@@ -301,15 +301,15 @@ resource "aws_sns_topic_subscription" "correo" {
 locals {
   # nombre => [métrica, umbral, periodo en segundos, descripción, severidad]
   alarmas = {
-    pin-bloqueado         = ["pin_bloqueado", 1, 300, "Un PIN de transacción se bloqueó (5 intentos fallidos). Posible fuerza bruta del PIN (CA-04).", "Alta"]
-    acceso-prohibido      = ["acceso_prohibido", 5, 300, "5 o más accesos prohibidos en 5 minutos. Posible enumeración de objetos ajenos o escalada (CA-01, CA-09).", "Alta"]
-    error-no-controlado   = ["error_no_controlado", 1, 300, "Una Lambda tuvo un error no controlado.", "Media"]
-    rafaga-401            = ["api_no_autenticado", 50, 300, "50 o más solicitudes sin token válido en 5 minutos. Posible reutilización o fuerza bruta de tokens.", "Media"]
-    throttling            = ["api_limite", 20, 300, "20 o más respuestas 429 en 5 minutos. Ráfaga contra la API (CA-06).", "Media"]
-    aws-no-autorizado     = ["trail_no_autorizado", 5, 300, "5 o más llamadas a AWS negadas por IAM en 5 minutos (CIS 4.1).", "Alta"]
-    uso-root              = ["trail_uso_root", 1, 300, "Se usó el usuario raíz de la cuenta (CIS 4.3).", "Crítica"]
-    consola-sin-mfa       = ["trail_consola_sin_mfa", 1, 300, "Inicio de sesión en la consola sin MFA (CIS 4.2).", "Crítica"]
-    auditoria-y-llaves    = ["trail_auditoria_y_llaves", 1, 300, "Cambio a CloudTrail o al SIEM (alarmas, filtros, logs, avisos), a la llave KMS o borrado de datos (CIS 4.5, 4.7).", "Crítica"]
+    pin-bloqueado       = ["pin_bloqueado", 1, 300, "Un PIN de transacción se bloqueó (5 intentos fallidos). Posible fuerza bruta del PIN (CA-04).", "Alta"]
+    acceso-prohibido    = ["acceso_prohibido", 5, 300, "5 o más accesos prohibidos en 5 minutos. Posible enumeración de objetos ajenos o escalada (CA-01, CA-09).", "Alta"]
+    error-no-controlado = ["error_no_controlado", 1, 300, "Una Lambda tuvo un error no controlado.", "Media"]
+    rafaga-401          = ["api_no_autenticado", 50, 300, "50 o más solicitudes sin token válido en 5 minutos. Posible reutilización o fuerza bruta de tokens.", "Media"]
+    throttling          = ["api_limite", 20, 300, "20 o más respuestas 429 en 5 minutos. Ráfaga contra la API (CA-06).", "Media"]
+    aws-no-autorizado   = ["trail_no_autorizado", 5, 300, "5 o más llamadas a AWS negadas por IAM en 5 minutos (CIS 4.1).", "Alta"]
+    uso-root            = ["trail_uso_root", 1, 300, "Se usó el usuario raíz de la cuenta (CIS 4.3).", "Crítica"]
+    consola-sin-mfa     = ["trail_consola_sin_mfa", 1, 300, "Inicio de sesión en la consola sin MFA (CIS 4.2).", "Crítica"]
+    auditoria-y-llaves  = ["trail_auditoria_y_llaves", 1, 300, "Cambio a CloudTrail o al SIEM (alarmas, filtros, logs, avisos), a la llave KMS o borrado de datos (CIS 4.5, 4.7).", "Crítica"]
   }
 }
 
@@ -368,33 +368,33 @@ resource "aws_cloudwatch_dashboard" "seguridad" {
       {
         type = "metric", x = 0, y = 4, width = 12, height = 6
         properties = {
-          title  = "Aplicación: rechazos por regla (Lambdas)"
-          region = local.region
-          stat   = "Sum"
-          period = 300
-          view   = "timeSeries"
+          title   = "Aplicación: rechazos por regla (Lambdas)"
+          region  = local.region
+          stat    = "Sum"
+          period  = 300
+          view    = "timeSeries"
           metrics = [for r in keys(local.reglas_lambda) : [local.ns_seguridad, r]]
         }
       },
       {
         type = "metric", x = 12, y = 4, width = 12, height = 6
         properties = {
-          title  = "Perímetro: 401, 429 y bloqueos del WAF (API Gateway)"
-          region = local.region
-          stat   = "Sum"
-          period = 300
-          view   = "timeSeries"
+          title   = "Perímetro: 401, 429 y bloqueos del WAF (API Gateway)"
+          region  = local.region
+          stat    = "Sum"
+          period  = 300
+          view    = "timeSeries"
           metrics = [for r in keys(local.reglas_api) : [local.ns_seguridad, r]]
         }
       },
       {
         type = "metric", x = 0, y = 10, width = 12, height = 6
         properties = {
-          title  = "Cuenta AWS: eventos de CloudTrail por regla"
-          region = local.region
-          stat   = "Sum"
-          period = 300
-          view   = "timeSeries"
+          title   = "Cuenta AWS: eventos de CloudTrail por regla"
+          region  = local.region
+          stat    = "Sum"
+          period  = 300
+          view    = "timeSeries"
           metrics = [for r in keys(local.reglas_trail) : [local.ns_seguridad, r]]
         }
       },
