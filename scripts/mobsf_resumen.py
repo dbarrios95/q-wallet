@@ -71,9 +71,11 @@ for nivel in ("high", "warning"):
         lineas.append(f"   - [{seccion}] {titulo}")
     lineas.append("")
 
-lineas.append("Secretos que MobSF cree ver en el código:")
+# Solo el conteo: MobSF lista cadenas largas (tablas hexadecimales, símbolos de C++) que no son
+# secretos y que harían saltar a gitleaks si se copian. La búsqueda real de secretos es EVD-4-11.
 secretos = informe.get("secrets") or []
-lineas.extend([f"   - {s}" for s in secretos[:20]] or ["   (ninguno)"])
+lineas.append(f"Cadenas que MobSF marca como posibles secretos: {len(secretos)} "
+              "(tablas y símbolos de librerías; ver EVD-4-11 para la búsqueda con gitleaks)")
 lineas.append("")
 lineas.append("Dominios que contacta la app (análisis de cadenas):")
 dominios = informe.get("domains") or {}
