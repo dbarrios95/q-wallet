@@ -1,0 +1,18 @@
+EVD-5-03 freeRASP y pinning en el arranque de la app (CTRL-15, CTRL-08)
+Fecha: 2026-10-31 18:47:34 UTC
+Dispositivo: emulador Android 13, imagen userdebug
+APK: versión de producción (release, Hermes + R8), firmada; isProd = true
+
+Marcas de seguridad escritas por la app (logcat, etiqueta ReactNativeJS):
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=cliente_api estado=401 pinning=activo ms=1818
+   QWALLET_API sonda=GET_/me via=fetch_global_diagnostico estado=401 pinning=activo ms=377
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Esperado: la sonda GET /me sin token responde 401 con el pinning activo, y freeRASP
+marca el emulador (simulator) y bloquea la app (pantalla EVD-5-03_bloqueo_rasp.png).
