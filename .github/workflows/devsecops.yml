@@ -232,8 +232,15 @@ jobs:
           {
             echo "== EVD-3-09 gitleaks ${GITLEAKS_VERSION} · $(date -u '+%Y-%m-%d %H:%M UTC') · commit ${GITHUB_SHA::7}"
             echo "Commits revisados: $(git rev-list --count HEAD)"
-            ./gitleaks git --redact --no-banner --no-color -v .
-          } 2>&1 | tee evidencias/EVD-3-09_gitleaks.txt
+            ./gitleaks git --redact --no-banner --no-color -v --report-format json --report-path gitleaks.json .
+          } 2>&1 | tee evidencias/EVD-3-09_gitleaks.txt || {
+            # Anotaciones legibles por la API (el valor ya va tapado por --redact).
+            python3 -c "import json
+          for h in json.load(open('gitleaks.json'))[:20]:
+              print('::error title=gitleaks::' + h['RuleID'] + ' en ' + h['File'] + ':' + str(h['StartLine']) + ' commit ' + h['Commit'][:7])"
+            git branch -a --contains "$(python3 -c "import json;print(json.load(open('gitleaks.json'))[0]['Commit'])")" | head -3 | sed 's/^/::error title=gitleaks rama::/'
+            exit 1
+          }
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
