@@ -20,8 +20,16 @@
 | 2 | Presentación del 7-nov (5 diapositivas) | 2 | — | ☑ Lista (Claude Slides; guion en `docs/entregas/Entrega2_Presentacion.md`). Falta ensayarla |
 | 3 | Lambdas con código seguro + SAST/SCA + minSdk 29 | 3 | 3.4, 3.5, 4.3, 4.4, 4.6 | ☑ Merge (PR #36) y desplegado el código real |
 | 4 | Pentest caja negra y gris, OWASP API Top 10, casos de abuso, perímetro | 4 | 3.1, 3.2, 3.3, 3.6 | ☑ Merge (PR #40) + fix EVD-3-09 (PR #42); evidencias generadas |
-| 5 | WAF, RASP, SIEM, alertas, tratamiento, mapa de calor "después" | 6 | 5.1 a 5.6 | ◐ En curso: PR de código (`feat/bloque5-operaciones`) → bootstrap con la rama → merge → flujos `movil`, `waf-siem` → PR de cierre con el Word |
+| 5 | WAF, RASP, SIEM, alertas, tratamiento, mapa de calor "después" | 6 | 5.1 a 5.6 | ◐ PR #47 listo (código, infra, app y flujos; móvil probado en emulador). Falta: Daniel hace 3 pasos → merge → `infra` + `pentest` + `waf-siem` → PR de cierre con el Word |
 | 6 | Word final, dictamen, presentación final | Todas | 0, 6 | ☐ |
+
+## Bloque 5 en curso (31-oct-2026) — retomar aquí
+- **PR #47** (`feat/bloque5-operaciones`): SIEM en CloudWatch (`infra/monitoreo.tf`), alarmas → SNS → correo, WAF con SQLi, bootstrap con `despliegue-c` y endurecimiento de cuenta, app con freeRASP + pinning + `llamarApi()` (XHR), flujos `movil.yml` y `waf-siem.yml`, evidencias a la rama `evidencias-ci`.
+- **Pendiente de Daniel antes del merge**: secreto `ALERTAS_CORREO`; `bash bootstrap.sh feat/bloque5-operaciones` en CloudShell; regla del entorno `dev` con él como aprobador (sin "Prevent self-review").
+- **Después del merge**: aprobar los despliegues de `infra` y `waf-siem`; confirmar el correo de suscripción de SNS. Leer evidencias en el issue «Evidencias WAF y SIEM» y en `evidencias-ci/waf-siem/`.
+- **PR de cierre**: `docs/evidencias/bloque5/resultados.json` + `scripts/bloque5_word.py` (borrador del contenido en el chat; cabecera = la de bloque4_word.py) → Word `Final_Secciones_5-1_a_5-6_Operaciones.docx`; ESTADO, CONTEXTO 11, BITÁCORA, CHECKLIST (EVD-5-05/06 ya no son Wazuh).
+- Decisiones de Daniel (31-oct): SIEM CloudWatch; aviso por correo; pruebas del teléfono en Actions; conexión mínima app–API; gitleaks ignora 13 falsos positivos (`.gitleaksignore`); WAF solo para pruebas (RSK-11 Alto aceptado temporal); aprobación manual de despliegues (RSK-32 → P1×I5).
+- Hallazgos del bloque: HAL-06 a HAL-13 (ver `docs/REGISTRO_RIESGOS.md`); HAL-13 = pinning no protegía `fetch` de Expo SDK 57, corregido.
 
 ## Qué dejó el bloque 4 (este PR, 30-oct-2026)
 - **Arnés de pentest de caja gris** `services/pentest/pentest.test.ts` (vitest): ejecuta cada caso de abuso de servidor y cada riesgo OWASP API Top 10 (2023) contra los manejadores reales. **71 pruebas en verde** (60 del bloque 3 + 11 nuevas). Genera `EVD-4-13` (tabla de 11 casos de abuso, todos bloqueados) y `EVD-4-12` (18 pruebas OWASP API; 8 riesgos aplican y quedan cubiertos, 2 no aplican); cada caso mapea a su evidencia individual del checklist (EVD-4-03 a EVD-4-11). Fluyen al comentario del PR y al issue "Evidencias DevSecOps".
