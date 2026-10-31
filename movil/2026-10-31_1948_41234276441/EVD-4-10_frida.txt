@@ -1,0 +1,21 @@
+EVD-4-10 CA-10 instrumentación con Frida contra la app (CTRL-15)
+Fecha: 2026-10-31 19:45:50 UTC
+Ataque: frida-server 17.22.0 como root en el emulador + hook a getpid() en el proceso de la app.
+
+Salida de Frida (lado atacante):
+   QWALLET_FRIDA hook=instalado
+
+Marcas de la app después del ataque:
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me via=cliente_api estado=401 pinning=activo ms=937
+   QWALLET_API sonda=GET_/me via=fetch_global_diagnostico estado=401 pinning=activo ms=123
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=hooks reaccion=bloquear
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=privilegedAccess reaccion=bloquear
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Resultado: DETECTADO. freeRASP reportó 'hooks' y la app aplica la reacción indicada.

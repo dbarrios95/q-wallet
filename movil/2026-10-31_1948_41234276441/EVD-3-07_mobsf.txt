@@ -1,0 +1,49 @@
+EVD-3-07 MobSF 4.5.3: análisis estático del APK de producción
+Fecha: 2026-10-31 19:43:32 UTC
+App: Q-Wallet · paquete gt.qwallet.app · versión 1.0.0 · minSdk 29 · targetSdk 36
+
+Puntaje de seguridad de MobSF: 49/100
+Hallazgos por nivel: high 3, warning 12, info 1, secure 2, hotspot 0
+
+HIGH (3):
+   - [certificate] Application signed with debug certificate
+   - [certificate] Certificate algorithm vulnerable to hash collision
+   - [code] The App uses the encryption mode CBC with PKCS5/PKCS7 padding. This configuration is vulnerable to padding oracle attacks.
+
+WARNING (12):
+   - [manifest] TaskAffinity is set for activity (expo.modules.webbrowser.BrowserProxyActivity)
+   - [manifest] Broadcast Receiver (androidx.profileinstaller.ProfileInstallReceiver) is Protected by a permission, but the protection level of the permission should be checked. Permission: android.permission.DUMP [android:exported=true]
+   - [code] Files may contain hardcoded sensitive information like usernames, passwords, keys etc.
+   - [code] App can read/write to External Storage. Any App can read data written to External Storage.
+   - [code] The App uses an insecure Random Number Generator.
+   - [code] MD5 is a weak hash known to have hash collisions.
+   - [code] SHA-1 is a weak hash known to have hash collisions.
+   - [code] Insecure WebView Implementation. Execution of user controlled code in WebView is a critical Security Hole.
+   - [code] Ensure that user controlled URLs never reaches the Webview. Enabling file access from URLs in WebView can leak sensitive information from the file system.
+   - [code] App creates temp file. Sensitive information should never be written into a temp file.
+   - [code] IP Address disclosure
+   - [secrets] This app may contain hardcoded secrets
+
+Cadenas que MobSF marca como posibles secretos: 936 (tablas y símbolos de librerías; ver EVD-4-11 para la búsqueda con gitleaks)
+
+Dominios que contacta la app (análisis de cadenas):
+   - www.googleorganizationautocompleterequirementsconservative
+   - xml.org
+   - expo.dev
+   - www.a
+   - www.interpretation
+   - youtrack.jetbrains.com
+   - goo.gle
+   - www.wencodeuricomponent
+   - xmlpull.org
+   - .jpg
+   - docs.swmansion.com
+   - www.hortcut
+   - www.css
+   - www.in
+   - .css
+   - www.recent
+   - schemas.android.com
+   - reactnative.dev
+   - www.c
+   - www.world
