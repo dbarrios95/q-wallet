@@ -212,7 +212,7 @@ falla() { echo "FALLA: $1"; FALLAS=$((FALLAS + 1)); }
     --output text | tr '\t' '\n' | sort -u | sed 's/^/     - /'
   echo
   echo "3) Consultas de correlación guardadas (Logs Insights):"
-  aws logs describe-query-definitions --query-definition-name-prefix qwallet/ --query 'queryDefinitions[].name' \
+  aws logs describe-query-definitions --query-definition-name-prefix qwallet --query 'queryDefinitions[].name' \
     --output text | tr '\t' '\n' | sed 's/^/   - /'
   echo
   echo "4) Alarmas de seguridad (umbral, ventana y estado):"
