@@ -207,10 +207,19 @@ diagnostico)
     consulta /aws/cloudtrail/qwallet-auditoria $(( ${HORAS:-24} * 60 )) 'filter userIdentity.type = "Root" | stats count(*) as eventos, min(@timestamp) as desde, max(@timestamp) as hasta by eventName, eventSource | sort eventos desc | limit 15'
     echo
     echo "6) Log de acceso de API Gateway: ¿por qué no llegan eventos?"
-    echo "   Flujos de log en /aws/apigateway/qwallet-api:"
-    aws logs describe-log-streams --log-group-name /aws/apigateway/qwallet-api --order-by LastEventTime --descending \
-      --max-items 3 --query 'logStreams[].[logStreamName, lastEventTimestamp]' --output text | sed 's/^/     /'
-    echo "   (vacío = API Gateway nunca escribió)"
+    echo "   Prueba activa: 3 solicitudes GET /me sin token (esperado 401) y búsqueda en el log tras 90 s"
+    url=$(aws apigateway get-rest-apis --query "items[?name=='qwallet-api'].id" --output text)
+    for i in 1 2 3; do
+      printf '     solicitud %s: HTTP %s\n' "$i" "$(curl -s -o /dev/null -w '%{http_code}' -A qwallet-diagnostico "https://${url}.execute-api.us-east-1.amazonaws.com/v1/me")"
+    done
+    sleep 90
+    n=$(aws logs filter-log-events --log-group-name /aws/apigateway/qwallet-api \
+      --start-time $(( ($(date +%s) - 300) * 1000 )) --query 'length(events)' --output text 2>&1)
+    echo "     Eventos en el log de acceso en los últimos 5 minutos: ${n}"
+    if [ "$n" = "0" ]; then echo "     -> API Gateway NO está escribiendo el log de acceso"; else echo "     -> el log de acceso funciona"; fi
+    aws logs filter-log-events --log-group-name /aws/apigateway/qwallet-api \
+      --start-time $(( ($(date +%s) - 300) * 1000 )) --max-items 2 --query 'events[].message' --output text 2>/dev/null \
+      | tr '\t' '\n' | sed -E 's/("ip":"[0-9]+\.[0-9]+\.[0-9]+\.)[0-9]+/\1x/; s/^/     /'
     echo "   Grupo de log (cifrado y retención):"
     aws logs describe-log-groups --log-group-name-prefix /aws/apigateway/qwallet-api \
       --query 'logGroups[].{cifradoKms:kmsKeyId!=null, retencionDias:retentionInDays, bytes:storedBytes}' --output json | sed 's/^/     /'
@@ -229,7 +238,7 @@ diagnostico)
       --query 'EvaluationResults[].[EvalActionName, EvalDecision]' --output text | sed 's/^/     /'
     echo "   Política de la llave KMS para CloudWatch Logs (condición):"
     llave=$(aws kms describe-key --key-id alias/qwallet-datos --query KeyMetadata.KeyId --output text)
-    aws kms get-key-policy --key-id "$llave" --policy-name default --output text \
+    aws kms get-key-policy --key-id "$llave" --policy-name default --query Policy --output text \
       | python3 -c "import json,sys;d=json.load(sys.stdin);[print('     ', s.get('Sid'), json.dumps(s.get('Condition'))) for s in d['Statement'] if 'logs' in json.dumps(s.get('Principal'))]" \
       | sed -E 's/[0-9]{12}/************/g'
   } > "$OUT/EVD-5-06e_diagnostico.txt" 2>&1
