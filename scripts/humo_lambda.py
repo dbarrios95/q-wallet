@@ -9,6 +9,7 @@ sin token) al runtime real de la imagen y espera su respuesta. Comprueba que:
 Uso: python3 scripts/humo_lambda.py <puerto> <servicio>   (sale con 0 si todo bien)
 """
 import json
+import os
 import sys
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -75,8 +76,8 @@ from http.server import ThreadingHTTPServer
 servidor = ThreadingHTTPServer(("127.0.0.1", PUERTO), Api)
 threading.Thread(target=servidor.serve_forever, daemon=True).start()
 if not listo.wait(60):
-    print(f"{SERVICIO}: FALLA (el runtime no respondió en 60 s)")
-    sys.exit(1)
+    print(f"{SERVICIO}: FALLA (el runtime no respondió en 60 s)", flush=True)
+    os._exit(1)
 
 ok = False
 if resultado.get("ruta", "").endswith("/response"):
@@ -89,4 +90,8 @@ if resultado.get("ruta", "").endswith("/response"):
 else:
     print(f"{SERVICIO}: el runtime reportó un error: {resultado.get('cuerpo', '')[:300]}")
 print(f"{SERVICIO}: {'PASA' if ok else 'FALLA'}")
-sys.exit(0 if ok else 1)
+# Salida inmediata: un hilo del servidor puede seguir escribiendo en stderr y, con sys.exit,
+# Python abortaba al cerrar ("could not acquire lock for <stderr>") aunque la prueba pasara.
+sys.stdout.flush()
+sys.stderr.flush()
+os._exit(0 if ok else 1)

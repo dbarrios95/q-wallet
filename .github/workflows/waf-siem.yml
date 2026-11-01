@@ -10,6 +10,12 @@ name: waf-siem
 
 on:
   workflow_dispatch:
+    inputs:
+      modo:
+        description: "completo = WAF encendido + ataques + SIEM; consultas = solo leer logs, alarmas y diagnóstico (sin WAF ni ataques)"
+        type: choice
+        options: [completo, consultas]
+        default: completo
   workflow_run:
     workflows: [pentest]
     types: [completed]
@@ -74,6 +80,7 @@ jobs:
           echo "API_URL=$(terraform -chdir=infra output -raw api_url)" >> "$GITHUB_ENV"
 
       - name: Encender el WAF (solo para esta prueba)
+        if: inputs.modo != 'consultas'
         run: |
           set -o pipefail
           {
@@ -86,6 +93,7 @@ jobs:
           sleep 90
 
       - name: EVD-5-01 reglas del WAF configuradas
+        if: inputs.modo != 'consultas'
         run: |
           id=$(aws wafv2 list-web-acls --scope REGIONAL --query "WebACLs[?Name=='qwallet-api'].Id" --output text)
           {
@@ -113,9 +121,11 @@ jobs:
           cat evidencias/EVD-5-01_waf_reglas.txt
 
       - name: EVD-5-02 ataques acotados contra la API con el WAF encendido
+        if: inputs.modo != 'consultas'
         run: bash infra/pruebas/waf_ataques.sh "$API_URL" evidencias
 
       - name: Esperar los logs y la alarma del WAF
+        if: inputs.modo != 'consultas'
         run: |
           bash infra/pruebas/siem.sh esperar 480 qwallet-waf-bloqueos
           bash infra/pruebas/siem.sh waf evidencias
@@ -125,7 +135,7 @@ jobs:
             | sed -E 's/arn:aws:sns:[^ ]*/[tema SNS qwallet-alertas]/g' > evidencias/waf_alarma_historial.txt || true
 
       - name: Apagar el WAF (siempre)
-        if: always()
+        if: always() && inputs.modo != 'consultas'
         run: |
           set -o pipefail
           {
@@ -138,7 +148,7 @@ jobs:
           } 2>&1 | tee registro/3_apagar_waf.txt
 
       - name: SIEM - reglas, denegaciones reales y alarmas
-        if: always()
+        if: always() && inputs.modo != 'consultas'
         run: |
           bash infra/pruebas/siem.sh reglas evidencias
           bash infra/pruebas/siem.sh denegaciones evidencias
@@ -149,6 +159,17 @@ jobs:
           bash infra/pruebas/siem.sh graficas evidencias
           cat evidencias/waf_alarma_historial.txt >> evidencias/EVD-5-06b_alarmas.txt 2>/dev/null || true
           rm -f evidencias/waf_alarma_historial.txt
+
+      - name: Solo consultas (logs, alarmas y diagnóstico de las últimas 24 h)
+        if: always() && inputs.modo == 'consultas'
+        env:
+          MIN: "1440"
+          HORAS: "24"
+        run: |
+          bash infra/pruebas/siem.sh waf evidencias
+          bash infra/pruebas/siem.sh consultas evidencias
+          bash infra/pruebas/siem.sh alarmas evidencias
+          bash infra/pruebas/siem.sh diagnostico evidencias
 
       - name: Publicar evidencias
         if: always()

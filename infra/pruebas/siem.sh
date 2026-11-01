@@ -24,13 +24,8 @@ consulta() { # grupo minutos consulta -> tabla de texto
     estado=$(aws logs get-query-results --query-id "$id" --query status --output text)
     [ "$estado" = "Complete" ] && break; sleep 2
   done
-  aws logs get-query-results --query-id "$id" --output json | python3 -c '
-import json, sys
-r = json.load(sys.stdin)["results"]
-if not r:
-    print("   (sin resultados)")
-for fila in r:
-    print("   " + " | ".join(f"{c[\"field\"]}={c[\"value\"]}" for c in fila if not c["field"].startswith("@ptr")))'
+  aws logs get-query-results --query-id "$id" --output json > /tmp/consulta.json
+  python3 "$(dirname "$0")/tabla_consulta.py" /tmp/consulta.json
 }
 
 case "$CMD" in
@@ -124,10 +119,12 @@ alarmas)
       --query 'MetricAlarms[].[AlarmName, StateValue, StateUpdatedTimestamp]' --output text | sed 's/^/   /'
     echo
     echo "Historial de las últimas 2 horas (cambios de estado y envío del aviso a SNS):"
-    aws cloudwatch describe-alarm-history --alarm-name-prefix qwallet- \
-      --start-date "$(date -u -d '-2 hours' '+%Y-%m-%dT%H:%M:%SZ')" --max-records 60 \
-      --query 'AlarmHistoryItems[].[Timestamp, AlarmName, HistoryItemType, HistorySummary]' --output text \
-      | sed -E 's/arn:aws:sns:[^ ]*/[tema SNS qwallet-alertas]/g; s/^/   /'
+    # describe-alarm-history no acepta prefijo: se recorre cada alarma.
+    for a in $(aws cloudwatch describe-alarms --alarm-name-prefix qwallet- --query 'MetricAlarms[].AlarmName' --output text); do
+      aws cloudwatch describe-alarm-history --alarm-name "$a" \
+        --start-date "$(date -u -d "-${HORAS:-2} hours" '+%Y-%m-%dT%H:%M:%SZ')" --max-records 20 \
+        --query 'AlarmHistoryItems[].[Timestamp, AlarmName, HistoryItemType, HistorySummary]' --output text
+    done | sort | sed -E 's/arn:aws:sns:[^ ]*/[tema SNS qwallet-alertas]/g; s/^/   /'
   } > "$OUT/EVD-5-06b_alarmas.txt" 2>&1
   cat "$OUT/EVD-5-06b_alarmas.txt"
   ;;
@@ -138,13 +135,13 @@ consultas)
     echo "Fecha: $(FECHA)"
     echo
     echo "1) IPs sospechosas en el perímetro (401 + 403 + 429 por IP; log de acceso de API Gateway):"
-    consulta /aws/apigateway/qwallet-api 60 'filter estado = "401" or estado = "429" or waf = "403" | stats count(*) as eventos by ip, estado, waf | filter eventos >= 10 | sort eventos desc | limit 10'
+    consulta /aws/apigateway/qwallet-api ${MIN:-60} 'filter estado = "401" or estado = "429" or waf = "403" | stats count(*) as eventos by ip, estado, waf | filter eventos >= 10 | sort eventos desc | limit 10'
     echo
     echo "2) Llamadas a AWS negadas por IAM, por rol (CloudTrail):"
-    consulta /aws/cloudtrail/qwallet-auditoria 90 'filter errorCode like /AccessDenied|Unauthorized/ | stats count(*) as negadas by userIdentity.sessionContext.sessionIssuer.userName as rol, eventName | sort negadas desc | limit 10'
+    consulta /aws/cloudtrail/qwallet-auditoria ${MIN:-90} 'filter errorCode like /AccessDenied|Unauthorized/ | stats count(*) as negadas by userIdentity.sessionContext.sessionIssuer.userName as rol, eventName | sort negadas desc | limit 10'
     echo
     echo "3) Cambios de configuración de seguridad hechos por el despliegue (CloudTrail):"
-    consulta /aws/cloudtrail/qwallet-auditoria 90 'filter eventSource in ["wafv2.amazonaws.com","cloudtrail.amazonaws.com","kms.amazonaws.com"] and readOnly = 0 | stats count(*) as cambios by eventSource, eventName | sort cambios desc | limit 10'
+    consulta /aws/cloudtrail/qwallet-auditoria ${MIN:-90} 'filter eventSource in ["wafv2.amazonaws.com","cloudtrail.amazonaws.com","kms.amazonaws.com"] and readOnly = 0 | stats count(*) as cambios by eventSource, eventName | sort cambios desc | limit 10'
     echo
     echo "4) Rechazos de la aplicación por regla (logs JSON de las Lambdas, 24 h):"
     consulta /aws/lambda/qwallet-svc-transfers 1440 'filter evento = "solicitud_rechazada" | stats count(*) as rechazos by codigo | sort rechazos desc'
@@ -159,10 +156,10 @@ waf)
     echo "Fecha: $(FECHA)"
     echo "Fuente: grupo aws-waf-logs-qwallet (la cabecera Authorization se redacta)."
     echo
-    consulta aws-waf-logs-qwallet 60 'parse httpRequest.args /caso=(?<caso>C[0-9]+)/ | filter ispresent(caso) | stats count(*) as solicitudes, latest(action) as accion by caso, terminatingRuleId, terminatingRuleType | sort caso asc'
+    consulta aws-waf-logs-qwallet ${MIN:-60} 'parse httpRequest.args /caso=(?<caso>C[0-9]+)/ | filter ispresent(caso) | stats count(*) as solicitudes, latest(action) as accion by caso, terminatingRuleId, terminatingRuleType | sort caso asc'
     echo
     echo "Reglas administradas: sub-regla exacta que coincidió en los bloqueos:"
-    consulta aws-waf-logs-qwallet 60 'filter action = "BLOCK" | parse httpRequest.args /caso=(?<caso>C[0-9]+)/ | stats count(*) by caso, terminatingRuleId, ruleGroupList.0.terminatingRule.ruleId | sort caso asc'
+    consulta aws-waf-logs-qwallet ${MIN:-60} 'filter action = "BLOCK" | parse httpRequest.args /caso=(?<caso>C[0-9]+)/ | stats count(*) by caso, terminatingRuleId, ruleGroupList.0.terminatingRule.ruleId | sort caso asc'
   } > "$OUT/EVD-5-02b_waf_logs.txt" 2>&1
   cat "$OUT/EVD-5-02b_waf_logs.txt"
   ;;
@@ -180,6 +177,38 @@ graficas)
     img EVD-5-02c_waf_metricas.png "{\"title\":\"AWS WAF: solicitudes permitidas y bloqueadas\",\"width\":900,\"height\":360,\"start\":\"-PT1H\",\"period\":60,\"stat\":\"Sum\",\"metrics\":[[\"AWS/WAFV2\",\"BlockedRequests\",\"WebACL\",\"qwallet-api\",\"Region\",\"$R\",\"Rule\",\"ALL\",{\"label\":\"Bloqueadas\",\"color\":\"#EF4444\"}],[\"AWS/WAFV2\",\"AllowedRequests\",\"WebACL\",\"qwallet-api\",\"Region\",\"$R\",\"Rule\",\"ALL\",{\"label\":\"Permitidas\",\"color\":\"#10B981\"}]]}"
   fi
   ;;
+diagnostico)
+  {
+    echo "EVD-5-06e Diagnóstico de las reglas del perímetro (por qué no saltó rafaga-401 y no hubo 429)"
+    echo "Fecha: $(FECHA)"
+    echo
+    echo "1) Datos publicados por cada métrica del perímetro en las últimas ${HORAS:-24} horas (suma por hora):"
+    for m in api_no_autenticado api_limite api_bloqueo_waf trail_no_autorizado trail_uso_root; do
+      v=$(aws cloudwatch get-metric-statistics --namespace "$NS" --metric-name "$m" \
+        --start-time "$(date -u -d "-${HORAS:-24} hours" '+%Y-%m-%dT%H:%M:%SZ')" --end-time "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" \
+        --period 3600 --statistics Sum --query 'Datapoints[].Sum' --output text)
+      printf '   %-22s %s\n' "$m" "${v:-(sin datos)}"
+    done
+    echo
+    echo "2) Tres líneas reales del log de acceso de API Gateway (último octeto de la IP tapado):"
+    aws logs filter-log-events --log-group-name /aws/apigateway/qwallet-api \
+      --start-time $(( ($(date +%s) - ${HORAS:-24} * 3600) * 1000 )) --max-items 3 --query 'events[].message' --output text \
+      | tr '\t' '\n' | sed -E 's/("ip":"[0-9]+\.[0-9]+\.[0-9]+\.)[0-9]+/\1x/; s/^/   /'
+    echo
+    echo "3) Respuestas por estado y decisión del WAF en el log de acceso (últimas ${HORAS:-24} h):"
+    consulta /aws/apigateway/qwallet-api $(( ${HORAS:-24} * 60 )) 'stats count(*) as solicitudes by estado, waf | sort solicitudes desc'
+    echo
+    echo "4) Throttling configurado en la etapa v1:"
+    api=$(aws apigateway get-rest-apis --query "items[?name=='qwallet-api'].id" --output text)
+    aws apigateway get-stage --rest-api-id "$api" --stage-name v1 \
+      --query '{metodos:methodSettings."*/*".{rafaga:throttlingBurstLimit,porSegundo:throttlingRateLimit}}' --output json | sed 's/^/   /'
+    echo
+    echo "5) Uso del usuario raíz (CloudTrail, últimas ${HORAS:-24} h): evento, origen y hora (sin IP)"
+    consulta /aws/cloudtrail/qwallet-auditoria $(( ${HORAS:-24} * 60 )) 'filter userIdentity.type = "Root" | stats count(*) as eventos, min(@timestamp) as desde, max(@timestamp) as hasta by eventName, eventSource, userAgent | sort desc eventos | limit 15'
+  } > "$OUT/EVD-5-06e_diagnostico.txt" 2>&1
+  cat "$OUT/EVD-5-06e_diagnostico.txt"
+  ;;
+
 *)
   echo "Subcomando desconocido: $CMD"; exit 2 ;;
 esac
