@@ -1,0 +1,30 @@
+EVD-5-06c Correlación de eventos entre fuentes (Logs Insights, última hora)
+Fecha: 2026-11-01 01:57:49 UTC
+
+1) IPs sospechosas en el perímetro (401 + 403 + 429 por IP; log de acceso de API Gateway):
+   (sin resultados)
+
+2) Llamadas a AWS negadas por IAM, por rol (CloudTrail):
+   rol=qwallet-gha-plan | eventName=Decrypt | negadas=10
+   rol=qwallet-gha-despliegue | eventName=ListUsers | negadas=6
+   rol=qwallet-gha-pentest | eventName=Decrypt | negadas=5
+   rol=qwallet-gha-pentest | eventName=GetFunction20150331v2 | negadas=5
+   rol=qwallet-cloudtrail-logs | eventName=CreateLogStream | negadas=1
+   rol=qwallet-gha-pentest | eventName=GetRestApi | negadas=1
+   rol=qwallet-gha-despliegue | eventName=ListTagsForResource | negadas=1
+   rol=qwallet-gha-plan | eventName=ListTagsForResource | negadas=1
+   rol=qwallet-gha-pentest | eventName=GetUserPoolMfaConfig | negadas=1
+
+3) Cambios de configuración de seguridad hechos por el despliegue (CloudTrail):
+   eventSource=wafv2.amazonaws.com | eventName=AssociateWebACL | cambios=16
+   eventSource=cloudtrail.amazonaws.com | eventName=UpdateTrail | cambios=4
+   eventSource=wafv2.amazonaws.com | eventName=DeleteWebACL | cambios=1
+   eventSource=wafv2.amazonaws.com | eventName=CreateWebACL | cambios=1
+   eventSource=kms.amazonaws.com | eventName=PutKeyPolicy | cambios=1
+   eventSource=wafv2.amazonaws.com | eventName=DisassociateWebACL | cambios=1
+   eventSource=cloudtrail.amazonaws.com | eventName=PutEventSelectors | cambios=1
+   eventSource=wafv2.amazonaws.com | eventName=DeleteLoggingConfiguration | cambios=1
+   eventSource=wafv2.amazonaws.com | eventName=PutLoggingConfiguration | cambios=1
+
+4) Rechazos de la aplicación por regla (logs JSON de las Lambdas, 24 h):
+   (sin resultados)

@@ -1,0 +1,58 @@
+EVD-5-06b Alarmas de seguridad: estado y disparos reales (CTRL-20)
+Fecha: 2026-11-01 01:58:01 UTC
+
+Estado actual:
+   qwallet-acceso-prohibido	OK	2026-10-31T20:54:05.650000+00:00
+   qwallet-auditoria-y-llaves	OK	2026-11-01T01:38:16.643000+00:00
+   qwallet-aws-no-autorizado	OK	2026-11-01T01:47:58.512000+00:00
+   qwallet-consola-sin-mfa	OK	2026-10-31T20:53:38.884000+00:00
+   qwallet-error-no-controlado	OK	2026-10-31T20:54:25.922000+00:00
+   qwallet-pin-bloqueado	OK	2026-10-31T20:53:30.304000+00:00
+   qwallet-rafaga-401	OK	2026-10-31T20:54:44.853000+00:00
+   qwallet-throttling	OK	2026-10-31T20:54:12.145000+00:00
+   qwallet-uso-root	ALARM	2026-10-31T20:56:20.171000+00:00
+
+Historial de las últimas 2 horas (cambios de estado y envío del aviso a SNS):
+   2026-10-31T20:53:09.223000+00:00	qwallet-auditoria-y-llaves	ConfigurationUpdate	Alarm "qwallet-auditoria-y-llaves" created
+   2026-10-31T20:53:09.247000+00:00	qwallet-pin-bloqueado	ConfigurationUpdate	Alarm "qwallet-pin-bloqueado" created
+   2026-10-31T20:53:09.265000+00:00	qwallet-error-no-controlado	ConfigurationUpdate	Alarm "qwallet-error-no-controlado" created
+   2026-10-31T20:53:09.273000+00:00	qwallet-throttling	ConfigurationUpdate	Alarm "qwallet-throttling" created
+   2026-10-31T20:53:09.315000+00:00	qwallet-uso-root	ConfigurationUpdate	Alarm "qwallet-uso-root" created
+   2026-10-31T20:53:09.330000+00:00	qwallet-consola-sin-mfa	ConfigurationUpdate	Alarm "qwallet-consola-sin-mfa" created
+   2026-10-31T20:53:09.378000+00:00	qwallet-aws-no-autorizado	ConfigurationUpdate	Alarm "qwallet-aws-no-autorizado" created
+   2026-10-31T20:53:09.399000+00:00	qwallet-rafaga-401	ConfigurationUpdate	Alarm "qwallet-rafaga-401" created
+   2026-10-31T20:53:09.466000+00:00	qwallet-acceso-prohibido	ConfigurationUpdate	Alarm "qwallet-acceso-prohibido" created
+   2026-10-31T20:53:30.304000+00:00	qwallet-pin-bloqueado	StateUpdate	Alarm updated from INSUFFICIENT_DATA to OK
+   2026-10-31T20:53:30.364000+00:00	qwallet-pin-bloqueado	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-10-31T20:53:38.884000+00:00	qwallet-consola-sin-mfa	StateUpdate	Alarm updated from INSUFFICIENT_DATA to OK
+   2026-10-31T20:53:38.931000+00:00	qwallet-consola-sin-mfa	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-10-31T20:53:58.512000+00:00	qwallet-aws-no-autorizado	StateUpdate	Alarm updated from INSUFFICIENT_DATA to OK
+   2026-10-31T20:53:58.559000+00:00	qwallet-aws-no-autorizado	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-10-31T20:54:05.650000+00:00	qwallet-acceso-prohibido	StateUpdate	Alarm updated from INSUFFICIENT_DATA to OK
+   2026-10-31T20:54:05.695000+00:00	qwallet-acceso-prohibido	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-10-31T20:54:12.145000+00:00	qwallet-throttling	StateUpdate	Alarm updated from INSUFFICIENT_DATA to OK
+   2026-10-31T20:54:12.192000+00:00	qwallet-throttling	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-10-31T20:54:16.636000+00:00	qwallet-auditoria-y-llaves	StateUpdate	Alarm updated from INSUFFICIENT_DATA to ALARM
+   2026-10-31T20:54:16.681000+00:00	qwallet-auditoria-y-llaves	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-10-31T20:54:20.172000+00:00	qwallet-uso-root	StateUpdate	Alarm updated from INSUFFICIENT_DATA to OK
+   2026-10-31T20:54:20.220000+00:00	qwallet-uso-root	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-10-31T20:54:25.922000+00:00	qwallet-error-no-controlado	StateUpdate	Alarm updated from INSUFFICIENT_DATA to OK
+   2026-10-31T20:54:25.975000+00:00	qwallet-error-no-controlado	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-10-31T20:54:44.853000+00:00	qwallet-rafaga-401	StateUpdate	Alarm updated from INSUFFICIENT_DATA to OK
+   2026-10-31T20:54:44.903000+00:00	qwallet-rafaga-401	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-10-31T20:56:20.171000+00:00	qwallet-uso-root	StateUpdate	Alarm updated from OK to ALARM
+   2026-10-31T20:56:20.219000+00:00	qwallet-uso-root	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-10-31T21:11:16.636000+00:00	qwallet-auditoria-y-llaves	StateUpdate	Alarm updated from ALARM to OK
+   2026-10-31T21:11:16.708000+00:00	qwallet-auditoria-y-llaves	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-11-01T01:23:16.635000+00:00	qwallet-auditoria-y-llaves	StateUpdate	Alarm updated from OK to ALARM
+   2026-11-01T01:23:16.707000+00:00	qwallet-auditoria-y-llaves	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-11-01T01:24:58.508000+00:00	qwallet-aws-no-autorizado	StateUpdate	Alarm updated from OK to ALARM
+   2026-11-01T01:24:58.578000+00:00	qwallet-aws-no-autorizado	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-11-01T01:38:16.643000+00:00	qwallet-auditoria-y-llaves	StateUpdate	Alarm updated from ALARM to OK
+   2026-11-01T01:38:16.722000+00:00	qwallet-auditoria-y-llaves	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-11-01T01:39:58.509000+00:00	qwallet-aws-no-autorizado	StateUpdate	Alarm updated from ALARM to OK
+   2026-11-01T01:39:58.578000+00:00	qwallet-aws-no-autorizado	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-11-01T01:42:58.508000+00:00	qwallet-aws-no-autorizado	StateUpdate	Alarm updated from OK to ALARM
+   2026-11-01T01:42:58.555000+00:00	qwallet-aws-no-autorizado	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-11-01T01:47:58.512000+00:00	qwallet-aws-no-autorizado	StateUpdate	Alarm updated from ALARM to OK
+   2026-11-01T01:47:58.583000+00:00	qwallet-aws-no-autorizado	Action	Successfully executed action [tema SNS qwallet-alertas]

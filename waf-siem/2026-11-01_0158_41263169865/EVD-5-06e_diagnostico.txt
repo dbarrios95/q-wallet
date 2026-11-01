@@ -1,0 +1,26 @@
+EVD-5-06e Diagnóstico de las reglas del perímetro (por qué no saltó rafaga-401 y no hubo 429)
+Fecha: 2026-11-01 01:58:13 UTC
+
+1) Datos publicados por cada métrica del perímetro en las últimas 24 horas (suma por hora):
+   api_no_autenticado     (sin datos)
+   api_limite             (sin datos)
+   api_bloqueo_waf        (sin datos)
+   trail_no_autorizado    18.0	1.0
+   trail_uso_root         19.0	20.0	17.0	2.0	19.0	20.0
+
+2) Tres líneas reales del log de acceso de API Gateway (último octeto de la IP tapado):
+
+3) Respuestas por estado y decisión del WAF en el log de acceso (últimas 24 h):
+   (sin resultados)
+
+4) Throttling configurado en la etapa v1:
+   {
+       "metodos": {
+           "rafaga": 20,
+           "porSegundo": 10.0
+       }
+   }
+
+5) Uso del usuario raíz (CloudTrail, últimas 24 h): evento, origen y hora (sin IP)
+   (error: 
+aws: [ERROR]: An error occurred (MalformedQueryException) when calling the StartQuery operation: unexpected symbol found eventos at line 1 and position 246 (Service: AWSLogs; Status Code: 400; Error Code: MalformedQueryException; Request ID: 692fea46-dc6d-4f69-b447-9aef7f4232ee; Proxy: null))
