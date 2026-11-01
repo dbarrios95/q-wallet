@@ -204,7 +204,34 @@ diagnostico)
       --query '{metodos:methodSettings."*/*".{rafaga:throttlingBurstLimit,porSegundo:throttlingRateLimit}}' --output json | sed 's/^/   /'
     echo
     echo "5) Uso del usuario raíz (CloudTrail, últimas ${HORAS:-24} h): evento, origen y hora (sin IP)"
-    consulta /aws/cloudtrail/qwallet-auditoria $(( ${HORAS:-24} * 60 )) 'filter userIdentity.type = "Root" | stats count(*) as eventos, min(@timestamp) as desde, max(@timestamp) as hasta by eventName, eventSource, userAgent | sort desc eventos | limit 15'
+    consulta /aws/cloudtrail/qwallet-auditoria $(( ${HORAS:-24} * 60 )) 'filter userIdentity.type = "Root" | stats count(*) as eventos, min(@timestamp) as desde, max(@timestamp) as hasta by eventName, eventSource | sort eventos desc | limit 15'
+    echo
+    echo "6) Log de acceso de API Gateway: ¿por qué no llegan eventos?"
+    echo "   Flujos de log en /aws/apigateway/qwallet-api:"
+    aws logs describe-log-streams --log-group-name /aws/apigateway/qwallet-api --order-by LastEventTime --descending \
+      --max-items 3 --query 'logStreams[].[logStreamName, lastEventTimestamp]' --output text | sed 's/^/     /'
+    echo "   (vacío = API Gateway nunca escribió)"
+    echo "   Grupo de log (cifrado y retención):"
+    aws logs describe-log-groups --log-group-name-prefix /aws/apigateway/qwallet-api \
+      --query 'logGroups[].{cifradoKms:kmsKeyId!=null, retencionDias:retentionInDays, bytes:storedBytes}' --output json | sed 's/^/     /'
+    echo "   Rol de CloudWatch registrado en la cuenta de API Gateway:"
+    aws apigateway get-account --query '{rol:cloudwatchRoleArn}' --output json | sed -E 's/[0-9]{12}/************/g; s/^/     /'
+    echo "   Destino y formato del log de acceso de la etapa v1:"
+    aws apigateway get-stage --rest-api-id "$api" --stage-name v1 \
+      --query '{destino:accessLogSettings.destinationArn, tieneFormato:accessLogSettings.format!=null}' --output json \
+      | sed -E 's/[0-9]{12}/************/g; s/^/     /'
+    echo "   Simulación de permisos del rol qwallet-apigateway-logs (incluye el límite de permisos):"
+    rol=$(aws iam get-role --role-name qwallet-apigateway-logs --query Role.Arn --output text)
+    grupo=$(aws logs describe-log-groups --log-group-name-prefix /aws/apigateway/qwallet-api --query 'logGroups[0].arn' --output text)
+    aws iam simulate-principal-policy --policy-source-arn "$rol" \
+      --action-names logs:CreateLogStream logs:PutLogEvents logs:DescribeLogStreams logs:DescribeLogGroups \
+      --resource-arns "${grupo%:*}:*" \
+      --query 'EvaluationResults[].[EvalActionName, EvalDecision]' --output text | sed 's/^/     /'
+    echo "   Política de la llave KMS para CloudWatch Logs (condición):"
+    llave=$(aws kms describe-key --key-id alias/qwallet-datos --query KeyMetadata.KeyId --output text)
+    aws kms get-key-policy --key-id "$llave" --policy-name default --output text \
+      | python3 -c "import json,sys;d=json.load(sys.stdin);[print('     ', s.get('Sid'), json.dumps(s.get('Condition'))) for s in d['Statement'] if 'logs' in json.dumps(s.get('Principal'))]" \
+      | sed -E 's/[0-9]{12}/************/g'
   } > "$OUT/EVD-5-06e_diagnostico.txt" 2>&1
   cat "$OUT/EVD-5-06e_diagnostico.txt"
   ;;
