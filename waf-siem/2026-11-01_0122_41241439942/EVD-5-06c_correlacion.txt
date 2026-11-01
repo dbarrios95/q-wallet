@@ -1,0 +1,34 @@
+EVD-5-06c Correlación de eventos entre fuentes (Logs Insights, última hora)
+Fecha: 2026-11-01 01:22:24 UTC
+
+1) IPs sospechosas en el perímetro (401 + 403 + 429 por IP; log de acceso de API Gateway):
+  File "<string>", line 7
+    print("   " + " | ".join(f"{c[\"field\"]}={c[\"value\"]}" for c in fila if not c["field"].startswith("@ptr")))
+                                   ^
+SyntaxError: unexpected character after line continuation character
+Exception ignored while flushing sys.stdout:
+BrokenPipeError: [Errno 32] Broken pipe
+
+2) Llamadas a AWS negadas por IAM, por rol (CloudTrail):
+  File "<string>", line 7
+    print("   " + " | ".join(f"{c[\"field\"]}={c[\"value\"]}" for c in fila if not c["field"].startswith("@ptr")))
+                                   ^
+SyntaxError: unexpected character after line continuation character
+Exception ignored while flushing sys.stdout:
+BrokenPipeError: [Errno 32] Broken pipe
+
+3) Cambios de configuración de seguridad hechos por el despliegue (CloudTrail):
+  File "<string>", line 7
+    print("   " + " | ".join(f"{c[\"field\"]}={c[\"value\"]}" for c in fila if not c["field"].startswith("@ptr")))
+                                   ^
+SyntaxError: unexpected character after line continuation character
+Exception ignored while flushing sys.stdout:
+BrokenPipeError: [Errno 32] Broken pipe
+
+4) Rechazos de la aplicación por regla (logs JSON de las Lambdas, 24 h):
+  File "<string>", line 7
+    print("   " + " | ".join(f"{c[\"field\"]}={c[\"value\"]}" for c in fila if not c["field"].startswith("@ptr")))
+                                   ^
+SyntaxError: unexpected character after line continuation character
+Exception ignored while flushing sys.stdout:
+BrokenPipeError: [Errno 32] Broken pipe

@@ -1,0 +1,27 @@
+EVD-5-06b Alarmas de seguridad: estado y disparos reales (CTRL-20)
+Fecha: 2026-11-01 01:22:23 UTC
+
+Estado actual:
+   qwallet-acceso-prohibido	OK	2026-10-31T20:54:05.650000+00:00
+   qwallet-auditoria-y-llaves	OK	2026-10-31T21:11:16.636000+00:00
+   qwallet-aws-no-autorizado	OK	2026-10-31T20:53:58.512000+00:00
+   qwallet-consola-sin-mfa	OK	2026-10-31T20:53:38.884000+00:00
+   qwallet-error-no-controlado	OK	2026-10-31T20:54:25.922000+00:00
+   qwallet-pin-bloqueado	OK	2026-10-31T20:53:30.304000+00:00
+   qwallet-rafaga-401	OK	2026-10-31T20:54:44.853000+00:00
+   qwallet-throttling	OK	2026-10-31T20:54:12.145000+00:00
+   qwallet-uso-root	ALARM	2026-10-31T20:56:20.171000+00:00
+
+Historial de las últimas 2 horas (cambios de estado y envío del aviso a SNS):
+
+usage: aws [options] <command> <subcommand> [<subcommand> ...] [parameters]
+To see help text, you can run:
+
+  aws help
+  aws <command> help
+  aws <command> <subcommand> help
+
+
+aws: [ERROR]: Unknown options: --alarm-name-prefix, qwallet-
+2026-11-01T01:18:21.935000+00:00	StateUpdate	Alarm updated from INSUFFICIENT_DATA to OK
+2026-11-01T01:16:32.470000+00:00	ConfigurationUpdate	Alarm "qwallet-waf-bloqueos" created

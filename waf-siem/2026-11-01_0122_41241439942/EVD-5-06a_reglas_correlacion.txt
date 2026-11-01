@@ -1,0 +1,23 @@
+EVD-5-06a Reglas de correlación del SIEM probadas contra muestras (aws logs test-metric-filter)
+Fecha: 2026-11-01 01:21:42 UTC
+Cada regla debe coincidir con la muestra de ataque y NO con la muestra normal.
+
+Logs de las Lambdas (formato de services/comun/src/registro.ts):
+   pin_bloqueado              ataque=1 normal=0  OK
+   pin_incorrecto             ataque=1 normal=0  OK
+   acceso_prohibido           ataque=1 normal=0  OK
+   entrada_invalida           ataque=1 normal=0  OK
+   error_no_controlado        ataque=1 normal=0  OK
+
+Log de acceso de API Gateway:
+   api_no_autenticado         ataque=1 normal=0  OK
+   api_limite                 ataque=1 normal=0  OK
+   api_bloqueo_waf            ataque=1 normal=0  OK
+
+CloudTrail (eventos reales de AWS, recortados):
+   trail_no_autorizado        ataque=1 normal=0  OK
+   trail_uso_root             ataque=1 normal=0  OK
+   trail_consola_sin_mfa      ataque=1 normal=0  OK
+   trail_auditoria_y_llaves   ataque=1 normal=0  OK
+   trail_cambios_iam          ataque=1 normal=0  OK
+   trail_admin_cognito        ataque=1 normal=0  OK

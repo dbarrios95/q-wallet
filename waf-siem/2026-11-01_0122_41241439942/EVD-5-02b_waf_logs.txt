@@ -1,0 +1,18 @@
+EVD-5-02b Logs del WAF: regla que decidió cada caso (CTRL-17)
+Fecha: 2026-11-01 01:21:16 UTC
+Fuente: grupo aws-waf-logs-qwallet (la cabecera Authorization se redacta).
+
+  File "<string>", line 7
+    print("   " + " | ".join(f"{c[\"field\"]}={c[\"value\"]}" for c in fila if not c["field"].startswith("@ptr")))
+                                   ^
+SyntaxError: unexpected character after line continuation character
+Exception ignored while flushing sys.stdout:
+BrokenPipeError: [Errno 32] Broken pipe
+
+Reglas administradas: sub-regla exacta que coincidió en los bloqueos:
+  File "<string>", line 7
+    print("   " + " | ".join(f"{c[\"field\"]}={c[\"value\"]}" for c in fila if not c["field"].startswith("@ptr")))
+                                   ^
+SyntaxError: unexpected character after line continuation character
+Exception ignored while flushing sys.stdout:
+BrokenPipeError: [Errno 32] Broken pipe

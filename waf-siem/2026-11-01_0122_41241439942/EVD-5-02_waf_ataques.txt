@@ -1,0 +1,19 @@
+EVD-5-02 AWS WAF bloqueando ataques contra la API (CTRL-17)
+Fecha: 2026-11-01 01:21:16 UTC
+Destino: etapa v1 de API Gateway (endpoint execute-api), WAF encendido solo para esta prueba.
+
+Caso Ataque                                                         Esperado         Obtenido
+C00  Solicitud legítima sin token (el WAF deja pasar; Cognito rechaza) 401              401
+C01  Inyección SQL en parámetro (A05:2025)                        403              403
+C02  Inyección SQL en cuerpo JSON (A05:2025)                       403              403
+C03  XSS en parámetro (A05:2025)                                   403              403
+C04  Lectura de archivos locales (path traversal)                   403              403
+C05  SSRF al servicio de metadatos de EC2 (A01:2025)                403              403
+C06  Log4Shell en cabecera (A03:2025 componentes vulnerables)       403              403
+C07  Solicitud sin User-Agent (herramienta automatizada)            403              403
+C08  Cuerpo de más de 8 KB (abuso de tamaño)                      403              403
+C09  40 solicitudes simultáneas (throttling de API Gateway, ráfaga 20) algunas 429      429: 0 · 401: 40
+C10  Ráfaga corta contra el límite por IP del WAF (100 en 5 min)  403 al pasar el umbral 403 en la solicitud 111 (111 enviadas en 49 s)111
+
+Casos de una sola solicitud con el código esperado: 9 de 9 (C00 a C08).
+La regla del WAF que bloqueó cada caso se lee en los logs del WAF (EVD-5-02b).
