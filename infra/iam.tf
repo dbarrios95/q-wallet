@@ -152,17 +152,16 @@ resource "aws_iam_role_policy" "lambda" {
 }
 
 # Rol de cuenta para que API Gateway escriba sus logs de acceso en CloudWatch.
+# HAL-14 (bloque 5): con la condición aws:SourceAccount, API Gateway no lograba escribir el
+# log de acceso (grupo con 0 bytes tras cientos de solicitudes, sin error visible). La guía de
+# AWS para el rol de CloudWatch de la cuenta de API Gateway usa la confianza sin condiciones.
+# El riesgo queda acotado: el rol solo puede escribir logs y tiene el límite de permisos.
 data "aws_iam_policy_document" "confianza_apigateway" {
   statement {
     actions = ["sts:AssumeRole"]
     principals {
       type        = "Service"
       identifiers = ["apigateway.amazonaws.com"]
-    }
-    condition {
-      test     = "StringEquals"
-      variable = "aws:SourceAccount"
-      values   = [local.cuenta]
     }
   }
 }
