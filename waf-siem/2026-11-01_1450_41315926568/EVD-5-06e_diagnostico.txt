@@ -1,0 +1,65 @@
+EVD-5-06e Diagnóstico de las reglas del perímetro (por qué no saltó rafaga-401 y no hubo 429)
+Fecha: 2026-11-01 14:50:24 UTC
+
+1) Datos publicados por cada métrica del perímetro en las últimas 24 horas (suma por hora):
+   api_no_autenticado     (sin datos)
+   api_limite             (sin datos)
+   api_bloqueo_waf        (sin datos)
+   trail_no_autorizado    12.0	1.0	17.0	1.0
+   trail_uso_root         19.0	18.0	20.0	19.0	4.0	20.0	19.0	20.0
+
+2) Tres líneas reales del log de acceso de API Gateway (último octeto de la IP tapado):
+
+3) Respuestas por estado y decisión del WAF en el log de acceso (últimas 24 h):
+   (sin resultados)
+
+4) Throttling configurado en la etapa v1:
+   {
+       "metodos": {
+           "rafaga": 20,
+           "porSegundo": 10.0
+       }
+   }
+
+5) Uso del usuario raíz (CloudTrail, últimas 24 h): evento, origen y hora (sin IP)
+   eventName=ListManagedNotificationEvents | eventSource=notifications.amazonaws.com | eventos=139 | desde=2026-10-31 20:55:37.527 | hasta=2026-11-01 04:00:15.210
+
+6) Log de acceso de API Gateway: ¿por qué no llegan eventos?
+   Flujos de log en /aws/apigateway/qwallet-api:
+
+aws: [ERROR]: An error occurred (AccessDeniedException) when calling the DescribeLogStreams operation: User: arn:aws:sts::************:assumed-role/qwallet-gha-despliegue/qwallet-waf-siem-41315926568 is not authorized to perform: logs:DescribeLogStreams on resource: arn:aws:logs:us-east-1:************:log-group:/aws/apigateway/qwallet-api because no identity-based policy allows the logs:DescribeLogStreams action
+   (vacío = API Gateway nunca escribió)
+   Grupo de log (cifrado y retención):
+     [
+         {
+             "cifradoKms": true,
+             "retencionDias": 365,
+             "bytes": 0
+         }
+     ]
+   Rol de CloudWatch registrado en la cuenta de API Gateway:
+     {
+         "rol": "arn:aws:iam::************:role/qwallet-apigateway-logs"
+     }
+   Destino y formato del log de acceso de la etapa v1:
+     {
+         "destino": "arn:aws:logs:us-east-1:************:log-group:/aws/apigateway/qwallet-api",
+         "tieneFormato": true
+     }
+   Simulación de permisos del rol qwallet-apigateway-logs (incluye el límite de permisos):
+     logs:CreateLogStream	allowed
+     logs:PutLogEvents	allowed
+     logs:DescribeLogStreams	allowed
+     logs:DescribeLogGroups	implicitDeny
+   Política de la llave KMS para CloudWatch Logs (condición):
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/usr/lib/python3.12/json/__init__.py", line 293, in load
+    return loads(fp.read(),
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 62 column 3 (char 1649)

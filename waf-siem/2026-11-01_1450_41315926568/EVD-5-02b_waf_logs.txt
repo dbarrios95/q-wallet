@@ -1,0 +1,27 @@
+EVD-5-02b Logs del WAF: regla que decidió cada caso (CTRL-17)
+Fecha: 2026-11-01 14:49:50 UTC
+Fuente: grupo aws-waf-logs-qwallet (la cabecera Authorization se redacta).
+
+   caso=C00 | terminatingRuleId=Default_Action | terminatingRuleType=REGULAR | solicitudes=1 | accion=ALLOW
+   caso=C01 | terminatingRuleId=inyeccion-sql | terminatingRuleType=MANAGED_RULE_GROUP | solicitudes=1 | accion=BLOCK
+   caso=C02 | terminatingRuleId=inyeccion-sql | terminatingRuleType=MANAGED_RULE_GROUP | solicitudes=1 | accion=BLOCK
+   caso=C03 | terminatingRuleId=reglas-comunes | terminatingRuleType=MANAGED_RULE_GROUP | solicitudes=1 | accion=BLOCK
+   caso=C04 | terminatingRuleId=reglas-comunes | terminatingRuleType=MANAGED_RULE_GROUP | solicitudes=1 | accion=BLOCK
+   caso=C05 | terminatingRuleId=reglas-comunes | terminatingRuleType=MANAGED_RULE_GROUP | solicitudes=1 | accion=BLOCK
+   caso=C06 | terminatingRuleId=entradas-maliciosas-conocidas | terminatingRuleType=MANAGED_RULE_GROUP | solicitudes=1 | accion=BLOCK
+   caso=C07 | terminatingRuleId=reglas-comunes | terminatingRuleType=MANAGED_RULE_GROUP | solicitudes=1 | accion=BLOCK
+   caso=C08 | terminatingRuleId=reglas-comunes | terminatingRuleType=MANAGED_RULE_GROUP | solicitudes=1 | accion=BLOCK
+   caso=C09 | terminatingRuleId=Default_Action | terminatingRuleType=REGULAR | solicitudes=40 | accion=ALLOW
+   caso=C10 | terminatingRuleId=limite-por-ip | terminatingRuleType=RATE_BASED | solicitudes=1 | accion=BLOCK
+   caso=C10 | terminatingRuleId=Default_Action | terminatingRuleType=REGULAR | solicitudes=110 | accion=ALLOW
+
+Reglas administradas: sub-regla exacta que coincidió en los bloqueos:
+   caso=C01 | terminatingRuleId=inyeccion-sql | count(*)=1
+   caso=C02 | terminatingRuleId=inyeccion-sql | count(*)=1
+   caso=C03 | terminatingRuleId=reglas-comunes | ruleGroupList.0.terminatingRule.ruleId=CrossSiteScripting_QUERYARGUMENTS | count(*)=1
+   caso=C04 | terminatingRuleId=reglas-comunes | ruleGroupList.0.terminatingRule.ruleId=GenericLFI_QUERYARGUMENTS | count(*)=1
+   caso=C05 | terminatingRuleId=reglas-comunes | ruleGroupList.0.terminatingRule.ruleId=EC2MetaDataSSRF_QUERYARGUMENTS | count(*)=1
+   caso=C06 | terminatingRuleId=entradas-maliciosas-conocidas | count(*)=1
+   caso=C07 | terminatingRuleId=reglas-comunes | ruleGroupList.0.terminatingRule.ruleId=NoUserAgent_HEADER | count(*)=1
+   caso=C08 | terminatingRuleId=reglas-comunes | ruleGroupList.0.terminatingRule.ruleId=SizeRestrictions_BODY | count(*)=1
+   caso=C10 | terminatingRuleId=limite-por-ip | count(*)=1
