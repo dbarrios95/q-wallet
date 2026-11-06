@@ -13,6 +13,7 @@ ensamblar el informe final, cuando exista la sección 3.
 Requiere python-docx.
 """
 import copy
+import re
 from pathlib import Path
 
 import docx
@@ -131,7 +132,8 @@ def anchos_sin_cortes(encabezado, filas, tam, total):
     for i, fila in enumerate([encabezado] + filas):
         f = fb if i == 0 else fr
         for j, v in enumerate(fila):
-            for palabra in str(v).replace("\n", " ").split():
+            # U+200B marca dónde se puede partir un identificador largo sin cortar palabras.
+            for palabra in re.split(r"[\s\u200b]+", str(v)):
                 w = f.getlength(palabra) / 10 / 72  # pulgadas
                 minimo[j] = max(minimo[j], w)
             peso[j] += fr.getlength(str(v)) / 10 / 72
@@ -153,10 +155,7 @@ def tabla(nombre, encabezado, filas, anchos_pulg=None, tam=10, nota_txt=None, to
     n_tabla += 1
     t = doc.add_table(rows=1 + len(filas), cols=len(encabezado))
     t.autofit = False
-    tbl_pr = t._tbl.tblPr
-    lay = OxmlElement("w:tblLayout")
-    lay.set(qn("w:type"), "fixed")
-    tbl_pr.append(lay)
+    # t.autofit = False ya deja <w:tblLayout w:type="fixed"/> en su lugar del esquema.
     grid = t._tbl.tblGrid
     for gc, w in zip(grid.findall(qn("w:gridCol")), anchos_pulg):
         gc.set(qn("w:w"), str(int(w * 1440)))
@@ -292,11 +291,13 @@ parrafo(
 
 titulo("4.1.3 Despliegue automatizado con identidad temporal", 3)
 parrafo(
-    "La única configuración manual es un bootstrap que se corre una vez en AWS CloudShell "
-    "(archivo infra/bootstrap/bootstrap.sh): crea el bucket del estado de Terraform, el "
-    "proveedor OIDC de GitHub, un límite de permisos y dos roles. Todo lo demás lo crea "
-    "Terraform desde GitHub Actions. La Tabla 25 resume los roles y por qué no pueden "
-    "escalar privilegios. Además, el flujo se detiene si el plan de Terraform destruye o "
+    "La única configuración manual es un bootstrap que se corre en AWS CloudShell (archivo "
+    "infra/bootstrap/bootstrap.sh) y que se puede repetir sin efectos secundarios: crea el "
+    "bucket del estado de Terraform, el proveedor OIDC de GitHub, un límite de permisos y los "
+    "roles de GitHub. Son los dos roles de despliegue de la Tabla 25 y, desde la fase de "
+    "pruebas, uno de solo lectura para el pentest (sección 3.6). Todo lo demás lo crea "
+    "Terraform desde GitHub Actions. La Tabla 25 resume los roles de despliegue y por qué no "
+    "pueden escalar privilegios. Además, el flujo se detiene si el plan de Terraform destruye o "
     "reemplaza un recurso que no esté aprobado en un archivo del repositorio; así un error "
     "en el código no borra datos. Esto atiende el plan de RSK-32 de la sección 2.5.5."
 )
@@ -305,7 +306,7 @@ tabla(
     ["Identidad", "Quién la usa", "Condición para asumirla", "Qué puede hacer", "Qué tiene prohibido"],
     [
         ["qwallet-gha-plan", "GitHub Actions en cada pull request",
-         "Token OIDC del repositorio con sub repo:dbarrios95@58736977/q-wallet@1403562245:pull_request",
+         "Token OIDC del repositorio con sub repo:dbarrios95@58736977/\u200bq-wallet@1403562245:\u200bpull_request",
          "Solo leer la configuración y el estado para calcular el plan", "Escribir cualquier recurso; leer datos de las tablas"],
         ["qwallet-gha-despliegue", "GitHub Actions al hacer merge a main",
          "Token OIDC con sub del entorno dev (el entorno solo acepta la rama main)",
@@ -336,7 +337,9 @@ parrafo(
     "por tabla, separamos los datos en ocho tablas de DynamoDB según su tipo, en lugar de una "
     "sola tabla compartida. La Tabla 26 muestra la matriz de acceso que aplica el Terraform "
     "(archivo infra/iam.tf): ninguna función tiene permiso de Scan, ninguna usa comodines "
-    "de acción o de tabla, y svc-budgets no puede leer transferencias ni el PIN."
+    "de acción o de tabla, y svc-budgets no puede leer transferencias ni el PIN. svc-profile "
+    "solo puede escribir en cuentas y movimientos para crear la cuenta inicial del cliente al "
+    "registrarse; no puede leerlas ni modificarlas."
 )
 tabla(
     "Matriz de menor privilegio: acciones de cada rol de Lambda por tabla",
@@ -344,8 +347,8 @@ tabla(
     [
         ["perfiles", "Get, Put, Update; Query en índice por-telefono", "—", "Query en índice por-telefono", "—", "—"],
         ["pin", "Put, Update", "—", "Get, Update", "—", "—"],
-        ["cuentas", "—", "Get, Query", "Get, Query, Update, ConditionCheck", "Query", "—"],
-        ["movimientos", "—", "Query", "Put", "Query", "—"],
+        ["cuentas", "Put (cuenta inicial)", "Get, Query", "Get, Query, Update, ConditionCheck", "Query", "—"],
+        ["movimientos", "Put (cuenta inicial)", "Query", "Put", "Query", "—"],
         ["transferencias", "—", "—", "Get, Put", "—", "—"],
         ["beneficiarios", "—", "—", "Query, Put, Delete", "—", "—"],
         ["presupuestos", "—", "—", "—", "Get, Query, Put, Update", "—"],
@@ -363,8 +366,9 @@ tabla(
 parrafo(
     "El menor privilegio no queda solo escrito. Después de cada despliegue, el flujo "
     "automático consulta el simulador de políticas de IAM con cada rol contra cada tabla y "
-    "guarda el resultado como evidencia EVD-3-11. [EVIDENCIA PENDIENTE: se genera en el "
-    "primer despliegue.]"
+    "guarda el resultado como evidencia EVD-3-11. En el primer despliegue completo, del 30 de "
+    "octubre de 2026, el simulador confirmó la matriz de la Tabla 26: ninguna Lambda obtuvo "
+    "permiso de Scan y los cinco roles tienen el límite de permisos."
 )
 
 titulo("4.2.2 Estrategia de cifrado", 3)
@@ -409,44 +413,49 @@ tabla(
 )
 parrafo(
     "La prueba de TLS (EVD-3-12) y el reporte de cifrado (EVD-5-04) se generan "
-    "automáticamente después de cada despliegue: la conexión con TLS 1.3 debe aceptarse, la "
-    "de TLS 1.2 debe rechazarse y cada tabla debe mostrar la llave propia. [EVIDENCIA "
-    "PENDIENTE: se genera en el primer despliegue.]"
+    "automáticamente después de cada despliegue. En el despliegue del 30 de octubre de 2026, "
+    "el endpoint aceptó la conexión con TLS 1.3 y rechazó la de TLS 1.2 (no acordó ningún "
+    "cifrado), y una solicitud sin token a GET /me recibió 401 del authorizer. El reporte de "
+    "cifrado mostró las ocho tablas y los seis grupos de logs con la llave propia, con "
+    "rotación cada 365 días."
 )
 
 seccion(horizontal=True)
 titulo("4.2.3 Matriz de requisitos de seguridad", 3)
 parrafo(
     "La Tabla 28 traduce las amenazas del modelo STRIDE (sección 2.3) en requisitos "
-    "verificables, tomados de OWASP MASVS v2 para la app y del OWASP API Security Top 10 "
-    "para la API, y dice dónde se cumple cada uno. La columna Estado separa lo que ya está "
-    "en la infraestructura desplegada de lo que se implementa en el código de los servicios "
-    "y de la app en la fase de desarrollo."
+    "verificables, tomados de OWASP MASVS v2 para la app (OWASP Mobile Application Security "
+    "Project, 2024) y del OWASP API Security Top 10 para la API (OWASP Foundation, 2023), y "
+    "dice dónde se cumple cada uno. La columna Estado indica cómo está cada requisito al 6 de "
+    "noviembre de 2026 y la evidencia que lo verifica."
 )
 tabla(
     "Matriz de requisitos de seguridad",
     ["Req.", "Amenaza", "Requisito", "Referencia", "Control y dónde", "Estado"],
     [
-        ["REQ-01", "AME-05, AME-06", "Todo el tráfico de la app va cifrado con TLS 1.3 y la app fija la llave del servidor", "MASVS-NETWORK-1, NETWORK-2", "CTRL-08: apigateway.tf y la app", "Infraestructura lista; pinning en la app pendiente"],
+        ["REQ-01", "AME-05, AME-06", "Todo el tráfico de la app va cifrado con TLS 1.3 y la app fija la llave del servidor", "MASVS-NETWORK-1, NETWORK-2", "CTRL-08: apigateway.tf y la app", "Implementado; el pinning bloqueó la intercepción (EVD-4-08)"],
         ["REQ-02", "AME-13, AME-16", "Ninguna ruta acepta solicitudes sin un token válido y con el alcance de la API", "API2:2023", "CTRL-18: authorizer en las 18 rutas (apigateway.tf)", "Implementado"],
-        ["REQ-03", "AME-04, AME-15", "El inicio de sesión exige MFA y usa código de autorización con PKCE", "MASVS-AUTH-1", "CTRL-18: cognito.tf", "Implementado"],
-        ["REQ-04", "AME-38", "Las operaciones de dinero piden un segundo factor (PIN) con bloqueo por intentos", "MASVS-AUTH-3, API6:2023", "CTRL-02: svc-transfers y tabla pin", "Tabla lista; lógica en desarrollo"],
-        ["REQ-05", "AME-17, AME-37", "Cada servicio entrega solo recursos del usuario del token", "API1:2023", "CTRL-01: handlers de los servicios", "En desarrollo"],
+        ["REQ-03", "AME-04, AME-15", "El inicio de sesión exige MFA y usa código de autorización con PKCE", "MASVS-AUTH-1", "CTRL-18: cognito.tf", "Implementado; MFA obligatorio (EVD-3-13)"],
+        ["REQ-04", "AME-38", "Las operaciones de dinero piden un segundo factor (PIN) con bloqueo por intentos", "MASVS-AUTH-3, API6:2023", "CTRL-02: svc-transfers y tabla pin", "Implementado; bloqueo al quinto intento (EVD-4-13)"],
+        ["REQ-05", "AME-17, AME-37", "Cada servicio entrega solo recursos del usuario del token", "API1:2023", "CTRL-01: handlers de los servicios", "Implementado; acceso ajeno bloqueado (EVD-4-13)"],
         ["REQ-06", "AME-19", "Cada función tiene solo los permisos que necesita", "API5:2023; ISO 27001 8.2", "CTRL-12: iam.tf y límite de permisos", "Implementado"],
         ["REQ-07", "AME-26", "Los datos en reposo se cifran con AES-256 y llave propia", "MASVS-STORAGE-1; ISO 27001 8.24", "CTRL-19: kms.tf y dynamodb.tf", "Implementado"],
-        ["REQ-08", "AME-27, AME-08", "Ningún secreto vive en el cliente ni en el código", "MASVS-STORAGE-1; CWE-798", "CTRL-16: SSM por servicio", "Implementado (rutas); gitleaks en la fase 3"],
+        ["REQ-08", "AME-27, AME-08", "Ningún secreto vive en el cliente ni en el código", "MASVS-STORAGE-1; CWE-798", "CTRL-16: SSM por servicio y gitleaks", "Implementado; gitleaks sin hallazgos"],
         ["REQ-09", "AME-28, AME-29", "Nadie puede borrar la llave, detener ni borrar la auditoría desde el despliegue", "ISO 27001 8.15", "CTRL-12, CTRL-20: denegaciones del rol de despliegue", "Implementado"],
         ["REQ-10", "AME-30", "Los buckets no son públicos y exigen TLS", "CIS AWS", "CTRL-12: cloudtrail.tf y bootstrap", "Implementado"],
         ["REQ-11", "AME-32", "El despliegue usa identidad temporal y no puede borrar recursos sin aprobación", "SLSA; A08:2025", "CTRL-21: OIDC, entorno dev y revisión del plan", "Implementado"],
         ["REQ-12", "AME-35", "Las imágenes no se pueden reemplazar y su base está fijada", "CIS Docker", "CTRL-11: ecr.tf y Dockerfile", "Implementado"],
         ["REQ-13", "AME-11, AME-18", "La API limita la frecuencia de solicitudes", "API4:2023", "CTRL-05, CTRL-17: throttling y WAF", "Implementado (WAF solo en pruebas)"],
-        ["REQ-14", "AME-14, AME-25", "Los errores son genéricos y los logs no guardan tokens ni cuerpos", "API8:2023; A09:2025", "CTRL-09, CTRL-13: respuestas y logs de API Gateway", "Implementado en API Gateway"],
+        ["REQ-14", "AME-14, AME-25", "Los errores son genéricos y los logs no guardan tokens ni cuerpos", "API8:2023; A09:2025", "CTRL-09, CTRL-13: API Gateway y servicios", "Implementado"],
     ],
     tam=9,
     total=9.0,
     nota_txt="Elaboración propia. Las amenazas AME son las del modelo de la sección 2.3 y los "
              "controles CTRL, los de la sección 1.5. MASVS: OWASP Mobile Application Security "
-             "Project (2024); API: OWASP API Security Top 10 2023; A08 y A09: OWASP Top 10:2025.",
+             "Project (2024); API: OWASP Foundation (2023); A08 y A09: OWASP Foundation (2025); "
+             "ISO 27001: International Organization for Standardization e International "
+             "Electrotechnical Commission (2022a). EVD-4-13 se detalla en la sección 3.2 y "
+             "EVD-4-08, en la sección 5.2.",
 )
 seccion(horizontal=False)
 
@@ -482,22 +491,26 @@ tabla(
         ["CKV2_AWS_29, CKV2_AWS_77", "WAF asociado con regla de Log4j", "Etapa v1", "El WAF (con la regla de entradas maliciosas, que cubre Log4j) se enciende solo en pruebas por costo"],
         ["CKV_AWS_109, CKV_AWS_111, CKV_AWS_356", "Sin “*” en políticas", "Política de la llave KMS", "En una política de llave, “*” significa “esta llave”; los servicios llevan condiciones de origen"],
         ["CKV_AWS_18, CKV_AWS_144, CKV2_AWS_62", "Registro de acceso, replicación y notificaciones del bucket", "Bucket de CloudTrail", "Costo; una sola región aceptada (RSK-01); las alertas se definen con el SIEM"],
-        ["CKV2_AWS_10, CKV_AWS_252", "CloudTrail a CloudWatch y a SNS", "Trail", "Se decide con el SIEM en la fase de operación (CTRL-20)"],
+        ["CKV2_AWS_10, CKV_AWS_252", "CloudTrail a CloudWatch y a SNS", "Trail", "Omitidas el 29 de octubre; en la fase de operación CloudTrail ya envía a CloudWatch y las alertas salen de sus alarmas (CTRL-20, sección 5.3)"],
     ],
     [1.45, 1.4, 1.0, 2.65],
     tam=9,
     nota_txt="Elaboración propia a partir del resultado de Checkov 3.3.22 sobre la carpeta infra "
-             "(Bridgecrew, s. f.). El escaneo de las imágenes con Trivy se agrega en la fase de "
-             "desarrollo, cuando existan las imágenes reales de los servicios.",
+             "(Bridgecrew, s. f.). Las imágenes de los servicios se escanean con Trivy en el "
+             "mismo flujo desde la fase de desarrollo (sección 4.4).",
 )
 
-titulo("Referencias de esta sección [se integran a la lista general al ensamblar]", 2)
+titulo("Referencias", 2)
 refs = [
     "Amazon Web Services. (s. f.-d). Permissions boundaries for IAM entities. AWS Identity and Access Management User Guide. Recuperado el 29 de octubre de 2026, de https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html",
     "Amazon Web Services. (s. f.-e). DynamoDB encryption at rest: How it works. Amazon DynamoDB Developer Guide. Recuperado el 29 de octubre de 2026, de https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/encryption.howitworks.html",
     "Amazon Web Services. (s. f.-f). Key spec reference. AWS Key Management Service Developer Guide. Recuperado el 29 de octubre de 2026, de https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-choose-key-spec.html",
     "Amazon Web Services. (s. f.-g). Supported security policies. Amazon API Gateway Developer Guide. Recuperado el 29 de octubre de 2026, de https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-security-policies-list.html",
     "Bridgecrew. (s. f.). Checkov: Policy-as-code for everyone. Recuperado el 29 de octubre de 2026, de https://www.checkov.io/",
+    "International Organization for Standardization e International Electrotechnical Commission. (2022a). Information security, cybersecurity and privacy protection — Information security management systems — Requirements (ISO/IEC 27001:2022). https://www.iso.org/standard/27001",
+    "OWASP Foundation. (2023). OWASP API Security Top 10 2023. https://owasp.org/API-Security/editions/2023/en/0x11-t10/",
+    "OWASP Foundation. (2025). OWASP Top 10:2025. https://owasp.org/Top10/2025/",
+    "OWASP Mobile Application Security Project. (2024). OWASP Mobile Application Security Verification Standard (MASVS) (versión 2.1.0). https://mas.owasp.org/MASVS/",
     "Rose, S., Borchert, O., Mitchell, S. y Connelly, S. (2020). Zero trust architecture (NIST Special Publication 800-207). National Institute of Standards and Technology. https://doi.org/10.6028/NIST.SP.800-207",
 ]
 for ref in refs:

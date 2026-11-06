@@ -3,6 +3,19 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-11-06 — Daniel — Claude (claude.ai), revisión del Word de la Entrega 2
+- Fase / sección del informe: Entrega 2 (Fase 2); secciones 4.1, 4.2 y 4.5.
+- Qué se hizo: revisión del Word contra el enunciado (Fase 2), la rúbrica, CONTEXTO sección 9 y el Terraform actual. Cambios en `scripts/entrega2_seccion4.py` y Word regenerado (14 págs., validador sin errores, render revisado):
+  - Se quitaron los 3 marcadores: los dos "[EVIDENCIA PENDIENTE]" se reemplazaron por los resultados reales del despliegue del 30-oct (EVD-3-11, EVD-3-12 y EVD-5-04, ver entradas de ese día) y "Referencias de esta sección [...]" pasa a "Referencias".
+  - Tabla 25: `sub` de OIDC con el formato nuevo (commit 671c37f cambió el script pero el Word no se había regenerado); puntos de corte invisibles (U+200B) para que el identificador quepa sin partir palabras.
+  - Tabla 26: svc-profile con PutItem en cuentas y movimientos (cuenta inicial, bloque 3), igual que `infra/iam.tf`.
+  - 4.1.3: el bootstrap crea también el rol de solo lectura del pentest y se puede repetir.
+  - Tabla 28: columna Estado al 6-nov con su evidencia (pinning EVD-4-08, PIN y BOLA EVD-4-13, MFA EVD-3-13, gitleaks); citas APA de MASVS, OWASP API Top 10, OWASP Top 10:2025 e ISO 27001 y sus 4 referencias.
+  - Tabla 29: fila de CloudTrail (ya envía a CloudWatch desde el bloque 5); nota de Trivy (ya se usa desde el bloque 3).
+  - `tblLayout` duplicado corregido (python-docx ya lo agrega con `autofit = False`).
+- Archivos: `scripts/entrega2_seccion4.py`, `docs/entregas/Entrega2_Seccion_4_Arquitectura_Controles.docx`, `docs/ESTADO.md`, `docs/BITACORA.md`.
+- Decisiones: los resultados de Checkov (282/0/39) se dejan como el análisis del 29-oct; no se inventan cifras nuevas.
+
 ### 2026-10-30 — Daniel — Claude (claude.ai), fix: Prowler (EVD-3-09) no generaba evidencia
 - Tras el merge del bloque 4, la primera corrida de `pentest.yml` (run #1) salió **Success**: EVD-4-01 (perímetro/Nmap: solo 443, TLS 1.3, 1.2 rechazado, todo 401 sin token) y EVD-4-02 (ZAP baseline: 0 High, 0 Medium, 1 Low = falta cabecera HSTS) quedaron bien. Pero **EVD-3-09 (Prowler) salió vacío** ("no se pudo resumir").
 - Causa: en el paso de Prowler el redirect `> prowler-out/consola.txt` se evaluaba antes de que existiera el directorio `prowler-out/`, así que bash fallaba al crear el archivo, Prowler no llegaba a correr y la consola quedaba vacía. Ese es el "exit code 1" del annotation (paso con `continue-on-error`, no tumbó el job).

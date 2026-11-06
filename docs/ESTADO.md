@@ -46,7 +46,7 @@
 
 ## Antes (bloques 1 a 3, detalle en BITÁCORA)
 - Cuenta AWS de Daniel (`qwallet-umg`, us-east-1, Free plan, US$100 de crédito). Bootstrap OIDC hecho; MFA raíz y presupuesto de US$5 confirmados. Toda la arquitectura desplegada y verificada (EVD-3-11, 3-12, 3-13, 5-04 en el issue "Evidencias AWS"). Código real de las 5 Lambdas en producción (PR #36 merge).
-- Word de la Entrega 2: `docs/entregas/Entrega2_Seccion_4_Arquitectura_Controles.docx` (4.1, 4.2, 4.5). Word del bloque 3: `docs/entregas/Final_Secciones_3-4_3-5_4-3_4-4_4-6_DevSecOps.docx`. Presentación del 7-nov en Claude Slides (privada).
+- Word de la Entrega 2: `docs/entregas/Entrega2_Seccion_4_Arquitectura_Controles.docx` (4.1, 4.2, 4.5); revisado el 6-nov sin marcadores pendientes y con el validador sin errores. Word del bloque 3: `docs/entregas/Final_Secciones_3-4_3-5_4-3_4-4_4-6_DevSecOps.docx`. Presentación del 7-nov en Claude Slides (privada).
 
 ## Decisiones tomadas por Daniel (30-oct-2026, bloque 4)
 - Caja negra en vivo **acotada** (Nmap + TLS + ZAP baseline, sin WAF; el WAF se prueba en el bloque 5).
@@ -56,7 +56,7 @@
 ## Decisiones pendientes (para el bloque 5)
 - SIEM: Wazuh necesita 4 GB+ de RAM y no cabe en US$5; opción CloudWatch + alarmas + CloudTrail.
 - Pruebas en el teléfono (Frida, freeRASP): emulador en la computadora de Daniel o intento en GitHub Actions.
-- Al ensamblar el Word final: revisar `w:tblLayout` duplicado del Word de la Entrega 2 con el validador; integrar EVD-4-01/4-02/3-09 (salida de pentest.yml) a la sección 3.1 y 3.6.
+- Al ensamblar el Word final: integrar EVD-4-01/4-02/3-09 (salida de pentest.yml) a la sección 3.1 y 3.6.
 - *Quick wins* gratis que sugiere Prowler para mostrar mejora en el mapa "después": S3 Block Public Access de cuenta, política de contraseñas IAM, logging de API Gateway y CloudTrail→CloudWatch.
 - Verificar el MFA de Cognito: Prowler lo marca como **no requerido**; ESTADO/CONTEXTO lo daban por activo. Probablemente está en OPTIONAL y no en REQUIRED.
 
