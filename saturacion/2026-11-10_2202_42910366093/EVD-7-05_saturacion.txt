@@ -1,0 +1,70 @@
+EVD-7-05 HAL-16: prueba de saturación del throttling de API Gateway (CTRL-05, CA-06)
+Fecha: 2026-11-10 22:00:04 UTC
+Objetivo: GET /v1/me sin token (el authorizer de Cognito responde 401; no corre ninguna Lambda).
+Límite configurado en la etapa v1 (aws_api_gateway_method_settings, */*): ráfaga 20, 10 por segundo.
+Prueba de carga acotada (no inundación): pausas de 15 s entre fases.
+
+Fase  Solicitudes    429   Códigos             Descripción
+F1             40      0   401: 40             40 simultáneas (repite C09 del bloque 5)
+F2            300      0   401: 300            10 por segundo durante 30 s (justo en el límite)
+F3            900      0   401: 900            30 por segundo durante 30 s (3 veces el límite)
+F4           1200      0   401: 1200           60 por segundo durante 20 s (6 veces el límite)
+F5            100      0   401: 100            100 simultáneas (5 veces la ráfaga)
+
+Total: 2540 solicitudes, 0 con 429.
+
+F3 segundo a segundo (códigos por segundo desde el inicio de la fase):
+   s  0: 401=31
+   s  1: 401=29
+   s  2: 401=31
+   s  3: 401=30
+   s  4: 401=30
+   s  5: 401=30
+   s  6: 401=30
+   s  7: 401=30
+   s  8: 401=30
+   s  9: 401=30
+   s 10: 401=30
+   s 11: 401=30
+   s 12: 401=30
+   s 13: 401=30
+   s 14: 401=30
+   s 15: 401=30
+   s 16: 401=30
+   s 17: 401=30
+   s 18: 401=30
+   s 19: 401=30
+   s 20: 401=30
+   s 21: 401=30
+   s 22: 401=30
+   s 23: 401=30
+   s 24: 401=30
+   s 25: 401=30
+   s 26: 401=30
+   s 27: 401=30
+   s 28: 401=30
+   s 29: 401=29
+
+F4 segundo a segundo (códigos por segundo desde el inicio de la fase):
+   s  0: 401=61
+   s  1: 401=60
+   s  2: 401=60
+   s  3: 401=60
+   s  4: 401=60
+   s  5: 401=60
+   s  6: 401=60
+   s  7: 401=60
+   s  8: 401=60
+   s  9: 401=60
+   s 10: 401=60
+   s 11: 401=60
+   s 12: 401=60
+   s 13: 401=60
+   s 14: 401=60
+   s 15: 401=60
+   s 16: 401=60
+   s 17: 401=60
+   s 18: 401=60
+   s 19: 401=59
+
+Resultado: ningún 429 ni con carga sostenida sobre el límite. HAL-16 sigue abierto (ver análisis).
