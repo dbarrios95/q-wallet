@@ -52,17 +52,28 @@ def main() -> int:
 
     codigo: dict[str, str] = {}
 
-    def al_responder(resp) -> None:
-        destino = resp.headers.get("location", "")
-        if destino.startswith(REDIRECT):
+    def tomar(destino: str) -> None:
+        if destino and destino.startswith(REDIRECT):
             q = urllib.parse.parse_qs(urllib.parse.urlparse(destino).query)
             if q.get("state", [""])[0] == estado:
                 codigo["code"] = q.get("code", [""])[0]
 
+    def al_responder(resp) -> None:
+        tomar(resp.headers.get("location", ""))
+
     with sync_playwright() as p:
         nav = p.chromium.launch()
         pag = nav.new_page()
+        # El retorno a qwallet:// no es una página: Chromium no lo abre. Se toma la URL por varios
+        # caminos: cabecera Location, la solicitud misma o la navegación que pide la página (CDP).
         pag.on("response", al_responder)
+        pag.on("request", lambda r: tomar(r.url))
+        pag.on("requestfailed", lambda r: tomar(r.url))
+        pag.on("framenavigated", lambda f: tomar(f.url))
+        cdp = pag.context.new_cdp_session(pag)
+        cdp.send("Page.enable")
+        cdp.on("Page.frameRequestedNavigation", lambda e: tomar(e.get("url", "")))
+        cdp.on("Page.frameScheduledNavigation", lambda e: tomar(e.get("url", "")))
         pag.goto(url, wait_until="networkidle")
         hecho = set()
         fin = time.time() + 120
