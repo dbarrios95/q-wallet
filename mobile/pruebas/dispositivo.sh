@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 # Pruebas de la app en un emulador Android (bloque 5, secciones 5.2 y 3.2).
 # Corre dentro de reactivecircus/android-emulator-runner en el flujo movil.yml.
-# Uso: bash mobile/pruebas/dispositivo.sh ruta/app-release.apk carpeta-de-salida
+# Uso: bash mobile/pruebas/dispositivo.sh ruta/app-release.apk carpeta-de-salida [ruta/app-prueba-ca07.apk]
 #
 #   A) Arranque normal ........ freeRASP (CTRL-15) + pinning y sonda a la API (CTRL-08)
 #   B) CA-10 Frida ............ frida-server + hook en la app; freeRASP debe detectarlo
 #   C) CA-08 MITM ............. proxy mitmproxy con su CA instalada como CA del SISTEMA
 #                               (atacante con root); el pinning debe cortar la conexión
-#   D) CA-07 almacenamiento ... sin tokens ni datos legibles en /data/data de la app
+#   D) CA-07 almacenamiento ... sin tokens ni datos legibles en /data/data de la app (sin sesión)
+#   E) CA-07 con sesión real .. bloque 7: login con Cognito (PKCE + MFA TOTP), revisión con root,
+#                               desbloqueo y cierre de sesión (mobile/pruebas/sesion_ca07.py)
 #
 # No falla por una detección "faltante": deja el resultado tal cual para el informe.
 # Sí falla si la app no instala o no arranca.
@@ -15,6 +17,7 @@ set -uo pipefail
 
 APK="$1"
 OUT="$2"
+APK_PRUEBA="${3:-}"
 PKG="gt.qwallet.app"
 FRIDA_VER="17.22.0"
 mkdir -p "$OUT"
@@ -167,9 +170,14 @@ marcas | grep 'QWALLET_API' | sed 's/^/   /' >> "$OUT/EVD-4-08_mitm_pinning.txt"
   echo "allowBackup del paquete: $(adb shell dumpsys package ${PKG} | grep -o 'ALLOW_BACKUP' | head -1 || true)"
   echo "(vacío = allowBackup desactivado; ver también el manifiesto en EVD-4-11)"
   echo
-  echo "Nota: en esta versión la app no inicia sesión (conexión mínima con la API, decisión del"
-  echo "bloque 5), así que no hay tokens que guardar; el control CTRL-07 queda verificado por diseño"
-  echo "y por configuración (expo-secure-store con Android Keystore), no por un token real."
+  echo "Nota: esta revisión es SIN sesión abierta (estado inicial de la app). La prueba con una"
+  echo "sesión real de Cognito está en EVD-7-01 (sección E de este script, bloque 7)."
 } > "$OUT/EVD-4-08b_almacenamiento.txt"
+
+# ---------- E) CA-07 con sesión real (bloque 7) ----------
+if [ -n "$APK_PRUEBA" ] && [ -f "$APK_PRUEBA" ]; then
+  adb install -r -g "$APK_PRUEBA" || echo "No se pudo instalar el APK de prueba"
+  python3 mobile/pruebas/sesion_ca07.py "$OUT" || echo "La prueba E terminó incompleta (ver EVD-7-01)"
+fi
 
 for f in "$OUT"/*.txt; do echo "==== $(basename "$f")"; cat "$f"; done

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -25,7 +25,8 @@ import {
 } from "lucide-react-native";
 import { useTheme } from "../../src/theme";
 import { Header, Card, Button } from "../../src/components";
-import { mockUser, mockAccount } from "../../src/mocks";
+import { cerrarSesion, tokenAcceso, useUsuario } from "../../src/seguridad/sesion";
+import { llamarApi } from "../../src/seguridad/red";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -37,8 +38,25 @@ export default function ProfileScreen() {
   const [biometricsEnabled, setBiometricsEnabled] = useState(true);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
-  const handleLogout = () => {
-    // Redirigir a bienvenida y limpiar sesión
+  // Datos de la sesión (id token) y del perfil en la API (GET /me, respuesta mínima CTRL-03).
+  const usuario = useUsuario();
+  const [perfil, setPerfil] = useState<{ nombre: string | null; telefono: string | null } | null>(null);
+  useEffect(() => {
+    (async () => {
+      try {
+        const r = await llamarApi("/me", { token: await tokenAcceso() });
+        if (r.estado === 200) setPerfil(JSON.parse(r.cuerpo));
+      } catch {
+        setPerfil(null);
+      }
+    })();
+  }, []);
+  const nombre = perfil?.nombre ?? "Usuario Q-Wallet";
+  const iniciales = nombre.split(" ").filter(Boolean).slice(0, 2).map((p) => p[0]?.toUpperCase()).join("");
+
+  const handleLogout = async () => {
+    // Revoca el refresh token en Cognito y borra la sesión guardada (CTRL-07, CTRL-18).
+    await cerrarSesion();
     router.replace("/(auth)/welcome");
   };
 
@@ -59,18 +77,18 @@ export default function ProfileScreen() {
                 { backgroundColor: palette.primary },
               ]}
             >
-              <Text style={styles.avatarLargeText}>MM</Text>
+              <Text style={styles.avatarLargeText}>{iniciales}</Text>
             </View>
             <View style={styles.userDetails}>
               <Text style={[styles.userName, { color: colors.text }]}>
-                {mockUser.name}
+                {nombre}
               </Text>
               <Text style={[styles.userEmail, { color: colors.textMuted }]}>
-                {mockUser.email}
+                {usuario?.correo ?? ""}
               </Text>
               <View style={styles.verifiedTag}>
                 <ShieldCheck size={12} color="#00D688" />
-                <Text style={styles.verifiedText}>Usuario Verificado (KYC)</Text>
+                <Text style={styles.verifiedText}>MFA activo</Text>
               </View>
             </View>
           </View>
@@ -91,7 +109,7 @@ export default function ProfileScreen() {
                 Teléfono móvil
               </Text>
               <Text style={[styles.infoValue, { color: colors.text }]}>
-                +502 {mockUser.maskedPhone}
+                {perfil?.telefono ? `+502 ${perfil.telefono}` : "Sin registrar"}
               </Text>
             </View>
           </View>
@@ -104,10 +122,10 @@ export default function ProfileScreen() {
             </View>
             <View style={styles.infoContent}>
               <Text style={[styles.infoLabel, { color: colors.textMuted }]}>
-                DPI (Documento de Identificación)
+                Correo verificado
               </Text>
               <Text style={[styles.infoValue, { color: colors.text }]}>
-                {mockUser.maskedDpi}
+                {usuario?.correo ?? ""}
               </Text>
             </View>
           </View>
@@ -120,10 +138,10 @@ export default function ProfileScreen() {
             </View>
             <View style={styles.infoContent}>
               <Text style={[styles.infoLabel, { color: colors.textMuted }]}>
-                Cuenta Monetaria Asociada
+                Sesión
               </Text>
               <Text style={[styles.infoValue, { color: colors.text }]}>
-                Cuenta {mockAccount.accountNumber}
+                OAuth 2.0 con PKCE · token de 15 minutos
               </Text>
             </View>
           </View>
