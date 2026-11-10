@@ -1,0 +1,67 @@
+EVD-7-05 HAL-16: prueba de saturación del throttling de API Gateway (CTRL-05, CA-06)
+Fecha: 2026-11-10 23:52:36 UTC
+Objetivo: GET /v1/me. Fases F sin token (el authorizer de Cognito responde 401; no corre ninguna Lambda).
+Fases A (si están): con un access token real del usuario de prueba (PKCE + MFA); responde la Lambda.
+Límite configurado en la etapa v1 (aws_api_gateway_method_settings, */*): ráfaga 20, 10 por segundo.
+Prueba de carga acotada (no inundación): pausas de 15 s entre fases.
+
+Fase  Solicitudes    429   Códigos             Descripción
+F1             40      0   401: 40             40 simultáneas (repite C09 del bloque 5)
+F2            300      0   401: 300            10 por segundo durante 30 s (justo en el límite)
+F3            900      0   401: 900            30 por segundo durante 30 s (3 veces el límite)
+F4           1200      0   401: 1200           60 por segundo durante 20 s (6 veces el límite)
+F5            100      0   401: 100            100 simultáneas (5 veces la ráfaga)
+A1             40      0   200: 10, 500 InternalServerErrorException: 30CON TOKEN: 40 simultáneas
+A2            600    246   200: 354, 429 TooManyRequestsException: 246CON TOKEN: 30 por segundo durante 20 s (3 veces el límite)
+A3            100      0   200: 17, 500 InternalServerErrorException: 83CON TOKEN: 100 simultáneas (5 veces la ráfaga)
+
+Total: 3280 solicitudes, 246 con 429.
+
+F4 segundo a segundo (códigos por segundo desde el inicio de la fase):
+   s  0: 401=61
+   s  1: 401=60
+   s  2: 401=60
+   s  3: 401=60
+   s  4: 401=60
+   s  5: 401=60
+   s  6: 401=60
+   s  7: 401=60
+   s  8: 401=60
+   s  9: 401=60
+   s 10: 401=60
+   s 11: 401=60
+   s 12: 401=60
+   s 13: 401=60
+   s 14: 401=60
+   s 15: 401=60
+   s 16: 401=60
+   s 17: 401=60
+   s 18: 401=60
+   s 19: 401=59
+
+A2 segundo a segundo (códigos por segundo desde el inicio de la fase):
+   s  0: 200=31
+   s  1: 200=30
+   s  2: 200=27, 429 TooManyRequestsException=3
+   s  3: 200=23, 429 TooManyRequestsException=7
+   s  4: 200=21, 429 TooManyRequestsException=9
+   s  5: 200=25, 429 TooManyRequestsException=5
+   s  6: 200=17, 429 TooManyRequestsException=13
+   s  7: 200=24, 429 TooManyRequestsException=6
+   s  8: 200=21, 429 TooManyRequestsException=9
+   s  9: 200=20, 429 TooManyRequestsException=10
+   s 10: 200=16, 429 TooManyRequestsException=14
+   s 11: 200=20, 429 TooManyRequestsException=10
+   s 12: 200=11, 429 TooManyRequestsException=19
+   s 13: 200=3, 429 TooManyRequestsException=27
+   s 14: 200=14, 429 TooManyRequestsException=16
+   s 15: 200=14, 429 TooManyRequestsException=16
+   s 16: 200=6, 429 TooManyRequestsException=24
+   s 17: 200=9, 429 TooManyRequestsException=21
+   s 18: 200=15, 429 TooManyRequestsException=15
+   s 19: 200=7, 429 TooManyRequestsException=22
+
+Sin token: 0 respuestas 429. Con token: 246 respuestas 429.
+Resultado: el throttling SÍ limita las solicitudes autenticadas; las que rechaza el authorizer
+(401) no cuentan para el límite. HAL-16 se explica y se cierra; el freno para tráfico sin
+token es el WAF con regla de tasa (RSK-11).
