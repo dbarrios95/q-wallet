@@ -1,0 +1,1 @@
+EVD-7-01 CA-07 con sesión real: NO SE CORRIÓ (faltan los secretos QWALLET_PRUEBA_*).

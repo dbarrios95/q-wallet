@@ -1,0 +1,43 @@
+EVD-4-08 CA-08 intercepción MITM contra la app (CTRL-08, pinning)
+Fecha: 2026-11-10 22:56:47 UTC
+Ataque: proxy mitmproxy en 10.0.2.2:8080 con su CA instalada como CA del SISTEMA (con root).
+CA del atacante en el almacén del sistema: /system/etc/security/cacerts/c8750f0d.0
+
+Control (curl confiando en la CA del atacante, sin pinning): HTTP 401
+   -> el proxy SÍ puede descifrar a un cliente sin pinning.
+
+Marcas de la app con el proxy activo:
+   QWALLET_API error=pinning host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com
+   QWALLET_API pinning=activo hosts=2 pines=4
+   QWALLET_API sonda=GET_/me via=cliente_api estado=sin_conexion motivo=conexion_rechazada ms=766
+   QWALLET_API sonda=GET_/me via=fetch_global_diagnostico estado=401 pinning=activo ms=221
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=privilegedAccess reaccion=bloquear
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Solicitudes a la API que el proxy pudo leer en claro: 2 (1 es el control con curl)
+   [22:58:41.633][127.0.0.1:58788] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (50.19.149.92:443)
+   127.0.0.1:58788: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [22:58:41.725][127.0.0.1:58788] client disconnect
+   [22:58:41.725][127.0.0.1:58788] server disconnect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (50.19.149.92:443)
+   [22:58:43.598][127.0.0.1:34038] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (50.19.149.92:443)
+   [22:58:44.065][127.0.0.1:34038] client disconnect
+   [22:58:44.065][127.0.0.1:34038] server disconnect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (50.19.149.92:443)
+   [22:58:44.186][127.0.0.1:34050] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (50.19.149.92:443)
+   127.0.0.1:34050: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [22:59:00.695][127.0.0.1:47998] client disconnect
+   [22:59:00.793][127.0.0.1:48020] client disconnect
+   [22:59:10.954][127.0.0.1:50428] client disconnect
+
+Resultado cliente_api: BLOQUEADO (la app cortó la conexión con el proxy).
+Resultado fetch_global_diagnostico: INTERCEPTADO (la solicitud llegó a la API pasando por el proxy).
+La librería de pinning reportó el rechazo del certificado del proxy (error=pinning).
+Solicitudes de la app leídas por el proxy: 1 (se descuenta el control).
+Sin proxy, de nuevo:
+   QWALLET_API pinning=activo hosts=2 pines=4
+   QWALLET_API sonda=GET_/me via=cliente_api estado=401 pinning=activo ms=390
+   QWALLET_API sonda=GET_/me via=fetch_global_diagnostico estado=401 pinning=activo ms=153
