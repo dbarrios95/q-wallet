@@ -31,14 +31,18 @@ falla() { echo "FALLA: $1"; FALLAS=$((FALLAS + 1)); }
   echo
   echo "2) Patrones de secretos en el código (classes*.dex y el bundle de Hermes):"
   for p in 'AKIA[0-9A-Z]{16}' 'ASIA[0-9A-Z]{16}' '-----BEGIN (RSA |EC |)PRIVATE KEY' 'aws_secret_access_key' \
-           'client_secret' 'sk_live_[0-9a-zA-Z]{20,}' 'xox[baprs]-[0-9A-Za-z-]{10,}' 'ghp_[0-9A-Za-z]{36}'; do
+           'client_secret["'"'"' :=]+["'"'"'][A-Za-z0-9+/_=-]{16,}' 'sk_live_[0-9a-zA-Z]{20,}' 'xox[baprs]-[0-9A-Za-z-]{10,}' 'ghp_[0-9A-Za-z]{36}'; do
     c=$(cat "$TMP"/apk/classes*.dex "$TMP"/apk/assets/index.android.bundle 2>/dev/null | grep -a -E -c -- "$p" || true)
     printf '   %-40s %s coincidencias\n' "$p" "$c"
     [ "$c" = "0" ] || falla "patrón ${p}"
   done
+  # Bloque 7: expo-auth-session trae el NOMBRE del parámetro client_secret (lo usa solo si se le da
+  # un secreto). Se informa aparte; lo que falla es un client_secret con un valor (patrón de arriba).
+  c=$(cat "$TMP"/apk/assets/index.android.bundle 2>/dev/null | grep -a -o -c 'client_secret' || true)
+  printf '   %-40s %s (nombre del parámetro en expo-auth-session; el cliente de Cognito es público, sin secreto)\n' 'client_secret (solo el nombre)' "$c"
   echo
   echo "3) Datos públicos que la app sí lleva (no son secretos):"
-  for p in 'execute-api.us-east-1.amazonaws.com' 'gt.qwallet.app'; do
+  for p in 'execute-api.us-east-1.amazonaws.com' 'auth.us-east-1.amazoncognito.com' 'gt.qwallet.app'; do
     c=$(grep -a -c -- "$p" "$TMP"/apk/assets/index.android.bundle 2>/dev/null || echo 0)
     printf '   %-40s %s\n' "$p" "$c"
   done
