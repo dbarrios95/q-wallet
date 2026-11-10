@@ -1,0 +1,45 @@
+# HAL-16 (bloque 7): prueba de saturación más larga del throttling de API Gateway.
+# Sin AWS: solo llama a la API pública sin token. Unas 2 500 solicitudes en ~3 minutos,
+# máximo 60 por segundo (prueba de carga acotada, no inundación).
+# Evidencia: issue "Evidencias Pentest", el PR y la rama evidencias-ci (saturacion/).
+name: saturacion
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "infra/pruebas/saturacion.py"
+      - ".github/workflows/saturacion.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: saturacion
+  cancel-in-progress: false
+
+jobs:
+  saturacion:
+    name: Throttling de API Gateway (HAL-16)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Prueba de saturación
+        run: |
+          mkdir -p evidencias
+          host=$(grep -o '[a-z0-9]*\.execute-api\.[a-z0-9-]*\.amazonaws\.com' mobile/src/seguridad/config.ts | head -1)
+          python3 infra/pruebas/saturacion.py "https://${host}/v1" evidencias
+
+      - name: Publicar evidencias
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/publicar_evidencias.sh evidencias "Evidencias Pentest" saturacion "${{ job.status }}"
