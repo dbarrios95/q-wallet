@@ -16,6 +16,7 @@
   - Informe: `scripts/bloque7_ajustes.py` (redacción sin «simulado»/«ficticio», «antes de pasar a producción», sin «pendiente») y cambios en `bloque5_word.py`, `bloque6_word.py`, `bloque6_capturas.py`, `final_ensamblar.py` y `resultados.json`. Figura 9 sin la pantalla de login; Figura 10 nueva con el login real (correo de prueba tapado). Informe de 166 págs., 60 tablas, 21 figuras; render revisado en las páginas cambiadas.
   - Presentación final (Claude Slides) actualizada: cifras, CA-07, dictamen y números de figura; mapa de calor nuevo. Guion `Final_Presentacion.md` actualizado. `REGISTRO_RIESGOS.md` y `CHECKLIST_EVIDENCIAS.md` al día.
 - Nota de exposición: las capturas sin tapar de la rama `evidencias-ci` (pública) muestran el correo del usuario de prueba (`qwallet.example`, dominio reservado, sin datos). Las del repo y del informe van tapadas. Durante las pruebas de saturación pudieron dispararse alarmas de 4xx o 5xx por correo: es esperado.
+- gitleaks: marcó como `generic-api-key` el inicio del valor CIFRADO de SecureStore que imprimía EVD-7-01 (`key_v1-qw_refresh: ... {"ct":"VV...`). Falso positivo (texto cifrado con Keystore de un emulador destruido). `sesion_ca07.py` ya no imprime ningún fragmento del valor, la copia del repo se corrigió y `.gitleaksignore` suma solo esas 2 entradas (commit de evidencias-ci y commit 4422646), con su motivo.
 - Borrados: ninguno. El usuario de prueba de Cognito queda activo (lo usan los flujos).
 - Siguiente paso: Daniel revisa y hace merge del PR #63, actualiza el índice en Word y presenta (14-nov y 28-nov).
 

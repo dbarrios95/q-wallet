@@ -235,8 +235,10 @@ def revisar_almacenamiento() -> list[str]:
         lineas.append("")
         lineas.append(f"{p}: entradas {', '.join(claves) if claves else '(vacío)'}")
         for nombre, valor in re.findall(r'name="([^"]+)"[^>]*>([^<]*)<', contenido):
-            muestra = valor[:24] + "..." if len(valor) > 24 else valor
-            lineas.append(f"   {nombre}: {len(valor)} caracteres, empieza con {muestra!r} (cifrado, no es JWT)"
+            # Ni un fragmento del valor en la evidencia: solo su tamaño y su forma (bloque 7: gitleaks
+            # marcó como posible llave el inicio del texto cifrado).
+            forma = "objeto con texto cifrado (ct)" if "ct&quot;" in valor or '"ct"' in valor else "otro formato"
+            lineas.append(f"   {nombre}: {len(valor)} caracteres, {forma}; cifrado, no es JWT"
                           if "eyJ" not in valor else f"   {nombre}: CONTIENE UN JWT EN CLARO")
     llaves = sh("ls /data/misc/keystore/persistent.sqlite 2>/dev/null && echo keystore2_presente")
     lineas.append("")

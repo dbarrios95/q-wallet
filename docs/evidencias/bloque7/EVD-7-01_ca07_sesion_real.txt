@@ -38,8 +38,8 @@ Usuario: usuario de prueba de Cognito con MFA TOTP obligatorio (correo de domini
    Archivos con la contraseña en claro: ninguno
    
    /data/data/gt.qwallet.app/shared_prefs/SecureStore.xml: entradas key_v1-qw_refresh, key_v1-qw_modo
-      key_v1-qw_refresh: 2703 caracteres, empieza con '{&quot;ct&quot;:&quot;VV...' (cifrado, no es JWT)
-      key_v1-qw_modo: 284 caracteres, empieza con '{&quot;ct&quot;:&quot;KO...' (cifrado, no es JWT)
+      key_v1-qw_refresh: 2703 caracteres, objeto con texto cifrado (ct); cifrado, no es JWT [fragmento quitado de esta copia]
+      key_v1-qw_modo: 284 caracteres, objeto con texto cifrado (ct); cifrado, no es JWT [fragmento quitado de esta copia]
    
    Llaves de Android Keystore: en keystore2 (fuera del alcance de la app y de la carpeta de datos)
    Tokens (eyJ...) en el registro del sistema (logcat): 0
