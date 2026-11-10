@@ -1,7 +1,7 @@
 # CTRL-11: imagen base oficial de Lambda (Node.js 24) fijada por digest, etapas
 # separadas y usuario sin privilegios. Se construye desde la carpeta services/:
 #   docker build -f services/svc-profile/Dockerfile services
-FROM public.ecr.aws/lambda/nodejs:24@sha256:8bc0d3a010f3503f4b028c132c1b589740442a48f389df2648a3d3b485ccfbd3 AS base
+FROM public.ecr.aws/lambda/nodejs:24@sha256:710c806b12813c522a7293199a32e9fbb766c664667dcdec90d3458342c40b3d AS base
 
 # Etapa de compilación: instala dependencias exactas del package-lock y empaqueta
 # el servicio en un solo archivo. Nada de esta etapa llega a la imagen final.
