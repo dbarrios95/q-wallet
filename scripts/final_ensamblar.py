@@ -3,6 +3,8 @@
 Uso (desde la raíz del repo):
     python scripts/bloque6_word.py
     python scripts/entrega1_estilos.py docs/entregas/Final_Seccion_6_Dictamen.docx
+    python scripts/bloque6_capturas.py
+    python scripts/entrega1_estilos.py docs/entregas/Final_Capturas.docx
     python scripts/final_ensamblar.py
     python scripts/entrega1_estilos.py docs/entregas/Informe_Final_QWallet.docx
     python scripts/entrega1_indice.py docs/entregas/Informe_Final_QWallet.docx
@@ -12,7 +14,8 @@ Qué hace:
    reescribe el resumen ejecutivo para todo el proyecto y quita su lista de referencias.
 2. Agrega las partes de los Word por bloque en el orden del esquema del enunciado (Opción A):
    3.1-3.3 (pentest), 3.4-3.5 (DevSecOps), 3.6 (pentest), 4.1-4.2 (Entrega 2), 4.3-4.4 (DevSecOps),
-   4.5 (Entrega 2), 4.6 (DevSecOps), 5 (operaciones) y 6 (dictamen).
+   4.5 (Entrega 2), 4.6 (DevSecOps), 5 (operaciones) y 6 (dictamen); las capturas de la app van al
+   final de 4.3 y el Anexo D al final de 6.5 (Final_Capturas.docx).
 3. Actualiza los textos que quedaron viejos al juntar las entregas (estado de REQ-01, 04 y 05,
    excepciones renovadas, alarma ajustada, frases de "este bloque").
 4. Renumera tablas y figuras por orden de aparición y corrige todas sus referencias en el texto.
@@ -43,6 +46,7 @@ F_PEN = E / "Final_Secciones_3-1_3-2_3-3_3-6_Pentest.docx"
 F_DEV = E / "Final_Secciones_3-4_3-5_4-3_4-4_4-6_DevSecOps.docx"
 F_OPS = E / "Final_Secciones_5-1_a_5-6_Operaciones.docx"
 F_D6 = E / "Final_Seccion_6_Dictamen.docx"
+F_CAP = E / "Final_Capturas.docx"
 SALIDA = Path(sys.argv[1]) if len(sys.argv) > 1 else E / "Informe_Final_QWallet.docx"
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 
@@ -113,6 +117,27 @@ def reemplazar(doc, viejo, nuevo, n=1):
             ts[0].set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
             for t in ts[1:]:
                 t.text = ""
+
+
+def estado_fila(doc, primera, nuevo):
+    """Cambia la última celda de la fila cuya primera celda empieza con `primera` (una sola fila)."""
+    filas = [tr for tr in doc.element.body.iter(qn("w:tr"))
+             if texto(tr.findall(qn("w:tc"))[0]).replace("‑", "-").startswith(primera)]
+    if len(filas) != 1:
+        raise SystemExit(f"Fila {primera!r}: se esperaba 1 y hay {len(filas)}")
+    tc = filas[0].findall(qn("w:tc"))[-1]
+    ts = list(tc.iter(qn("w:t")))
+    ts[0].text = nuevo.replace("-", "‑")
+    for t in ts[1:]:
+        t.text = ""
+
+
+# Tabla de hardening de la app (4.3): estado al cierre del proyecto
+ESTADOS_43 = [
+    ("Pinning de llaves", "Implementado y probado (MITM rechazado, HAL-13)"),
+    ("Detección de root", "Implementado y probado (sección 5.2)"),
+    ("Bloqueo de capturas", "Implementado y probado (FLAG_SECURE)"),
+]
 
 
 def parrafo_como(modelo, txt):
@@ -411,15 +436,18 @@ def main():
         ("DEV", parte(F_DEV, "3.4 ", "4.3 ")),
         ("PEN", parte(F_PEN, "3.6 ", None)),
         ("E2", parte(F_E2, "4. Mitigación", "4.5 ")),
-        ("DEV", parte(F_DEV, "4.3 ", "4.6 ")),
+        ("DEV", parte(F_DEV, "4.3 ", "4.4 ")),
+        ("CAP", parte(F_CAP, 0, "Anexo D")),
+        ("DEV", parte(F_DEV, "4.4 ", "4.6 ")),
         ("E2", parte(F_E2, "4.5 ", "Referencias de esta sección")),
         ("DEV", parte(F_DEV, "4.6 ", "Referencias de esta sección")),
         ("OPS", parte(F_OPS, 0, None)),
         ("D6", parte(F_D6, 0, None)),
+        ("CAP", parte(F_CAP, "Anexo D", None)),
     ]
     # título de la sección 5 (el Word del bloque 5 no lo traía)
-    ops = piezas[8][1]
-    h = copy.deepcopy(next(el for el in piezas[4][1].element.body if es_titulo(el, "4. Mitigación")))
+    ops = next(d for c, d in piezas if c == "OPS")
+    h = copy.deepcopy(next(el for c, d in piezas if c == "E2" for el in d.element.body if es_titulo(el, "4. Mitigación")))
     for t in h.iter(qn("w:t")):
         t.text = ""
     next(h.iter(qn("w:t"))).text = "5. Operaciones y monitoreo"
@@ -436,6 +464,9 @@ def main():
                     raise
     if pendientes:
         raise SystemExit("Ediciones sin aplicar: " + "; ".join(x[1][:60] for x in pendientes))
+    dev43 = next(d for c, d in piezas if c == "DEV" and any(es_titulo(el, "4.3 ") for el in d.element.body))
+    for primera, nuevo in ESTADOS_43:
+        estado_fila(dev43, primera, nuevo)
     for _, d in piezas:
         comp.append(d)
 

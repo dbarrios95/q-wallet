@@ -66,11 +66,13 @@
       "nota": "gitleaks y patrones sobre el APK de producción, MobSF."
     },
     "AME-09": {
-      "estado": "configuracion",
+      "estado": "prueba",
       "evidencias": [
-        "EVD-3-17"
+        "EVD-3-17",
+        "EVD-6-06",
+        "EVD-6-07"
       ],
-      "nota": "FLAG_SECURE en transfer, unlock y profile (revisión del código). En el emulador la app se bloquea por freeRASP antes de llegar a esas pantallas."
+      "nota": "FLAG_SECURE en transfer, unlock y profile. Probado el 10-nov-2026 en el emulador con la versión de desarrollo (freeRASP no bloquea en desarrollo): adb shell screencap de Transferir y Perfil sale en negro y dumpsys window muestra el flag SECURE en la ventana de la app (EVD-6-06, EVD-6-07)."
     },
     "AME-10": {
       "estado": "parcial",

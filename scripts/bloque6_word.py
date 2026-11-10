@@ -217,7 +217,7 @@ RES = _res.resumen(FILAS)
 S0, _, S2 = RES["suma"]
 assert (S0, S2) == (580, 208), RES["suma"]
 assert RES["verificado"]["Crítico"] == 0 and RES["verificado"]["Alto"] == 1
-assert dict(RES["estados"]) == {"aceptado": 1, "parcial": 4, "configuracion": 7, "prueba": 28, "eliminado": 1}
+assert dict(RES["estados"]) == {"aceptado": 1, "parcial": 4, "configuracion": 6, "prueba": 29, "eliminado": 1}
 
 
 def pxi(p, i):
@@ -301,8 +301,8 @@ parrafo(
     "Análisis de riesgos y activos. Partir de un inventario ISO/IEC 27001 y de diagramas de "
     "flujo de datos permitió que cada amenaza tuviera un activo, una frontera de confianza y "
     "una capa de defensa. Esa trazabilidad fue lo que después hizo posible medir el residual "
-    "con pruebas y no con supuestos: de las 41 amenazas, 28 se verificaron con un ataque real, "
-    "7 leyendo la configuración desplegada, 4 quedaron parciales, 1 se aceptó y 1 se eliminó "
+    "con pruebas y no con supuestos: de las 41 amenazas, 29 se verificaron con un ataque real, "
+    "6 leyendo la configuración desplegada, 4 quedaron parciales, 1 se aceptó y 1 se eliminó "
     "al cambiar la arquitectura (el SIEM local se reemplazó por CloudWatch)."
 )
 parrafo(
@@ -445,14 +445,15 @@ for negrita, texto in lecciones:
 titulo("6.5 Anexos", 2)
 parrafo(
     "Los anexos reúnen el índice de evidencias (Anexo A), la matriz de trazabilidad de las 41 "
-    "amenazas (Anexo B) y la ubicación del código y de los flujos que generan cada resultado "
-    "(Anexo C). Todo está en el repositorio público github.com/dbarrios95/q-wallet."
+    "amenazas (Anexo B), la ubicación del código y de los flujos que generan cada resultado "
+    "(Anexo C) y las capturas de pantalla que no aparecen en el cuerpo (Anexo D). Todo está en el repositorio público github.com/dbarrios95/q-wallet."
 )
 titulo("Anexo A. Índice de evidencias", 3)
 EVID = [
     ["EVD-1-01", "Arquitectura de seguridad con fronteras de confianza y controles", "Figura 1; docs/evidencias"],
-    ["EVD-1-03", "Cuenta de AWS: MFA, presupuesto de US$5 con alerta y plan gratuito", "docs/evidencias"],
-    ["EVD-1-04", "GitHub: protección de secretos, Dependabot y ruleset de main", "docs/evidencias"],
+    ["EVD-1-03", "Cuenta de AWS: MFA, presupuesto de US$5 con alerta y plan gratuito", "Figura 103; docs/evidencias"],
+    ["EVD-1-04", "GitHub: protección de secretos, Dependabot y ruleset de main", "Figura 104; docs/evidencias"],
+    ["EVD-1-06 y 1-07", "Push directo a main rechazado; gitleaks sobre el historial", "Figuras 104 y 105"],
     ["EVD-2-01 a 2-03", "Diagramas de flujo de datos de niveles 0, 1 y 2", "Figuras 2 a 4"],
     ["EVD-2-05 y 2-07", "Mapas de calor inherente y residual proyectado", "Figuras 5 y 6"],
     ["EVD-3-01", "Flujo DevSecOps con todas sus etapas", "Comentarios de PR; issue Evidencias DevSecOps"],
@@ -467,15 +468,17 @@ EVID = [
     ["EVD-3-14 y 3-15", "Pruebas por control y prueba de humo de las imágenes", "Comentarios de PR"],
     ["EVD-3-16 y 3-17", "Figura del flujo DevSecOps; app en release con minSdk 29", "Figura 8; docs/evidencias"],
     ["EVD-4-01 y 4-02", "Caja negra: Nmap y TLS; ZAP baseline", "Tabla 38; issue Evidencias Pentest"],
-    ["EVD-4-03 a 4-13", "Casos de abuso CA-01 a CA-13 y OWASP API Top 10", "Tablas 39, 40 y 45"],
+    ["EVD-4-03 a 4-13", "Casos de abuso CA-01 a CA-13 y OWASP API Top 10", "Tablas 39, 40 y 45; Figura 106"],
     ["EVD-4-14", "Perímetro del software", "Figura 9"],
     ["EVD-5-01 y 5-02", "Reglas del WAF y ataques bloqueados, con la regla que decidió", "Tablas 42 y 43"],
     ["EVD-5-03", "freeRASP: detección del emulador y pantalla de bloqueo", "Figura 10"],
     ["EVD-5-04", "Llave KMS propia y cifrado de las 8 tablas", "Issue Evidencias AWS"],
-    ["EVD-5-05 a 5-07", "SIEM en CloudWatch, reglas, alarmas, correos y tablero", "Tablas 46 a 49; Figura 12"],
+    ["EVD-5-05 a 5-07", "SIEM en CloudWatch, reglas, alarmas, correos y tablero", "Tablas 46 a 49; Figuras 12 y 107"],
     ["EVD-5-08", "Arquitectura del SIEM y re-test de cada hallazgo", "Figura 11; Tabla 50"],
     ["EVD-5-09", "Mapa de calor antes y después verificado", "Figura 13"],
     ["EVD-5-11", "Ofuscación y firma del APK (Hermes y R8)", "docs/evidencias/bloque5"],
+    ["EVD-6-01 a 6-05", "Pantallas principales de la app en el emulador", "Figura 101"],
+    ["EVD-6-06 y 6-07", "FLAG_SECURE: captura desde Android en negro y flag SECURE en dumpsys", "Figura 102"],
 ]
 tabla(
     "Índice de evidencias del proyecto",

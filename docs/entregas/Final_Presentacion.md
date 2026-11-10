@@ -12,11 +12,11 @@
 | 2 | Seis fases, un resultado por fase | Tabla 54 | ~60 s |
 | 3 | Fase 1: 28 activos, 41 amenazas, 18 críticos | 2.1 a 2.5 | ~55 s |
 | 4 | Fase 2: arquitectura Zero Trust (Figura 8) | 4.1, 4.2 | ~60 s |
-| 5 | Fase 3: el flujo detiene lo que no escribimos (Figura 9, HAL-06 y HAL-15) | 3.4, 3.5, 4.6 | ~60 s |
+| 5 | Fase 3: el flujo detiene lo que no escribimos (Figura 11, HAL-06 y HAL-15) | 3.4, 3.5, 4.6 | ~60 s |
 | 6 | Fase 4: pentest (caja negra, CA-01, 02, 06, 10, OWASP API 18/18) | 3.1 a 3.3 | ~60 s |
-| 7 | HAL-13: el pinning que no protegía (antes y después) y freeRASP (Figura 10) | 3.2, 5.2 | ~60 s |
-| 8 | Fase 6: WAF 9/9, SIEM 14 reglas, correo en ~6 min (Figura 12) | 5.1 a 5.4 | ~60 s |
-| 9 | Riesgo antes y después (Figura 13), RSK-11 aceptado | 5.6 | ~60 s |
+| 7 | HAL-13: el pinning que no protegía (antes y después) y freeRASP (Figura 12) | 3.2, 5.2 | ~60 s |
+| 8 | Fase 6: WAF 9/9, SIEM 14 reglas, correo en ~6 min (Figura 14) | 5.1 a 5.4 | ~60 s |
+| 9 | Riesgo antes y después (Figura 15), RSK-11 aceptado | 5.6 | ~60 s |
 | 10 | Dictamen con tres condiciones y lecciones | 6.1 a 6.4 | ~65 s |
 
 Total: ~9 min 50 s. Si hay que recortar, se acorta la diapositiva 3 y la 6 (decir solo los totales).
