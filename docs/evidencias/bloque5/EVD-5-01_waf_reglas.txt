@@ -1,0 +1,56 @@
+EVD-5-01 AWS WAF: reglas configuradas (CTRL-17)
+Fecha: 2026-11-01 01:20:13 UTC
+
+{
+    "accionPorDefecto": "Allow",
+    "capacidadUsadaWCU": 1102,
+    "reglas": [
+        {
+            "prioridad": 10,
+            "nombre": "reglas-comunes",
+            "grupoAdministrado": "AWSManagedRulesCommonRuleSet",
+            "limitePorIp": null,
+            "ventanaSeg": null,
+            "accion": "None"
+        },
+        {
+            "prioridad": 15,
+            "nombre": "inyeccion-sql",
+            "grupoAdministrado": "AWSManagedRulesSQLiRuleSet",
+            "limitePorIp": null,
+            "ventanaSeg": null,
+            "accion": "None"
+        },
+        {
+            "prioridad": 20,
+            "nombre": "entradas-maliciosas-conocidas",
+            "grupoAdministrado": "AWSManagedRulesKnownBadInputsRuleSet",
+            "limitePorIp": null,
+            "ventanaSeg": null,
+            "accion": "None"
+        },
+        {
+            "prioridad": 30,
+            "nombre": "limite-por-ip",
+            "grupoAdministrado": null,
+            "limitePorIp": 100,
+            "ventanaSeg": 300,
+            "accion": "Block"
+        }
+    ]
+}
+
+Asociado a la etapa v1 de API Gateway:
+   RESOURCEARNS	arn:aws:apigateway:us-east-1::/restapis/dk1m3avi8i/stages/v1
+
+Registro del WAF (destino y campos redactados):
+{
+    "destino": "arn:aws:...:************:log-group:aws-waf-logs-qwallet",
+    "redactado": [
+        {
+            "SingleHeader": {
+                "Name": "authorization"
+            }
+        }
+    ]
+}

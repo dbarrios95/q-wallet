@@ -35,7 +35,7 @@ Como no hay demo en vivo, toda afirmación técnica del informe necesita una evi
 | ☑ | EVD-3-04 | SCA: npm audit con compuerta + Trivy fs + SBOM (Dependency-Check y Snyk solo con llaves) |
 | ☑ | EVD-3-05 | Trivy sobre las 5 imágenes: 24 HIGH antes (HAL-05), 0 HIGH después |
 | ◐ | EVD-3-06 | Checkov sobre Terraform y Dockerfile (29-oct: 282 pasan, 0 fallan, 39 omitidas con motivo; resultado en el comentario del PR #22) |
-| ☐ | EVD-3-07 | MobSF: reporte del APK de release |
+| ☑ | EVD-3-07 | MobSF 4.5.3: 49/100; altos = certificado de depuración y CBC en librerías (`docs/evidencias/bloque5/`, flujo `movil.yml`) |
 | ☑ | EVD-3-08 | Diagrama de arquitectura de seguridad con el flujo de datos numerado (Figura 7). Script `scripts/entrega2_diagrama_flujo.py` |
 | ☑ | EVD-3-11 | Simulador de políticas IAM: matriz rol × tabla (lo genera `infra/scripts/verificar_aws.sh` en cada despliegue) |
 | ☑ | EVD-3-12 | Prueba de TLS: 1.3 aceptado, 1.2 rechazado, 401 sin token (igual, automático) |
@@ -51,16 +51,16 @@ Como no hay demo en vivo, toda afirmación técnica del informe necesita una evi
 
 | ✔ | EVD | Qué debe verse |
 |---|---|---|
-| ☐ | EVD-4-01 | Nmap / mapeo de superficie expuesta |
-| ☐ | EVD-4-02 | ZAP: escaneo de API con OpenAPI importado |
+| ☑ | EVD-4-01 | Nmap / mapeo de superficie expuesta (pentest.yml: solo 443, TLS 1.3, todo 401 sin token) |
+| ☑ | EVD-4-02 | ZAP baseline: 0 High, 0 Medium, 1 Low (HSTS en la raíz del host, HAL-09) |
 | ◐ | EVD-4-03 | CA-01 BOLA bloqueado (403/404) |
 | ◐ | EVD-4-04 | CA-02 fuerza bruta del PIN bloqueada |
 | ◐ | EVD-4-05 | CA-03 datos enmascarados + CA-04 mass assignment rechazado |
 | ◐ | EVD-4-06 | CA-05 paginación limitada |
 | ◐ | EVD-4-07 | CA-06 concurrencia: una sola transferencia aplicada |
-| ☐ | EVD-4-08 | CA-07 tokens no extraíbles + CA-08 MITM rechazado por pinning (dispositivo, bloque 5) |
+| ☑ | EVD-4-08 | CA-08 MITM con CA en el sistema rechazado por el pinning tras HAL-13 (antes/después); EVD-4-08b CA-07 almacenamiento; EVD-4-08c pines vs. cadena real |
 | ◐ | EVD-4-09 | CA-09 `/admin` rechazado para cliente |
-| ☐ | EVD-4-10 | CA-10 freeRASP detectando Frida/root (dispositivo, bloque 5) |
+| ☑ | EVD-4-10 | CA-10 Frida 17.22.0: freeRASP detectó hooks y root (emulador en Actions) |
 | ◐ | EVD-4-11 | CA-11 APK sin secretos (bloque 5) + CA-13 token alterado rechazado |
 | ◐ | EVD-4-12 | OWASP API Top 10 (2023): cobertura de los 10 riesgos contra los handlers reales (agregado del arnés de caja gris) |
 | ◐ | EVD-4-13 | Casos de abuso de servidor CA-01..CA-06, CA-09, CA-13: tabla de bloqueos (agregado del arnés de caja gris) |
@@ -71,12 +71,13 @@ Como no hay demo en vivo, toda afirmación técnica del informe necesita una evi
 
 | ✔ | EVD | Qué debe verse |
 |---|---|---|
-| ☐ | EVD-5-01 | AWS WAF: reglas configuradas |
-| ☐ | EVD-5-02 | WAF bloqueando un ataque (muestras de solicitudes) |
-| ☐ | EVD-5-03 | freeRASP detectando root/hook |
+| ☑ | EVD-5-01 | AWS WAF: 4 reglas (CRS, SQLi, Known Bad Inputs, límite por IP), 1 102 WCU |
+| ☑ | EVD-5-02 | WAF: 9/9 ataques con el código esperado y regla que decidió cada uno (EVD-5-02b) |
+| ☑ | EVD-5-03 | freeRASP en el arranque: emulador detectado y pantalla de bloqueo |
 | ☑ | EVD-5-04 | KMS CMK y DynamoDB cifrado (automático, `verificar_aws.sh`) |
-| ☐ | EVD-5-05 | Wazuh: ingesta de CloudTrail |
-| ☐ | EVD-5-06 | Wazuh: alerta por fuerza bruta / BOLA |
-| ☐ | EVD-5-07 | Dashboard de seguridad |
-| ☐ | EVD-5-08 | Re-test de cada HAL real (una por hallazgo) |
-| ☐ | EVD-5-09 | Heatmap residual ("después") verificado con pruebas; se compara con la proyección EVD-2-07 |
+| ☑ | EVD-5-05 | SIEM en CloudWatch (Wazuh pasó al roadmap): CloudTrail→CloudWatch, 14 reglas, 5 consultas, 9+1 alarmas, SNS confirmado |
+| ☑ | EVD-5-06 | Alertas: 06a reglas vs. muestras (14/14), 06b historial, 06c correlación, 06d correos reales, 06e diagnóstico |
+| ☑ | EVD-5-07 | Tablero `qwallet-seguridad` (gráficas generadas por API; casi vacías fuera de pruebas) |
+| ☑ | EVD-5-08 | Re-test de cada HAL en la Tabla 50 del Word del bloque 5; figura del SIEM `EVD-5-08_siem.png` |
+| ☑ | EVD-5-09 | Mapa de calor antes y después verificado: 580 → 208 (`scripts/bloque5_residual.py`) |
+| ☑ | EVD-5-11 | Ofuscación y firma del APK: Hermes bytecode, R8 renombró 20 836 de 22 027 clases |

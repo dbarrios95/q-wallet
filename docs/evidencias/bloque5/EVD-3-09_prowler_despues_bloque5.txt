@@ -1,0 +1,89 @@
+EVD-3-09 Prowler: evaluación de la arquitectura cloud (informe 3.6)
+Servicios revisados: apigateway, lambda, dynamodb, kms, cloudtrail, iam, s3, cognito, wafv2
+Comprobaciones totales: 255  |  PASS: 206  |  FAIL: 47
+
+Fallos por severidad:
+   critical       1
+   high           1
+   medium         27
+   low            18
+
+Controles con fallo (agrupados; recurso de ejemplo, el ARN y la cuenta van tapados):
+   [critical] iam_root_hardware_mfa_enabled  (x1, iam)
+        Root account has a hardware MFA device enabled
+        ej: arn:aws:iam::************:mfa (us-east-1)
+   [high    ] iam_role_cross_service_confused_deputy_prevention  (x1, iam)
+        IAM service role prevents cross-service confused deputy attack
+        ej: arn:aws:iam::************:role/qwallet-apigateway-logs (us-east-1)
+   [medium  ] dynamodb_table_protected_by_backup_plan  (x8, dynamodb)
+        DynamoDB table is protected by a backup plan
+        ej: arn:aws:dynamodb:us-east-1:************:table/qwallet-auditoria (us-east-1)
+   [medium  ] awslambda_function_no_dead_letter_queue  (x5, awslambda)
+        Lambda function has a Dead Letter Queue configured
+        ej: arn:aws:lambda:us-east-1:************:function:qwallet-svc-profile (us-east-1)
+   [medium  ] iam_role_access_not_stale_to_bedrock  (x2, iam)
+        Regular Bedrock access ensures IAM roles retain only actively used per
+        ej: arn:aws:iam::************:role/aws-service-role/support.amazonaws.com/AWSService (us-east-1)
+   [medium  ] s3_bucket_no_mfa_delete  (x2, s3)
+        S3 bucket has MFA Delete enabled
+        ej: arn:aws:s3:::qwallet-cloudtrail-************ (us-east-1)
+   [medium  ] s3_bucket_server_access_logging_enabled  (x2, s3)
+        S3 bucket has server access logging enabled
+        ej: arn:aws:s3:::qwallet-cloudtrail-************ (us-east-1)
+   [medium  ] apigateway_restapi_client_certificate_enabled  (x1, apigateway)
+        API Gateway REST API stage has client certificate enabled
+        ej: arn:aws:apigateway:us-east-1::/restapis/dk1m3avi8i/stages/v1 (us-east-1)
+   [medium  ] apigateway_restapi_logging_enabled  (x1, apigateway)
+        API Gateway REST API stage has logging enabled
+        ej: arn:aws:apigateway:us-east-1::/restapis/dk1m3avi8i/stages/v1 (us-east-1)
+   [medium  ] apigateway_restapi_public  (x1, apigateway)
+        API Gateway REST API endpoint is private
+        ej: arn:aws:apigateway:us-east-1::/restapis/dk1m3avi8i (us-east-1)
+   [medium  ] apigateway_restapi_waf_acl_attached  (x1, apigateway)
+        API Gateway stage has a WAF Web ACL attached
+        ej: arn:aws:apigateway:us-east-1::/restapis/dk1m3avi8i/stages/v1 (us-east-1)
+   [medium  ] cloudtrail_bucket_requires_mfa_delete  (x1, cloudtrail)
+        CloudTrail trail S3 bucket has MFA delete enabled
+        ej: arn:aws:cloudtrail:us-east-1:************:trail/qwallet-auditoria (us-east-1)
+   [medium  ] cloudtrail_logs_s3_bucket_access_logging_enabled  (x1, cloudtrail)
+        CloudTrail trail destination S3 bucket has access logging enabled
+        ej: arn:aws:cloudtrail:us-east-1:************:trail/qwallet-auditoria (us-east-1)
+   [medium  ] cognito_user_pool_mfa_enabled  (x1, cognito)
+        Amazon Cognito user pool requires Multi-Factor Authentication (MFA)
+        ej: arn:aws:cognito-idp:us-east-1:************:userpool/us-east-1_s4zdXtdva (us-east-1)
+   [medium  ] cognito_user_pool_self_registration_disabled  (x1, cognito)
+        Amazon Cognito user pool has self registration disabled
+        ej: arn:aws:cognito-idp:us-east-1:************:userpool/us-east-1_s4zdXtdva (us-east-1)
+   [low     ] awslambda_function_inside_vpc  (x5, awslambda)
+        Lambda function is deployed inside a VPC
+        ej: arn:aws:lambda:us-east-1:************:function:qwallet-svc-profile (us-east-1)
+   [low     ] s3_bucket_cross_region_replication  (x2, s3)
+        S3 bucket has cross-region replication configured to a bucket in a dif
+        ej: arn:aws:s3:::qwallet-cloudtrail-************ (us-east-1)
+   [low     ] s3_bucket_event_notifications_enabled  (x2, s3)
+        S3 bucket has event notifications enabled
+        ej: arn:aws:s3:::qwallet-cloudtrail-************ (us-east-1)
+   [low     ] s3_bucket_object_lock  (x2, s3)
+        S3 bucket has Object Lock enabled
+        ej: arn:aws:s3:::qwallet-cloudtrail-************ (us-east-1)
+   [low     ] cloudtrail_insights_exist  (x1, cloudtrail)
+        CloudTrail trail has Insights enabled
+        ej: arn:aws:cloudtrail:us-east-1:************:trail/qwallet-auditoria (us-east-1)
+   [low     ] cloudtrail_multi_region_enabled_logging_management_events  (x1, cloudtrail)
+        CloudTrail trail logs management events for read and write operations
+        ej: arn:aws:cloudtrail:us-east-1:************:trail (us-east-1)
+   [low     ] cloudtrail_s3_dataevents_read_enabled  (x1, cloudtrail)
+        CloudTrail trail records S3 object-level read events for all S3 bucket
+        ej: arn:aws:cloudtrail:us-east-1:************:trail (us-east-1)
+   [low     ] cloudtrail_s3_dataevents_write_enabled  (x1, cloudtrail)
+        CloudTrail trail records all S3 object-level API operations for all bu
+        ej: arn:aws:cloudtrail:us-east-1:************:trail (us-east-1)
+   [low     ] iam_check_saml_providers_sts  (x1, iam)
+        IAM SAML provider exists in the account
+        ej: arn:aws:iam::************:root (us-east-1)
+   [low     ] iam_support_role_created  (x1, iam)
+        At least one IAM role has the AWSSupportAccess managed policy attached
+        ej: arn:aws:iam::aws:policy/AWSSupportAccess (us-east-1)
+   [low     ] s3_bucket_lifecycle_enabled  (x1, s3)
+        S3 bucket has a lifecycle configuration enabled
+        ej: arn:aws:s3:::qwallet-tfstate-************ (us-east-1)

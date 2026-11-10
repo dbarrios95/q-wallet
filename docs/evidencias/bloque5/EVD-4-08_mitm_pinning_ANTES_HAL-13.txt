@@ -1,0 +1,33 @@
+EVD-4-08 CA-08 intercepción MITM contra la app (CTRL-08, pinning)
+Fecha: 2026-10-31 17:33:04 UTC
+Ataque: proxy mitmproxy en 10.0.2.2:8080 con su CA instalada como CA del SISTEMA (con root).
+CA del atacante en el almacén del sistema: /system/etc/security/cacerts/c8750f0d.0
+
+Control (curl confiando en la CA del atacante, sin pinning): HTTP 401
+   -> el proxy SÍ puede descifrar a un cliente sin pinning.
+
+Marcas de la app con el proxy activo:
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me estado=401 pinning=activo ms=1158
+   QWALLET_RASP amenaza=adbEnabled reaccion=registrar
+   QWALLET_RASP amenaza=passcode reaccion=registrar
+   QWALLET_RASP amenaza=privilegedAccess reaccion=bloquear
+   QWALLET_RASP amenaza=secureHardwareNotAvailable reaccion=registrar
+   QWALLET_RASP amenaza=simulator reaccion=bloquear
+   QWALLET_RASP amenaza=unofficialStore reaccion=registrar
+   QWALLET_RASP revision=terminada
+
+Solicitudes a la API que el proxy pudo leer en claro: 5 (1 es el control con curl)
+   [17:35:13.329][127.0.0.1:51774] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (98.95.19.42:443)
+   127.0.0.1:51774: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [17:35:13.506][127.0.0.1:51774] client disconnect
+   [17:35:13.507][127.0.0.1:51774] server disconnect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (98.95.19.42:443)
+   [17:35:17.257][127.0.0.1:51796] server connect dk1m3avi8i.execute-api.us-east-1.amazonaws.com:443 (98.95.19.42:443)
+   127.0.0.1:51796: GET https://dk1m3avi8i.execute-api.us-east-1.amazonaws.com/… HTTP/2.0
+   [17:35:39.324][127.0.0.1:52180] client disconnect
+   [17:35:39.394][127.0.0.1:52216] client disconnect
+
+Resultado: INTERCEPTADA. El proxy leyó la solicitud de la app: el pinning no se aplicó.
+Sin proxy, de nuevo:
+   QWALLET_API pinning=activo host=dk1m3avi8i.execute-api.us-east-1.amazonaws.com pines=4
+   QWALLET_API sonda=GET_/me estado=401 pinning=activo ms=516

@@ -1,0 +1,299 @@
+{
+  "_nota": "Resultados reales del bloque 5 que usa scripts/bloque5_word.py. Cada dato sale del archivo de evidencia indicado en esta misma carpeta (copias de la rama evidencias-ci y de los issues de evidencias).",
+  "waf": {
+    "wcu": "1 102",
+    "casos": [
+      [
+        "C00",
+        "Solicitud legítima sin token",
+        "401",
+        "401",
+        "Ninguna (pasa; Cognito rechaza)"
+      ],
+      [
+        "C01",
+        "Inyección SQL en parámetro",
+        "403",
+        "403",
+        "inyeccion-sql (SQLi)"
+      ],
+      [
+        "C02",
+        "Inyección SQL en cuerpo JSON",
+        "403",
+        "403",
+        "inyeccion-sql (SQLi)"
+      ],
+      [
+        "C03",
+        "XSS en parámetro",
+        "403",
+        "403",
+        "CRS: CrossSiteScripting_QUERYARGUMENTS"
+      ],
+      [
+        "C04",
+        "Lectura de archivos (path traversal)",
+        "403",
+        "403",
+        "CRS: GenericLFI_QUERYARGUMENTS"
+      ],
+      [
+        "C05",
+        "SSRF a metadatos de EC2",
+        "403",
+        "403",
+        "CRS: EC2MetaDataSSRF_QUERYARGUMENTS"
+      ],
+      [
+        "C06",
+        "Log4Shell en cabecera",
+        "403",
+        "403",
+        "Known Bad Inputs"
+      ],
+      [
+        "C07",
+        "Solicitud sin User-Agent",
+        "403",
+        "403",
+        "CRS: NoUserAgent_HEADER"
+      ],
+      [
+        "C08",
+        "Cuerpo de más de 8 KB",
+        "403",
+        "403",
+        "CRS: SizeRestrictions_BODY"
+      ],
+      [
+        "C09",
+        "40 solicitudes simultáneas",
+        "Algunas 429",
+        "40 × 401, 0 × 429",
+        "Ninguna (pasa)"
+      ],
+      [
+        "C10",
+        "Ráfaga contra el límite por IP",
+        "403 al pasar el umbral",
+        "403 en la solicitud 111",
+        "limite-por-ip"
+      ]
+    ],
+    "nota": "Prueba del 1 de noviembre de 2026 con el WAF encendido solo para ella (EVD-5-01, EVD-5-02). La regla que decidió cada caso sale de los registros del WAF (EVD-5-02b). Los nueve ataques de una sola solicitud (C00 a C08) dieron el código esperado. El límite por IP se evalúa con unos segundos de retraso, por eso el bloqueo llegó en la solicitud 111 y no en la 101.",
+    "conclusion": "El WAF bloqueó todos los ataques de la prueba y cada uno lo detuvo la regla prevista: inyección SQL el grupo de SQLi agregado en esta fase (HAL-07), XSS, lectura de archivos, SSRF, solicitudes sin User-Agent y cuerpos grandes el conjunto común, Log4Shell el grupo de entradas conocidas, y la ráfaga la regla de límite por IP. La solicitud legítima pasó. Un resultado no salió como esperábamos: con 40 solicitudes simultáneas el throttling de API Gateway (ráfaga de 20 y 10 por segundo) no devolvió ningún 429. Lo registramos como HAL-16 y lo reflejamos en el riesgo residual de RSK-11 (sección 5.6): con el WAF apagado, la protección de la API contra saturación no quedó demostrada."
+  },
+  "movil": {
+    "pines": "la cadena real pasa por Amazon Root CA 1, que está entre los cuatro pines de la app (EVD-4-08c)",
+    "r8": "20 836 de las 22 027 clases del código nativo",
+    "captura": "EVD-5-03_bloqueo_rasp.png",
+    "escenarios": [
+      [
+        "Arranque normal (EVD-5-03)",
+        "Ninguno: la app arranca en el emulador",
+        "freeRASP reportó emulador (simulator) y la app se bloqueó; además registró ADB activo, teléfono sin bloqueo y tienda no oficial, sin bloquear. La sonda GET /me respondió 401 con el pinning activo",
+        "EVD-5-03"
+      ],
+      [
+        "CA-10 instrumentación (EVD-4-10)",
+        "frida-server 17.22.0 como root y hook a getpid() dentro del proceso de la app",
+        "Detectado: freeRASP reportó hooks y privilegedAccess (root) y la app se bloqueó",
+        "EVD-4-10"
+      ],
+      [
+        "CA-08 intercepción (EVD-4-08)",
+        "Proxy mitmproxy con su CA instalada como CA del sistema (atacante con root)",
+        "Antes de HAL-13: el proxy leyó la solicitud de la app. Después: la app cortó la conexión (error=pinning); el proxy solo leyó la solicitud de control hecha sin pinning. Sin proxy, 401 normal",
+        "EVD-4-08"
+      ],
+      [
+        "CA-07 almacenamiento (EVD-4-08b)",
+        "Con root, lectura de /data/data de la app en busca de tokens",
+        "Sin tokens: esta versión no inicia sesión. Un archivo interno (files/tcb) contiene texto con forma de JWT que no se pudo decodificar [VERIFICAR origen]; allowBackup desactivado",
+        "EVD-4-08b"
+      ],
+      [
+        "CA-11 secretos y manifiesto (EVD-4-11)",
+        "gitleaks y búsqueda de patrones sobre el APK; lectura del manifiesto",
+        "0 secretos; allowBackup, debuggable y tráfico en claro desactivados; minSdk 29",
+        "EVD-4-11"
+      ]
+    ],
+    "nota": "Emulador Android 13 (API 33, Google APIs, imagen userdebug con root) en GitHub Actions, con el APK de producción (Hermes y R8). Las pruebas se repiten en cada cambio de la app (flujo movil.yml). La versión de la app no tiene inicio de sesión todavía (conexión mínima con la API, decisión del 31 de octubre), por eso CA-07 no pudo probarse con un token real."
+  },
+  "siem": {
+    "reglas": "las 14 reglas coincidieron con su muestra de ataque y ninguna con la normal",
+    "correlacion": "La correlación ya dio resultados útiles en la propia prueba. La consulta de llamadas negadas por rol mostró que el rol de solo lectura de Prowler recibió un acceso negado en GetUserPoolMfaConfig: por eso Prowler marcó el MFA de Cognito como no obligatorio, cuando en realidad está activo (HAL-10, falso positivo confirmado con dos fuentes). Y al cruzar el uso del usuario raíz con el nombre del evento vimos que las 139 llamadas eran ListManagedNotificationEvents, la consulta periódica de la consola web abierta con ese usuario, no un ataque (EVD-5-06c y EVD-5-06e). Al leer las fuentes también encontramos un defecto propio: el log de acceso de API Gateway estaba vacío pese a cientos de solicitudes, porque la confianza del rol de CloudWatch tenía una condición que API Gateway no cumple. Sin ese log, las tres reglas del perímetro no veían nada. Lo registramos como HAL-14, lo corregimos y lo verificamos el 10 de noviembre: tres solicitudes de prueba aparecieron en el log y la regla del perímetro las contó."
+  },
+  "alertas": {
+    "prueba": "Probamos las alertas de punta a punta. El flujo waf-siem.yml hizo seis llamadas a la API de AWS que IAM debía negar; CloudTrail las registró, la regla las contó (6 ≥ 5), la alarma pasó a ALARM y el correo llegó unos seis minutos después de la primera llamada. La Tabla 49 resume los disparos reales y la Figura 12 muestra uno de los correos.",
+    "disparos": [
+      [
+        "aws-no-autorizado",
+        "6 llamadas iam:ListUsers negadas, hechas a propósito por la prueba",
+        "ALARM (1-nov 01:24 UTC) y vuelta a OK",
+        "Recibido (EVD-5-06d)"
+      ],
+      [
+        "auditoria-y-llaves",
+        "Cambios del propio despliegue a CloudTrail y la CMK (31-oct) y borrado de la alarma del WAF al apagarlo (1-nov)",
+        "ALARM dos veces y vuelta a OK",
+        "Recibido (EVD-5-06d)"
+      ],
+      [
+        "uso-root",
+        "Consola web abierta con el usuario raíz (139 eventos)",
+        "ALARM (31-oct 20:56 UTC)",
+        "Enviado por SNS"
+      ],
+      [
+        "rafaga-401",
+        "No alcanzó el umbral: el log de acceso no se escribía (HAL-14); tras corregirlo la regla cuenta (8 eventos el 10-nov)",
+        "OK",
+        "—"
+      ],
+      [
+        "waf-bloqueos",
+        "10 bloqueos repartidos en una ventana mayor a 5 minutos",
+        "Sin disparo",
+        "—"
+      ]
+    ],
+    "nota": "Historial completo de estados y del envío a SNS en EVD-5-06b. La suscripción por correo está confirmada y el tema SNS está cifrado con la CMK (EVD-5-05). Ajuste pendiente: la alarma aws-no-autorizado también salta en los planes de los pull request porque el rol de solo lectura del plan no puede descifrar algunos valores; se excluirá ese rol igual que el de Prowler.",
+    "grafica": "EVD-5-06d_correo_alarma_recorte.png"
+  },
+  "hal": [
+    [
+      "HAL-01 a 05",
+      "SAST, SCA, contenedores, revisión",
+      "Fases anteriores (sección 3)",
+      "Corregidos; HAL-02 aceptado hasta el 28-nov",
+      "Cerrados"
+    ],
+    [
+      "HAL-06",
+      "npm audit (compuerta)",
+      "Avisos nuevos de node-forge rompieron main sin cambios de código",
+      "Versión 1.4.2 forzada con overrides",
+      "Cerrado"
+    ],
+    [
+      "HAL-07",
+      "Revisión del WAF",
+      "El WAF no tenía firmas de inyección SQL",
+      "Grupo AWSManagedRulesSQLiRuleSet",
+      "Cerrado (C01, C02)"
+    ],
+    [
+      "HAL-08",
+      "Prowler",
+      "Cuenta sin bloqueo público de S3 ni política de contraseñas; Cognito con 12 caracteres",
+      "Ajustes de cuenta y Cognito a 14",
+      "Cerrado"
+    ],
+    [
+      "HAL-09",
+      "ZAP",
+      "Sin HSTS en la raíz del host de AWS (fuera de la etapa v1)",
+      "Aceptado: lo genera AWS; se corrige con dominio propio",
+      "Aceptado"
+    ],
+    [
+      "HAL-10",
+      "Prowler",
+      "MFA de Cognito marcado como no obligatorio",
+      "Falso positivo: MFA ON leído con la API",
+      "Descartado"
+    ],
+    [
+      "HAL-11",
+      "Revisión de la app",
+      "freeRASP instalado pero nunca iniciado",
+      "Inicio con política de reacción",
+      "Cerrado"
+    ],
+    [
+      "HAL-12",
+      "aapt2, MobSF",
+      "Permisos de Android que la app no usa",
+      "blockedPermissions en app.json",
+      "Cerrado"
+    ],
+    [
+      "HAL-13",
+      "MITM en emulador",
+      "El pinning no protegía el fetch de Expo SDK 57",
+      "Cliente de API con XMLHttpRequest y regla Semgrep",
+      "Cerrado"
+    ],
+    [
+      "HAL-14",
+      "Lectura del SIEM",
+      "Log de acceso de API Gateway vacío",
+      "Confianza del rol sin condición",
+      "Cerrado"
+    ],
+    [
+      "HAL-15",
+      "Trivy (compuerta)",
+      "glibc y rpm con CVE HIGH nuevos en la imagen base",
+      "Digest nuevo y paquetes actualizados al construir",
+      "Cerrado"
+    ],
+    [
+      "HAL-16",
+      "Prueba del perímetro",
+      "Throttling de API Gateway sin 429 con 40 solicitudes simultáneas",
+      "Revisar con una prueba más larga; WAF en producción",
+      "Abierto"
+    ]
+  ],
+  "prowler": {
+    "texto": "Prowler, que corre después de cada despliegue, sirve para medir la mejora de la cuenta. Antes de esta fase reportó 182 verificaciones que pasan y 60 que fallan (1 crítica, 1 alta, 34 medias, 24 bajas); después, 206 que pasan y 47 que fallan (1 crítica, 1 alta, 27 medias, 18 bajas; EVD-3-09). Desaparecieron el bloqueo público de S3 a nivel de cuenta (la alta), las siete de la política de contraseñas de IAM, la contraseña de Cognito, la falta de CloudTrail en CloudWatch y la falta de registro de las invocaciones de Lambda. Apareció una alta nueva, y la explicamos en la Tabla 51: es el costo de la corrección de HAL-14.",
+    "filas": [
+      [
+        "Bloqueo público de S3 de la cuenta; política de contraseñas de IAM; contraseña de Cognito de 14",
+        "Corregido",
+        "Ajustes gratuitos (HAL-08)"
+      ],
+      [
+        "CloudTrail sin CloudWatch; invocaciones de Lambda sin registro",
+        "Corregido",
+        "Es el SIEM de esta fase"
+      ],
+      [
+        "MFA de hardware en la cuenta raíz (crítica)",
+        "Aceptado",
+        "La cuenta raíz tiene MFA (EVD-1-03b); una llave física tiene costo y no cambia el riesgo de un proyecto académico"
+      ],
+      [
+        "Confused deputy en el rol de logs de API Gateway (alta, nueva)",
+        "Aceptado",
+        "La condición que pide Prowler dejó el log de acceso vacío (HAL-14); el rol solo escribe logs y tiene límite de permisos"
+      ],
+      [
+        "MFA de Cognito no obligatorio (media)",
+        "Falso positivo",
+        "El rol de Prowler no puede leer esa configuración (HAL-10)"
+      ],
+      [
+        "WAF no asociado; API pública; sin certificado de cliente",
+        "Aceptado",
+        "WAF solo para pruebas por costo (RSK-11); la API es pública por diseño y la protegen Cognito y TLS 1.3"
+      ],
+      [
+        "Backup plans de DynamoDB; DLQ de Lambda; Lambda fuera de VPC; MFA Delete y réplica de S3",
+        "Aceptado",
+        "PITR ya activo; invocación síncrona; VPC exigiría NAT Gateway (prohibido por costo); una sola región (RSK-01)"
+      ]
+    ]
+  },
+  "mobsf": {
+    "texto": "MobSF 4.5.3 puntuó el APK de producción con 49 de 100 (EVD-3-07). Revisamos sus tres hallazgos altos. Dos son del certificado de firma: el APK de prueba se firma con el certificado de depuración de la plantilla de Expo; en una publicación real lo firmaría Google Play y freeRASP llevaría esa huella. El tercero (cifrado en modo CBC) y la mayoría de los avisos medios (MD5, SHA-1, WebView, archivos temporales) están en librerías de terceros incluidas en el APK, no en el código de Q-Wallet, que no usa cifrado propio ni WebView. Los registramos como observaciones de dependencias; la búsqueda de secretos con gitleaks sobre el mismo APK no encontró ninguno."
+  },
+  "tratamiento": {
+    "altos": "Una sola amenaza quedó en nivel Alto: RSK-11 (saturación de la API y consumo de costo), con P4×I3 = 12. Es una decisión consciente y no un descuido: el WAF, que la bajaría a Medio, cuesta casi el doble del presupuesto mensual, y la prueba no logró demostrar el throttling de API Gateway (HAL-16). Daniel, como dueño del riesgo, la aceptó de forma temporal el 31 de octubre con un plan: encender el WAF de forma permanente si Q-Wallet pasa a producción. Las demás amenazas que se verificaron solo en parte (RSK-02, RSK-03 y RSK-10) quedaron en Medio.",
+    "cierre": "Con esto cerramos el ciclo de la Fase 6: los controles de operación están desplegados y probados contra ataques reales, el SIEM detecta y avisa, cada hallazgo nuevo se registró y corrigió por el mismo proceso que en las fases anteriores, y cada riesgo tiene una decisión formal con su evidencia. El riesgo total bajó de 580 a 208 puntos, sin amenazas en nivel Crítico. Los pendientes (HAL-16, el inicio de sesión real en la app y el SIEM con Wazuh) pasan al roadmap de la sección 6.3."
+  }
+}

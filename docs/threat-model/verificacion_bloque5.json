@@ -83,9 +83,11 @@
     "AME-11": {
       "estado": "parcial",
       "evidencias": [
-        "EVD-5-02"
+        "EVD-5-02",
+        "EVD-5-02b",
+        "EVD-5-06e"
       ],
-      "nota": "El throttling de API Gateway (429) y el límite por IP del WAF funcionan en la prueba, pero el WAF solo se enciende para pruebas por presupuesto: en operación normal queda solo el throttling. Decisión de Daniel (31-oct-2026): el WAF sigue solo para pruebas por presupuesto; el residual Alto se acepta de forma temporal, con el plan de encenderlo de forma permanente si la app pasa a producción."
+      "nota": "El límite por IP del WAF bloqueó la ráfaga en la solicitud 111 (EVD-5-02), pero el WAF solo se enciende para pruebas por presupuesto y con 40 solicitudes simultáneas el throttling de API Gateway no devolvió ningún 429. Decisión de Daniel (31-oct-2026): residual Alto aceptado de forma temporal, con el plan de encender el WAF de forma permanente si la app pasa a producción."
     },
     "AME-12": {
       "estado": "prueba",

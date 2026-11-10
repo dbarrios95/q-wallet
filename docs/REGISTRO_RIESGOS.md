@@ -80,19 +80,19 @@ Las escalas están en `CONTEXTO.md` sección 6. No se cambian.
 ### D.1 Verificación de controles (casos de abuso)
 | Caso | Abuso intentado | CTRL | Herramienta | Resultado esperado | Resultado obtenido | EVD |
 |---|---|---|---|---|---|---|
-| CA-01 | Leer movimientos de una cuenta ajena | CTRL-01 | Burp | 403/404 | | |
-| CA-02 | Fuerza bruta del PIN | CTRL-02 | Burp Intruder | Bloqueo tras 5 intentos | | |
-| CA-03 | Enumerar usuarios por teléfono | CTRL-03/05 | Postman | Datos enmascarados + 429 | | |
-| CA-04 | `PATCH /me` con `role=admin` | CTRL-04 | Burp | 400 | | |
-| CA-05 | `?limit=100000` | CTRL-05 | Postman | 400 o tope de 50 | | |
-| CA-06 | 20 transferencias concurrentes con la misma clave | CTRL-06 | Script / Burp Turbo Intruder | Una sola aplicada | | |
-| CA-07 | Extraer tokens del dispositivo | CTRL-07 | objection | No legibles | | |
-| CA-08 | MITM con certificado de Burp | CTRL-08 | Burp + emulador | Conexión rechazada | | |
-| CA-09 | Acceder a `/admin/*` como cliente | CTRL-14 | Burp | 403 | | |
-| CA-10 | Hooking / root | CTRL-15 | Frida | freeRASP detecta y reacciona | | |
-| CA-11 | Buscar secretos en el APK | CTRL-16 | MobSF / apktool | Ninguno | | |
-| CA-12 | SQLi/XSS/payloads OWASP | CTRL-17 | ZAP | WAF 403 | | |
-| CA-13 | Login sin MFA / token alterado | CTRL-18 | Burp | 401 | | |
+| CA-01 | Leer movimientos de una cuenta ajena | CTRL-01 | Burp | 403/404 | Bloqueado (404/403) | EVD-4-03 |
+| CA-02 | Fuerza bruta del PIN | CTRL-02 | Burp Intruder | Bloqueo tras 5 intentos | Bloqueado tras 5 intentos (423) | EVD-4-04 |
+| CA-03 | Enumerar usuarios por teléfono | CTRL-03/05 | Postman | Datos enmascarados + 429 | Datos enmascarados | EVD-4-05 |
+| CA-04 | `PATCH /me` con `role=admin` | CTRL-04 | Burp | 400 | Rechazado (400) | EVD-4-05 |
+| CA-05 | `?limit=100000` | CTRL-05 | Postman | 400 o tope de 50 | Tope de 50 | EVD-4-06 |
+| CA-06 | 20 transferencias concurrentes con la misma clave | CTRL-06 | Script / Burp Turbo Intruder | Una sola aplicada | Una sola transferencia aplicada | EVD-4-07 |
+| CA-07 | Extraer tokens del dispositivo | CTRL-07 | objection | No legibles | Sin tokens en el dispositivo (la app aún no inicia sesión) | EVD-4-08b |
+| CA-08 | MITM con certificado de Burp | CTRL-08 | Burp + emulador | Conexión rechazada | Conexión rechazada por el pinning (tras HAL-13) | EVD-4-08 |
+| CA-09 | Acceder a `/admin/*` como cliente | CTRL-14 | Burp | 403 | Rechazado (403) | EVD-4-09 |
+| CA-10 | Hooking / root | CTRL-15 | Frida | freeRASP detecta y reacciona | freeRASP detectó hooks y root; app bloqueada | EVD-4-10 |
+| CA-11 | Buscar secretos en el APK | CTRL-16 | MobSF / apktool | Ninguno | 0 secretos (gitleaks y patrones) | EVD-4-11 |
+| CA-12 | SQLi/XSS/payloads OWASP | CTRL-17 | ZAP | WAF 403 | WAF 403 en SQLi, XSS, LFI, SSRF, Log4Shell | EVD-5-02 |
+| CA-13 | Login sin MFA / token alterado | CTRL-18 | Burp | 401 | Token alterado rechazado (401) | EVD-4-13 |
 
 ### D.2 Hallazgos reales
 | HAL | Prueba (negra/gris/blanca/SAST/SCA/IaC) | Herramienta | Endpoint/archivo | Severidad | EVD hallazgo | Corrección (commit) | EVD re-test | Estado |
@@ -110,3 +110,6 @@ Las escalas están en `CONTEXTO.md` sección 6. No se cambian.
 | HAL-11 | Caja blanca (bloque 5) | Revisión + compilación | freeRASP instalado pero nunca iniciado; al iniciarlo el empaquetado fallaba por la dependencia `buffer` | Alta | Compilación del flujo movil.yml | Inicio de freeRASP con política de reacción + `buffer` 6.0.3 (PR #47) | EVD-5-03, EVD-4-10 | Cerrado |
 | HAL-12 | Estático del APK | aapt2 / MobSF | Permisos que la app no usa: almacenamiento externo, ventana superpuesta, imágenes, arranque del sistema | Media | EVD-4-11 (antes) | `android.blockedPermissions` en app.json (PR #47) | EVD-4-11 (después) | Cerrado |
 | HAL-13 | Caja gris en emulador | mitmproxy con CA en el sistema | El pinning no protegía la conexión: el proxy leyó la solicitud de la app a la API. Causa: en Expo SDK 57 el fetch global es expo/fetch, que no pasa por el CertificatePinner de react-native-ssl-public-key-pinning | Alta | EVD-4-08 (antes) | La app llama a la API solo por `llamarApi()` (XMLHttpRequest de React Native, con pinning) y la regla Semgrep `qwallet-fetch-sin-pinning` prohíbe fetch en la app (PR #47) | EVD-4-08 (después: cliente bloqueado con error=pinning) | Cerrado |
+| HAL-14 | Lectura del SIEM (bloque 5) | Logs Insights + diagnóstico | Log de acceso de API Gateway `/aws/apigateway/qwallet-api` vacío (0 bytes) pese a cientos de solicitudes: la confianza del rol de CloudWatch de la cuenta de API Gateway tenía la condición `aws:SourceAccount` | Media | EVD-5-06e (1-nov) | Confianza sin condición (PR #52). Efecto: Prowler marca `iam_role_cross_service_confused_deputy_prevention` (alta), aceptado | EVD-5-06e (10-nov: 3 solicitudes en el log; `api_no_autenticado` = 8) | Cerrado |
+| HAL-15 | Contenedores | Trivy 0.75.0 (compuerta) | Imagen base de Lambda con glibc (CVE-2026-86805) y rpm (3 CVE) HIGH nuevos; detuvo el despliegue del 10-nov sin cambios de código | Alta | Infra #72 y PR #58 | Digest del 10-nov + `dnf upgrade --releasever=latest` en la imagen final (PR #58) | EVD-3-05 (0 HIGH) y EVD-3-15 (5 Lambdas 401) | Cerrado |
+| HAL-16 | Prueba del perímetro | curl (40 simultáneas) | El throttling de la etapa v1 (ráfaga 20, 10/s) no devolvió ningún 429 con 40 solicitudes simultáneas | Baja | EVD-5-02 (C09) | Revisar con una prueba más larga; WAF permanente si pasa a producción (RSK-11) | — | Abierto |
