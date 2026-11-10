@@ -5,8 +5,10 @@ ventana (Playwright). Lo usa la prueba de saturación de HAL-16 para medir el th
 solicitudes autenticadas.
 
 Variables: QWALLET_PRUEBA_CORREO, QWALLET_PRUEBA_CLAVE, QWALLET_PRUEBA_TOTP (secretos de GitHub).
-Uso: python3 token_prueba.py <host-cognito> <client-id> <archivo-de-salida>
-Escribe el access token SOLO en el archivo indicado (fuera de la carpeta de evidencias).
+Uso: python3 token_prueba.py <host-cognito> <client-id> <archivo-de-salida> [carpeta-diagnóstico]
+Escribe el access token SOLO en el archivo indicado (fuera de la carpeta de evidencias). En la
+carpeta de diagnóstico deja qué vio en cada paso (campos visibles, ruta de la página y una
+captura), sin la clave, la semilla ni tokens.
 """
 from __future__ import annotations
 
@@ -37,6 +39,8 @@ def totp(semilla: str) -> str:
 
 def main() -> int:
     host, client_id, salida = sys.argv[1], sys.argv[2], sys.argv[3]
+    diag_dir = sys.argv[4] if len(sys.argv) > 4 else ""
+    diag: list[str] = []
     correo, clave, semilla = (os.environ[k] for k in ("QWALLET_PRUEBA_CORREO", "QWALLET_PRUEBA_CLAVE", "QWALLET_PRUEBA_TOTP"))
     verificador = secrets.token_urlsafe(64)
     reto = base64.urlsafe_b64encode(hashlib.sha256(verificador.encode()).digest()).rstrip(b"=").decode()
@@ -62,8 +66,16 @@ def main() -> int:
         pag.goto(url, wait_until="networkidle")
         hecho = set()
         fin = time.time() + 120
+        paso = 0
         while not codigo and time.time() < fin:
             visibles = lambda sel: [e for e in pag.query_selector_all(sel) if e.is_visible()]  # noqa: E731
+            paso += 1
+            campos = [f"{e.get_attribute('type')}/{e.get_attribute('name')}/{e.get_attribute('autocomplete')}"
+                      for e in visibles("input")]
+            botones = [(e.inner_text() or "").strip()[:30] for e in visibles("button")]
+            diag.append(f"paso {paso}: {urllib.parse.urlparse(pag.url).path} campos={campos} botones={botones} hecho={sorted(hecho)}")
+            if diag_dir and paso <= 6:
+                pag.screenshot(path=f"{diag_dir}/EVD-7-05b_token_paso{paso}.png")
             clave_in = visibles("input[type=password]")
             usuario_in = visibles("input[type=email], input[name=username], input[autocomplete=username]")
             codigo_in = visibles("input[autocomplete=one-time-code], input[name*=code i], input[inputmode=numeric]")
@@ -88,8 +100,14 @@ def main() -> int:
             pag.wait_for_timeout(3000)
         nav.close()
 
+    texto_diag = "EVD-7-05b diagnóstico del login automático (sin secretos)\n" + "\n".join(diag) + "\n"
+    if diag_dir:
+        with open(f"{diag_dir}/EVD-7-05b_token_diagnostico.txt", "w", encoding="utf-8") as f:
+            f.write(texto_diag)
     if not codigo.get("code"):
         print("No se obtuvo el código de autorización.")
+        for linea in diag[-6:]:
+            print(f"::warning title=token_prueba::{linea}")
         return 1
     cuerpo = urllib.parse.urlencode({
         "grant_type": "authorization_code", "client_id": client_id, "code": codigo["code"],

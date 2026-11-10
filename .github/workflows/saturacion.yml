@@ -47,7 +47,8 @@ jobs:
           python3 -m playwright install --with-deps chromium > /dev/null
           cognito=$(grep -o '"[a-z0-9-]*\.auth\.[a-z0-9-]*\.amazoncognito\.com"' mobile/src/seguridad/config.ts | tr -d '"')
           cliente=$(grep -o 'EXPO_PUBLIC_COGNITO_CLIENT_ID ?? "[a-z0-9]*"' mobile/src/seguridad/config.ts | grep -o '"[a-z0-9]*"' | tr -d '"')
-          python3 infra/pruebas/token_prueba.py "$cognito" "$cliente" /tmp/token_prueba
+          mkdir -p evidencias
+          python3 infra/pruebas/token_prueba.py "$cognito" "$cliente" /tmp/token_prueba evidencias
           echo "::add-mask::$(cat /tmp/token_prueba)"
 
       - name: Prueba de saturación
