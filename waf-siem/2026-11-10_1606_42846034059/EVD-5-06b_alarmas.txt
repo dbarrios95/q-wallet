@@ -1,0 +1,19 @@
+EVD-5-06b Alarmas de seguridad: estado y disparos reales (CTRL-20)
+Fecha: 2026-11-10 16:04:20 UTC
+
+Estado actual:
+   qwallet-acceso-prohibido	OK	2026-10-31T20:54:05.650000+00:00
+   qwallet-auditoria-y-llaves	OK	2026-11-01T01:38:16.643000+00:00
+   qwallet-aws-no-autorizado	OK	2026-11-10T15:34:16.710000+00:00
+   qwallet-consola-sin-mfa	OK	2026-10-31T20:53:38.884000+00:00
+   qwallet-error-no-controlado	OK	2026-10-31T20:54:25.922000+00:00
+   qwallet-pin-bloqueado	OK	2026-10-31T20:53:30.304000+00:00
+   qwallet-rafaga-401	OK	2026-10-31T20:54:44.853000+00:00
+   qwallet-throttling	OK	2026-10-31T20:54:12.145000+00:00
+   qwallet-uso-root	OK	2026-11-01T04:16:20.171000+00:00
+
+Historial de las últimas 2 horas (cambios de estado y envío del aviso a SNS):
+   2026-11-10T15:23:16.711000+00:00	qwallet-aws-no-autorizado	StateUpdate	Alarm updated from OK to ALARM
+   2026-11-10T15:23:16.786000+00:00	qwallet-aws-no-autorizado	Action	Successfully executed action [tema SNS qwallet-alertas]
+   2026-11-10T15:34:16.710000+00:00	qwallet-aws-no-autorizado	StateUpdate	Alarm updated from ALARM to OK
+   2026-11-10T15:34:16.777000+00:00	qwallet-aws-no-autorizado	Action	Successfully executed action [tema SNS qwallet-alertas]

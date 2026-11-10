@@ -1,0 +1,8 @@
+EVD-5-02b Logs del WAF: regla que decidió cada caso (CTRL-17)
+Fecha: 2026-11-10 16:03:55 UTC
+Fuente: grupo aws-waf-logs-qwallet (la cabecera Authorization se redacta).
+
+   (sin resultados)
+
+Reglas administradas: sub-regla exacta que coincidió en los bloqueos:
+   (sin resultados)
