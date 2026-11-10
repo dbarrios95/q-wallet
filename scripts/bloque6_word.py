@@ -6,7 +6,7 @@ Uso:
 
 Mismo formato que las secciones anteriores (utilidades copiadas de bloque5_word.py). Las cifras
 salen de scripts/bloque5_residual.py, de docs/REGISTRO_RIESGOS.md y de las secciones 1 a 5;
-el script se detiene si el residual verificado no es el del bloque 5 (580 -> 208).
+el script se detiene si el residual verificado no es el del bloque 7 (580 -> 202).
 Las referencias (6.6) se arman al ensamblar el informe (scripts/final_ensamblar.py).
 Numeración: las tablas de la sección 6 empiezan en la 54 (la sección 5 termina en la 53); las
 referencias a tablas de las secciones 3 y 4 usan la numeración de los Word por bloque y las
@@ -215,9 +215,9 @@ import bloque5_residual as _res  # noqa: E402
 FILAS = _res.cargar()
 RES = _res.resumen(FILAS)
 S0, _, S2 = RES["suma"]
-assert (S0, S2) == (580, 208), RES["suma"]
+assert (S0, S2) == (580, 202), RES["suma"]
 assert RES["verificado"]["Crítico"] == 0 and RES["verificado"]["Alto"] == 1
-assert dict(RES["estados"]) == {"aceptado": 1, "parcial": 4, "configuracion": 6, "prueba": 29, "eliminado": 1}
+assert dict(RES["estados"]) == {"aceptado": 1, "parcial": 2, "configuracion": 6, "prueba": 31, "eliminado": 1}
 
 
 def pxi(p, i):
@@ -238,27 +238,30 @@ titulo("6.1 Conclusiones", 2)
 titulo("6.1.1 Dictamen", 3)
 parrafo(
     "Con base en las pruebas de las secciones 3 a 5, dictaminamos que Q-Wallet, en su versión 1 "
-    "desplegada en AWS con dinero simulado, tiene un riesgo residual aceptable. Las 41 amenazas "
+    "desplegada en AWS, tiene un riesgo residual aceptable. Las 41 amenazas "
     "del modelo STRIDE pasaron de una suma de riesgo inherente de 580 puntos a un residual "
-    "verificado de 208, una reducción del 64 %. No queda ninguna amenaza en nivel Crítico, que al "
+    "verificado de 202, una reducción del 65 %. No queda ninguna amenaza en nivel Crítico, que al "
     "inicio eran 18, y queda una sola en nivel Alto, RSK-11 (saturación de la API y consumo de "
     "costo), aceptada de forma temporal y formal por el dueño del riesgo con un plan de acción "
     "(sección 5.6)."
 )
 parrafo(
     "El dictamen es favorable para el alcance evaluado y tiene tres condiciones antes de "
-    "manejar dinero real: encender el WAF de forma permanente, que baja RSK-11 a Medio; "
-    "terminar el inicio de sesión de la app con Cognito y repetir el caso de abuso CA-07 con un "
-    "token real; y subir la app a Expo SDK 58 antes del 31 de enero de 2027, fecha en que vencen "
-    "las dos excepciones de dependencias que siguen abiertas (HAL-02 y la parte de HAL-03 que "
-    "corresponde a zod). Ninguna de las tres exige rediseñar la arquitectura: las tres están "
-    "en el roadmap de la sección 6.3."
+    "pasar a producción: encender el WAF de forma permanente, que baja RSK-11 a Medio; "
+    "ajustar la capacidad de la API para que una ráfaga de clientes autenticados reciba 429 y no "
+    "500 (HAL-17), subiendo el límite de ejecuciones simultáneas de Lambda y dejando la ráfaga de "
+    "API Gateway por debajo de él; y subir la app a Expo SDK 58 antes del 31 de enero de 2027, "
+    "fecha en que vencen las dos excepciones de dependencias que siguen abiertas (HAL-02 y la "
+    "parte de HAL-03 que corresponde a zod). Ninguna de las tres exige rediseñar la "
+    "arquitectura: las tres están en el roadmap de la sección 6.3. La condición que tenía la "
+    "versión anterior de este dictamen, terminar el inicio de sesión real y repetir CA-07 con un "
+    "token, quedó cumplida (Tabla 45)."
 )
 titulo("6.1.2 Cumplimiento de los objetivos", 3)
 parrafo(
     "La Tabla 54 compara la meta de cada objetivo específico (Tabla 2) con el resultado "
     "obtenido y la evidencia que lo respalda. Cumplimos cuatro objetivos por completo y uno "
-    "(OE3) en 11 de sus 13 casos; explicamos la diferencia debajo de la tabla."
+    "(OE3) en 12 de sus 13 casos; explicamos la diferencia debajo de la tabla."
 )
 tabla(
     "Cumplimiento de los objetivos específicos",
@@ -271,10 +274,10 @@ tabla(
          "Arquitectura desplegada con Terraform por OIDC; Checkov 282 pasan y 0 fallan; las compuertas detuvieron cambios reales (HAL-06, HAL-15); 2 avisos altos aceptados con motivo y fecha",
          "Tablas 29, 30, 31, 32, 33 y 37; EVD-3-01 a 3-06", "Cumplido"],
         ["OE3", "13 de 13 casos de abuso con evidencia de bloqueo",
-         "11 de 13 bloqueados con evidencia; CA-03 a medias (datos enmascarados, sin 429); CA-07 sin token que robar (la app aún no inicia sesión). Además, 18 de 18 pruebas OWASP API y 9 de 9 ataques al WAF bloqueados",
-         "Tablas 39, 40, 43 y 45; EVD-4-03 a 4-13, EVD-5-02", "Parcial (85 %)"],
+         "12 de 13 bloqueados con evidencia, incluido CA-07 con un token real; CA-03 a medias (datos enmascarados; el 429 se demostró en GET /me y no en la búsqueda por teléfono). Además, 18 de 18 pruebas OWASP API y 9 de 9 ataques al WAF bloqueados",
+         "Tablas 39, 40, 43 y 45; EVD-4-03 a 4-13, EVD-5-02, EVD-7-01 y 7-05", "Parcial (92 %)"],
         ["OE4", "0 críticos; altos solo con aceptación justificada; 100 % de hallazgos con plan",
-         "0 críticos y 1 alto aceptado (RSK-11); 16 de 16 hallazgos con decisión: 12 cerrados, 2 aceptados, 1 descartado y 1 abierto con plan",
+         "0 críticos y 1 alto aceptado (RSK-11); 17 de 17 hallazgos con decisión: 13 cerrados, 2 aceptados, 1 descartado y 1 abierto con plan (HAL-17)",
          "Tablas 50 a 53; Figura 13; EVD-5-09", "Cumplido"],
         ["OE5", "100 % de amenazas con trazabilidad; informe en formato UMG y APA 7",
          "Trazabilidad de las 41 amenazas hasta su evidencia y su residual (Anexo B); este informe",
@@ -287,22 +290,23 @@ tabla(
     ),
 )
 parrafo(
-    "La meta de OE3 no se cumplió completa por dos casos, y en ninguno de los dos el control "
-    "falló ante el ataque. En CA-03 (enumerar usuarios por teléfono) los datos salieron "
-    "enmascarados, pero el límite de solicitudes de API Gateway no devolvió el código 429 que "
-    "esperábamos; es el mismo comportamiento de HAL-16 y por eso RSK-11 quedó en Alto. En CA-07 "
-    "(extraer tokens del dispositivo) no había nada que extraer: la versión probada no inicia "
-    "sesión, una decisión de alcance del 31 de octubre para conectar la app con la API real sin "
-    "construir todo el flujo de Cognito. Los dos casos quedan como pendientes concretos del "
-    "roadmap y no como controles dados por buenos."
+    "La meta de OE3 no se cumplió completa por un caso, y en él el control no falló ante el "
+    "ataque. En CA-03 (enumerar usuarios por teléfono) los datos salieron enmascarados, pero en "
+    "la prueba de la Fase 4 el límite de solicitudes no devolvió el código 429. Al repetir la "
+    "prueba de saturación con un token real (EVD-7-05) entendimos por qué: API Gateway solo cuenta "
+    "para el límite las solicitudes que pasan el authorizer, y con un token el límite sí respondió "
+    "429. Esa prueba usó GET /me y no la búsqueda por teléfono, que tiene la misma configuración; "
+    "repetir CA-03 sobre esa ruta es parte de R4. CA-07 (extraer tokens del dispositivo), que en "
+    "la versión anterior no tenía token que robar, se cerró con un inicio de sesión real: con root "
+    "el refresh token solo aparece cifrado con Android Keystore (Tabla 45)."
 )
 titulo("6.1.3 Conclusiones por componente", 3)
 parrafo(
     "Análisis de riesgos y activos. Partir de un inventario ISO/IEC 27001 y de diagramas de "
     "flujo de datos permitió que cada amenaza tuviera un activo, una frontera de confianza y "
     "una capa de defensa. Esa trazabilidad fue lo que después hizo posible medir el residual "
-    "con pruebas y no con supuestos: de las 41 amenazas, 29 se verificaron con un ataque real, "
-    "6 leyendo la configuración desplegada, 4 quedaron parciales, 1 se aceptó y 1 se eliminó "
+    "con pruebas y no con supuestos: de las 41 amenazas, 31 se verificaron con un ataque real, "
+    "6 leyendo la configuración desplegada, 2 quedaron parciales, 1 se aceptó y 1 se eliminó "
     "al cambiar la arquitectura (el SIEM local se reemplazó por CloudWatch)."
 )
 parrafo(
@@ -336,7 +340,7 @@ titulo("6.2 Recomendaciones técnicas", 2)
 parrafo(
     "Las recomendaciones de la Tabla 55 salen de los riesgos que quedaron en Alto o parciales, "
     "de los hallazgos abiertos o aceptados y de las verificaciones de Prowler que aceptamos por "
-    "costo. Las ordenamos por prioridad: Alta es antes de manejar dinero real; Media, en los "
+    "costo. Las ordenamos por prioridad: Alta es antes de pasar a producción; Media, en los "
     "primeros meses de operación; Baja, mejora continua."
 )
 tabla(
@@ -344,9 +348,9 @@ tabla(
     ["#", "Recomendación", "Riesgo o hallazgo", "Prioridad", "Costo estimado"],
     [
         ["R1", "Encender el AWS WAF de forma permanente en la etapa de producción, con las mismas cuatro reglas y su alarma", "RSK-11, HAL-16", "Alta", "~US$9 al mes (sección 5.1)"],
-        ["R2", "Terminar el inicio de sesión de la app con Cognito (código de autorización con PKCE), guardar los tokens en Android Keystore con desbloqueo biométrico y repetir CA-07", "RSK-02, RSK-10; CA-07", "Alta", "Sin costo de AWS; trabajo de desarrollo"],
+        ["R2", "Conectar las pantallas de saldo, movimientos, presupuestos y transferencias con la API (hoy muestran datos de ejemplo) y probar el desbloqueo con biometría en un teléfono físico", "RSK-02; Figura 101", "Media", "Sin costo de AWS; trabajo de desarrollo"],
         ["R3", "Subir la app a Expo SDK 58 y quitar las dos excepciones de npm audit antes del 31-ene-2027", "HAL-02, HAL-03 (zod)", "Alta", "Sin costo; repetir las pruebas de movil.yml"],
-        ["R4", "Repetir la prueba de saturación con una carga más larga y, si el throttling de la etapa no responde, agregar límites por cliente con un usage plan", "HAL-16, CA-03", "Alta", "Sin costo"],
+        ["R4", "Pedir el aumento del límite de ejecuciones simultáneas de Lambda (Service Quotas), dejar la ráfaga de API Gateway por debajo de él y repetir la prueba de saturación con token, incluida la búsqueda por teléfono (CA-03)", "HAL-17, CA-03", "Alta", "Sin costo"],
         ["R5", "Usar un dominio propio con certificado de ACM, para tener HSTS también en la raíz del host y fijar un nombre estable en la app", "HAL-09", "Media", "Costo anual del dominio"],
         ["R6", "Firmar la app con Play App Signing y registrar esa huella en freeRASP, para detectar copias reempaquetadas", "MobSF (certificado de depuración)", "Media", "Pago único de la cuenta de desarrollador de Google Play"],
         ["R7", "Administrar la cuenta con un usuario de IAM Identity Center con MFA y dejar la cuenta raíz solo para emergencias, con llave física", "Alarma uso-root; Prowler (crítica aceptada)", "Media", "Sin costo; la llave física tiene costo"],
@@ -374,8 +378,8 @@ tabla(
     "Roadmap de seguridad por horizonte",
     ["Horizonte", "Fecha límite", "Actividades", "Resultado esperado"],
     [
-        ["Inmediato", "31-ene-2027", "R3 (Expo SDK 58), R4 (prueba de saturación) y revisión de las alarmas con el ajuste del rol de plan", "0 excepciones de SCA vigentes; HAL-16 cerrado o con control por cliente"],
-        ["Antes de producción", "Antes de manejar dinero real", "R1 (WAF permanente), R2 (inicio de sesión real y CA-07), R5 (dominio propio) y R6 (Play App Signing); repetir el pentest completo", "RSK-11 en Medio; 13 de 13 casos de abuso con evidencia; ningún riesgo en Alto"],
+        ["Inmediato", "31-ene-2027", "R3 (Expo SDK 58), R4 (concurrencia de Lambda y ráfaga) y revisión de las alarmas con el ajuste del rol de plan", "0 excepciones de SCA vigentes; HAL-17 cerrado: una ráfaga autenticada recibe 429 y no 500"],
+        ["Antes de producción", "Antes de pasar a producción", "R1 (WAF permanente), R2 (pantallas conectadas a la API y biometría en teléfono físico), R5 (dominio propio) y R6 (Play App Signing); repetir el pentest completo", "RSK-11 en Medio; 13 de 13 casos de abuso con evidencia; ningún riesgo en Alto"],
         ["Primeros 3 meses de operación", "Producción + 3 meses", "R7 (IAM Identity Center), R8 (copias y segunda región) y simulacro de incidente con el SIEM", "Cuenta raíz sin uso diario; recuperación probada"],
         ["Mediano plazo", "Producción + 6 meses", "R10 (SIEM con respuesta automática) y revisión del modelo de amenazas de las funciones nuevas", "Detección y respuesta con menos pasos manuales"],
     ],
@@ -412,7 +416,7 @@ lecciones = [
      "de acceso de API Gateway (HAL-14). Cruzar dos fuentes antes de aceptar o corregir un "
      "hallazgo evitó una corrección innecesaria y una que nos habría dejado sin datos."),
     ("La seguridad continua vigila lo que no escribimos. ",
-     "Dos de los dieciséis hallazgos aparecieron sin ningún cambio en el código: avisos nuevos "
+     "Dos de los diecisiete hallazgos aparecieron sin ningún cambio en el código: avisos nuevos "
      "publicados para dependencias e imágenes que ya usábamos. Sin compuertas en cada ejecución, "
      "esos avisos habrían llegado a producción en silencio."),
     ("El costo es un requisito de diseño. ",
@@ -427,7 +431,10 @@ lecciones = [
     ("Las reglas del proveedor limitan el pentest. ",
      "La política de pruebas de AWS no permite inundar servicios ni forzar el inicio de sesión de "
      "Cognito. Tuvimos que rediseñar tres casos de abuso (Tabla 11) y probar la saturación con "
-     "cargas pequeñas, lo que explica en parte que HAL-16 siga abierto."),
+     "cargas acotadas. La primera prueba, sin token, no mostró ningún 429 (HAL-16); solo al "
+     "repetirla con un token real vimos que el authorizer rechaza esas solicitudes antes del "
+     "límite y que el límite sí protege a los clientes autenticados, y apareció un hallazgo nuevo "
+     "(HAL-17). Probar como el usuario real, y no solo como el atacante anónimo, cambió la conclusión."),
     ("La evidencia se automatiza o se pierde. ",
      "Como la presentación no admite demostraciones en vivo, cada prueba publica su resultado en "
      "un comentario del PR o en un issue del repositorio, con la cuenta y los correos tapados. "
@@ -451,9 +458,9 @@ parrafo(
 titulo("Anexo A. Índice de evidencias", 3)
 EVID = [
     ["EVD-1-01", "Arquitectura de seguridad con fronteras de confianza y controles", "Figura 1; docs/evidencias"],
-    ["EVD-1-03", "Cuenta de AWS: MFA, presupuesto de US$5 con alerta y plan gratuito", "Figura 103; docs/evidencias"],
-    ["EVD-1-04", "GitHub: protección de secretos, Dependabot y ruleset de main", "Figura 104; docs/evidencias"],
-    ["EVD-1-06 y 1-07", "Push directo a main rechazado; gitleaks sobre el historial", "Figuras 104 y 105"],
+    ["EVD-1-03", "Cuenta de AWS: MFA, presupuesto de US$5 con alerta y plan gratuito", "Figura 104; docs/evidencias"],
+    ["EVD-1-04", "GitHub: protección de secretos, Dependabot y ruleset de main", "Figura 105; docs/evidencias"],
+    ["EVD-1-06 y 1-07", "Push directo a main rechazado; gitleaks sobre el historial", "Figuras 105 y 106"],
     ["EVD-2-01 a 2-03", "Diagramas de flujo de datos de niveles 0, 1 y 2", "Figuras 2 a 4"],
     ["EVD-2-05 y 2-07", "Mapas de calor inherente y residual proyectado", "Figuras 5 y 6"],
     ["EVD-3-01", "Flujo DevSecOps con todas sus etapas", "Comentarios de PR; issue Evidencias DevSecOps"],
@@ -468,17 +475,19 @@ EVID = [
     ["EVD-3-14 y 3-15", "Pruebas por control y prueba de humo de las imágenes", "Comentarios de PR"],
     ["EVD-3-16 y 3-17", "Figura del flujo DevSecOps; app en release con minSdk 29", "Figura 8; docs/evidencias"],
     ["EVD-4-01 y 4-02", "Caja negra: Nmap y TLS; ZAP baseline", "Tabla 38; issue Evidencias Pentest"],
-    ["EVD-4-03 a 4-13", "Casos de abuso CA-01 a CA-13 y OWASP API Top 10", "Tablas 39, 40 y 45; Figura 106"],
+    ["EVD-4-03 a 4-13", "Casos de abuso CA-01 a CA-13 y OWASP API Top 10", "Tablas 39, 40 y 45; Figura 107"],
     ["EVD-4-14", "Perímetro del software", "Figura 9"],
     ["EVD-5-01 y 5-02", "Reglas del WAF y ataques bloqueados, con la regla que decidió", "Tablas 42 y 43"],
     ["EVD-5-03", "freeRASP: detección del emulador y pantalla de bloqueo", "Figura 10"],
     ["EVD-5-04", "Llave KMS propia y cifrado de las 8 tablas", "Issue Evidencias AWS"],
-    ["EVD-5-05 a 5-07", "SIEM en CloudWatch, reglas, alarmas, correos y tablero", "Tablas 46 a 49; Figuras 12 y 107"],
+    ["EVD-5-05 a 5-07", "SIEM en CloudWatch, reglas, alarmas, correos y tablero", "Tablas 46 a 49; Figuras 12 y 108"],
     ["EVD-5-08", "Arquitectura del SIEM y re-test de cada hallazgo", "Figura 11; Tabla 50"],
     ["EVD-5-09", "Mapa de calor antes y después verificado", "Figura 13"],
     ["EVD-5-11", "Ofuscación y firma del APK (Hermes y R8)", "docs/evidencias/bloque5"],
     ["EVD-6-01 a 6-05", "Pantallas principales de la app en el emulador", "Figura 101"],
-    ["EVD-6-06 y 6-07", "FLAG_SECURE: captura desde Android en negro y flag SECURE en dumpsys", "Figura 102"],
+    ["EVD-6-06 y 6-07", "FLAG_SECURE: captura desde Android en negro y flag SECURE en dumpsys", "Figura 103"],
+    ["EVD-7-01 a 7-04", "Inicio de sesión real con Cognito (PKCE y MFA) y CA-07 con un token real: almacenamiento, desbloqueo y cierre de sesión", "Figura 102; Tabla 45; docs/evidencias/bloque7"],
+    ["EVD-7-05", "Prueba de saturación con y sin token (HAL-16 y HAL-17)", "Tabla 50; docs/evidencias/bloque7"],
 ]
 tabla(
     "Índice de evidencias del proyecto",
@@ -526,13 +535,14 @@ tabla(
     "Ubicación del código y de los flujos que generan los resultados",
     ["Ruta en el repositorio", "Contenido"],
     [
-        ["mobile/", "App Android (Expo SDK 57, TypeScript): freeRASP, pinning, cliente llamarApi() y pantallas"],
+        ["mobile/", "App Android (Expo SDK 57, TypeScript): inicio de sesión con Cognito, sesión en Keystore, freeRASP, pinning y pantallas"],
         ["services/", "Los 5 microservicios (svc-profile, svc-accounts, svc-transfers, svc-budgets y svc-admin) y el arnés de pentest de caja gris"],
         ["infra/", "Terraform de toda la arquitectura, bootstrap de OIDC y scripts de verificación"],
         [".github/workflows/devsecops.yml", "SAST, SCA, secretos, pruebas por control y pentest de caja gris en cada PR"],
         [".github/workflows/infra.yml", "Revisión de Terraform, plan, despliegue con aprobación y verificación en AWS"],
         [".github/workflows/pentest.yml", "Caja negra (Nmap, TLS y ZAP) y Prowler después de cada despliegue"],
-        [".github/workflows/movil.yml", "APK de producción, MobSF y pruebas en emulador (freeRASP, Frida, MITM y almacenamiento)"],
+        [".github/workflows/movil.yml", "APK de producción, MobSF y pruebas en emulador (freeRASP, Frida, MITM, almacenamiento e inicio de sesión real)"],
+        [".github/workflows/saturacion.yml", "Prueba de saturación de la API con y sin token (HAL-16 y HAL-17)"],
         [".github/workflows/waf-siem.yml", "Prueba del WAF y del SIEM; apaga el WAF al terminar"],
         ["docs/REGISTRO_RIESGOS.md", "Activos, amenazas, casos de abuso y hallazgos"],
         ["docs/threat-model/", "Modelo de amenazas (OWASP Threat Dragon) y verificación de cada amenaza"],

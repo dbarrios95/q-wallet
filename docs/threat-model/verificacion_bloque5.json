@@ -7,11 +7,12 @@
       "nota": "Una sola región por costo (RSK-01, aceptado en la Entrega 1)."
     },
     "AME-02": {
-      "estado": "parcial",
+      "estado": "prueba",
       "evidencias": [
-        "EVD-5-05"
+        "EVD-5-05",
+        "EVD-7-01"
       ],
-      "nota": "MFA obligatorio verificado (CTRL-18). La app aún no guarda sesión, así que el desbloqueo biométrico con Keystore (CTRL-07) no se pudo probar con un token real."
+      "nota": "MFA obligatorio verificado (CTRL-18). Con un token real, la sesión guardada solo se reabrió después del PIN del teléfono y se renovó en Cognito; el cierre de sesión revocó el refresh token (EVD-7-01). La biometría usa la misma llave de Keystore y no se probó en el emulador, que no tiene huella registrada."
     },
     "AME-03": {
       "estado": "parcial",
@@ -75,21 +76,23 @@
       "nota": "FLAG_SECURE en transfer, unlock y profile. Probado el 10-nov-2026 en el emulador con la versión de desarrollo (freeRASP no bloquea en desarrollo): adb shell screencap de Transferir y Perfil sale en negro y dumpsys window muestra el flag SECURE en la ventana de la app (EVD-6-06, EVD-6-07)."
     },
     "AME-10": {
-      "estado": "parcial",
+      "estado": "prueba",
       "evidencias": [
         "EVD-4-08b",
-        "EVD-5-03"
+        "EVD-5-03",
+        "EVD-7-01"
       ],
-      "nota": "No hay tokens guardados en esta versión (conexión mínima); el almacenamiento con Keystore queda por diseño. freeRASP sí bloquea en dispositivos con root."
+      "nota": "Con la sesión abierta y root, el refresh token solo aparece cifrado (SecureStore con llave de Android Keystore) y no hay tokens en logcat (EVD-7-01). freeRASP bloquea la versión de producción en dispositivos con root (EVD-5-03)."
     },
     "AME-11": {
       "estado": "parcial",
       "evidencias": [
         "EVD-5-02",
         "EVD-5-02b",
-        "EVD-5-06e"
+        "EVD-5-06e",
+        "EVD-7-05"
       ],
-      "nota": "El límite por IP del WAF bloqueó la ráfaga en la solicitud 111 (EVD-5-02), pero el WAF solo se enciende para pruebas por presupuesto y con 40 solicitudes simultáneas el throttling de API Gateway no devolvió ningún 429. Decisión de Daniel (31-oct-2026): residual Alto aceptado de forma temporal, con el plan de encender el WAF de forma permanente si la app pasa a producción."
+      "nota": "El límite por IP del WAF bloqueó la ráfaga en la solicitud 111 (EVD-5-02), pero el WAF solo se enciende para pruebas por presupuesto y sin token el throttling de API Gateway no devuelve 429 (el authorizer rechaza antes, HAL-16); con token sí, pero una ráfaga autenticada recibe 500 por el límite de Lambda (HAL-17, EVD-7-05). Decisión de Daniel (31-oct-2026): residual Alto aceptado de forma temporal, con el plan de encender el WAF de forma permanente si la app pasa a producción."
     },
     "AME-12": {
       "estado": "prueba",

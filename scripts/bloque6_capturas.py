@@ -306,8 +306,8 @@ figura(
     "Inicio de sesión real con Amazon Cognito: código de autorización con PKCE y MFA TOTP",
     F_LOGIN, 6.3,
     "Capturas propias en el emulador Android 13 (API 33) de GitHub Actions, con la copia de prueba "
-    "del APK de producción (EVD-7-01 a EVD-7-04). El correo es el del usuario de prueba, con "
-    "dominio reservado; la contraseña se escribe en un campo enmascarado.",
+    "del APK de producción (EVD-7-01 a EVD-7-04). El correo del usuario de prueba está tapado; "
+    "la contraseña se escribe en un campo enmascarado.",
 )
 parrafo(
     "Con la misma versión probamos FLAG_SECURE (CTRL-22), que hasta entonces solo habíamos "

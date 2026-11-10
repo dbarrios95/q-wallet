@@ -494,12 +494,13 @@ parrafo(
     "y corrigió el mismo día."
 )
 tabla(
-    "Hallazgos reales y su estado al cierre de la Fase 6",
+    "Hallazgos reales y su estado al cierre del proyecto",
     ["HAL", "Origen", "Hallazgo", "Tratamiento", "Estado"],
     R["hal"],
     tam=9,
     nota_txt=(
-        "HAL-01 a HAL-05 vienen de las fases anteriores (sección 3). Las excepciones temporales "
+        "HAL-01 a HAL-05 vienen de las fases anteriores (sección 3); HAL-17 salió de la prueba de "
+        "saturación con token del cierre del proyecto (EVD-7-05). Las excepciones temporales "
         "vencen el 28 de noviembre de 2026: si no se corrigen antes, la compuerta vuelve a fallar."
     ),
 )
@@ -554,7 +555,8 @@ parrafo(
     "transferimos ningún riesgo: Q-Wallet no contrata un seguro ni un tercero que responda por "
     "sus pérdidas, y AWS solo responde por su parte del modelo de responsabilidad compartida. "
     "Tampoco evitamos riesgos dentro del modelo, aunque la decisión de no procesar tarjetas ni "
-    "dinero real (sección 1.3) es en sí una forma de evitar el riesgo de PCI DSS y de fraude real."
+    "conectarse con bancos (sección 1.3) es en sí una forma de evitar el riesgo de PCI DSS y de "
+    "fraude con tarjetas."
 )
 parrafo(
     "La Tabla 53 es la matriz de decisiones por riesgo que pide el enunciado: para cada uno, su "

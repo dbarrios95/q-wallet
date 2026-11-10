@@ -6,6 +6,7 @@ Uso (desde la raíz del repo):
     python scripts/bloque6_capturas.py
     python scripts/entrega1_estilos.py docs/entregas/Final_Capturas.docx
     python scripts/final_ensamblar.py
+    python scripts/bloque7_ajustes.py
     python scripts/entrega1_estilos.py docs/entregas/Informe_Final_QWallet.docx
     python scripts/entrega1_indice.py docs/entregas/Informe_Final_QWallet.docx
 
@@ -137,6 +138,9 @@ ESTADOS_43 = [
     ("Pinning de llaves", "Implementado y probado (MITM rechazado, HAL-13)"),
     ("Detección de root", "Implementado y probado (sección 5.2)"),
     ("Bloqueo de capturas", "Implementado y probado (FLAG_SECURE)"),
+    # bloque 7: inicio de sesión real (EVD-7-01)
+    ("OAuth2 con PKCE y MFA", "Implementado y probado (inicio de sesión real, EVD-7-01)"),
+    ("Tokens en el Keystore", "Implementado y probado con el PIN del teléfono (EVD-7-01); biometría sin probar en el emulador"),
 ]
 
 
@@ -154,8 +158,8 @@ def parrafo_como(modelo, txt):
 
 
 RESUMEN = [
-    "Q-Wallet es una billetera digital ficticia para Android, con dinero simulado en quetzales, que "
-    "funciona sobre servicios de Amazon Web Services: API Gateway, Cognito, Lambda y DynamoDB. En "
+    "Q-Wallet es la billetera digital para Android de Q-Wallet, S.A., que maneja saldos en "
+    "quetzales y funciona sobre servicios de Amazon Web Services: API Gateway, Cognito, Lambda y DynamoDB. En "
     "este proyecto asumimos el rol de arquitectos de seguridad y recorrimos las seis fases del ciclo "
     "de vida continuo de seguridad de aplicaciones: planificación y modelado de amenazas, diseño de "
     "la arquitectura cloud, desarrollo con DevSecOps, verificación con pruebas de intrusión, "
@@ -172,18 +176,20 @@ RESUMEN = [
     "Trivy; esas compuertas detuvieron dos veces el trabajo por vulnerabilidades publicadas sin "
     "cambios en nuestro código. Los datos se cifran con una llave KMS propia y la API solo acepta "
     "TLS 1.3.",
-    "Las pruebas de caja negra, gris y blanca bloquearon 11 de los 13 casos de abuso, las 18 pruebas "
+    "Las pruebas de caja negra, gris y blanca bloquearon 12 de los 13 casos de abuso, las 18 pruebas "
     "del OWASP API Security Top 10 y los nueve ataques lanzados contra el WAF. En el teléfono, "
-    "freeRASP detectó el emulador, el root y la instrumentación con Frida. Registramos 16 hallazgos "
+    "freeRASP detectó el emulador, el root y la instrumentación con Frida, y la app inicia sesión "
+    "con Cognito (PKCE y MFA) y guarda la sesión cifrada con Android Keystore: con root no se pudo "
+    "leer ningún token. Registramos 17 hallazgos "
     "reales; el más importante fue que la fijación de certificados no protegía la conexión de la "
     "app, algo que solo apareció al interceptarla en un emulador y que corregimos y volvimos a "
     "probar. El SIEM en CloudWatch correlaciona los eventos con 14 reglas y avisa por correo.",
     "Con los controles desplegados y probados, el riesgo residual verificado quedó en 0 críticos, 1 "
-    "alto, 26 medios y 14 bajos, y la suma de los puntajes bajó de 580 a 208, una reducción del "
-    "64 %. El único riesgo alto (RSK-11, saturación de la API) se aceptó de forma temporal porque el "
+    "alto, 25 medios y 15 bajos, y la suma de los puntajes bajó de 580 a 202, una reducción del "
+    "65 %. El único riesgo alto (RSK-11, saturación de la API) se aceptó de forma temporal porque el "
     "WAF permanente excede el presupuesto. Nuestro dictamen es favorable para la versión evaluada, "
-    "con tres condiciones antes de manejar dinero real: WAF permanente, inicio de sesión completo "
-    "en la app y actualización a Expo SDK 58.",
+    "con tres condiciones antes de pasar a producción: WAF permanente, capacidad de la API ajustada "
+    "para que una ráfaga reciba 429 y no 500 (HAL-17) y actualización a Expo SDK 58.",
 ]
 
 # Textos que cambian al juntar las entregas: (archivo, viejo, nuevo, coincidencias)

@@ -82,7 +82,7 @@
       ]
     ],
     "nota": "Prueba del 1 de noviembre de 2026 con el WAF encendido solo para ella (EVD-5-01, EVD-5-02). La regla que decidió cada caso sale de los registros del WAF (EVD-5-02b). Los nueve ataques de una sola solicitud (C00 a C08) dieron el código esperado. El límite por IP se evalúa con unos segundos de retraso, por eso el bloqueo llegó en la solicitud 111 y no en la 101.",
-    "conclusion": "El WAF bloqueó todos los ataques de la prueba y cada uno lo detuvo la regla prevista: inyección SQL el grupo de SQLi agregado en esta fase (HAL-07), XSS, lectura de archivos, SSRF, solicitudes sin User-Agent y cuerpos grandes el conjunto común, Log4Shell el grupo de entradas conocidas, y la ráfaga la regla de límite por IP. La solicitud legítima pasó. Un resultado no salió como esperábamos: con 40 solicitudes simultáneas el throttling de API Gateway (ráfaga de 20 y 10 por segundo) no devolvió ningún 429. Lo registramos como HAL-16 y lo reflejamos en el riesgo residual de RSK-11 (sección 5.6): con el WAF apagado, la protección de la API contra saturación no quedó demostrada."
+    "conclusion": "El WAF bloqueó todos los ataques de la prueba y cada uno lo detuvo la regla prevista: inyección SQL el grupo de SQLi agregado en esta fase (HAL-07), XSS, lectura de archivos, SSRF, solicitudes sin User-Agent y cuerpos grandes el conjunto común, Log4Shell el grupo de entradas conocidas, y la ráfaga la regla de límite por IP. La solicitud legítima pasó. Un resultado no salió como esperábamos: con 40 solicitudes simultáneas el throttling de API Gateway (ráfaga de 20 y 10 por segundo) no devolvió ningún 429. Lo registramos como HAL-16 y lo reflejamos en el riesgo residual de RSK-11 (sección 5.6): con el WAF apagado, la protección de la API contra saturación no quedó demostrada. Al cierre del proyecto repetimos la prueba con más carga y con un token real (EVD-7-05): sin token no hubo ningún 429 ni a seis veces el límite, porque el authorizer de Cognito rechaza esas solicitudes con 401 antes de que cuenten para el throttling; con un token, a tres veces el límite, API Gateway respondió 429 a 244 de 600 solicitudes. HAL-16 quedó explicado y cerrado. La misma prueba encontró HAL-17: con 40 y 100 solicitudes autenticadas simultáneas, solo 10 y 23 respondieron 200 y el resto recibió 500, porque se agota el límite de ejecuciones simultáneas de Lambda de la cuenta antes que la ráfaga de API Gateway."
   },
   "movil": {
     "pines": "la cadena real pasa por Amazon Root CA 1, que está entre los cuatro pines de la app (EVD-4-08c)",
@@ -108,10 +108,10 @@
         "EVD-4-08"
       ],
       [
-        "CA-07 almacenamiento (EVD-4-08b)",
-        "Con root, lectura de /data/data de la app en busca de tokens",
-        "Sin tokens: esta versión no inicia sesión. Un archivo interno (files/tcb) contiene texto con forma de JWT que no se pudo decodificar [VERIFICAR origen]; allowBackup desactivado",
-        "EVD-4-08b"
+        "CA-07 almacenamiento con sesión real (EVD-4-08b, EVD-7-01)",
+        "Con root, lectura de /data/data de la app sin sesión y con la sesión de Cognito abierta; después, desbloqueo y cierre de sesión",
+        "Sin tokens legibles: el refresh token está cifrado con una llave de Android Keystore (SecureStore) y no hay tokens en logcat. La sesión solo se reabrió con el PIN del teléfono y el cierre de sesión revocó el refresh token en Cognito (HTTP 200). El archivo files/tcb, con texto en forma de JWT, existe desde antes de iniciar sesión y no es de la sesión [VERIFICAR origen]; allowBackup desactivado",
+        "EVD-4-08b, EVD-7-01"
       ],
       [
         "CA-11 secretos y manifiesto (EVD-4-11)",
@@ -120,7 +120,7 @@
         "EVD-4-11"
       ]
     ],
-    "nota": "Emulador Android 13 (API 33, Google APIs, imagen userdebug con root) en GitHub Actions, con el APK de producción (Hermes y R8). Las pruebas se repiten en cada cambio de la app (flujo movil.yml). La versión de la app no tiene inicio de sesión todavía (conexión mínima con la API, decisión del 31 de octubre), por eso CA-07 no pudo probarse con un token real."
+    "nota": "Emulador Android 13 (API 33, Google APIs, imagen userdebug con root) en GitHub Actions, con el APK de producción (Hermes y R8). CA-07 con sesión real usa una copia de ese APK con freeRASP en modo registro, porque la versión de producción se bloquea en el emulador (EVD-5-03); el código de sesión y de almacenamiento es el mismo. Las pruebas se repiten en cada cambio de la app (flujo movil.yml)."
   },
   "siem": {
     "reglas": "las 14 reglas coincidieron con su muestra de ataque y ninguna con la normal",
@@ -245,7 +245,14 @@
       "HAL-16",
       "Prueba del perímetro",
       "Throttling de API Gateway sin 429 con 40 solicitudes simultáneas",
-      "Revisar con una prueba más larga; WAF en producción",
+      "Prueba más larga con y sin token (EVD-7-05): el authorizer rechaza las solicitudes sin token antes del límite; con token, el límite sí responde 429",
+      "Cerrado"
+    ],
+    [
+      "HAL-17",
+      "Prueba de saturación con token",
+      "Ráfagas simultáneas autenticadas reciben 500 y no 429: el límite de ejecuciones simultáneas de Lambda se alcanza antes que la ráfaga de API Gateway",
+      "Subir el límite de Lambda y dejar la ráfaga por debajo de él (R4, sección 6.2)",
       "Abierto"
     ]
   ],
@@ -293,7 +300,7 @@
     "texto": "MobSF 4.5.3 puntuó el APK de producción con 49 de 100 (EVD-3-07). Revisamos sus tres hallazgos altos. Dos son del certificado de firma: el APK de prueba se firma con el certificado de depuración de la plantilla de Expo; en una publicación real lo firmaría Google Play y freeRASP llevaría esa huella. El tercero (cifrado en modo CBC) y la mayoría de los avisos medios (MD5, SHA-1, WebView, archivos temporales) están en librerías de terceros incluidas en el APK, no en el código de Q-Wallet, que no usa cifrado propio ni WebView. Los registramos como observaciones de dependencias; la búsqueda de secretos con gitleaks sobre el mismo APK no encontró ninguno."
   },
   "tratamiento": {
-    "altos": "Una sola amenaza quedó en nivel Alto: RSK-11 (saturación de la API y consumo de costo), con P4×I3 = 12. Es una decisión consciente y no un descuido: el WAF, que la bajaría a Medio, cuesta casi el doble del presupuesto mensual, y la prueba no logró demostrar el throttling de API Gateway (HAL-16). Daniel, como dueño del riesgo, la aceptó de forma temporal el 31 de octubre con un plan: encender el WAF de forma permanente si Q-Wallet pasa a producción. Las demás amenazas que se verificaron solo en parte (RSK-02, RSK-03 y RSK-10) quedaron en Medio.",
-    "cierre": "Con esto cerramos el ciclo de la Fase 6: los controles de operación están desplegados y probados contra ataques reales, el SIEM detecta y avisa, cada hallazgo nuevo se registró y corrigió por el mismo proceso que en las fases anteriores, y cada riesgo tiene una decisión formal con su evidencia. El riesgo total bajó de 580 a 208 puntos, sin amenazas en nivel Crítico. Los pendientes (HAL-16, el inicio de sesión real en la app y el SIEM con Wazuh) pasan al roadmap de la sección 6.3."
+    "altos": "Una sola amenaza quedó en nivel Alto: RSK-11 (saturación de la API y consumo de costo), con P4×I3 = 12. Es una decisión consciente y no un descuido: el WAF, que la bajaría a Medio, cuesta casi el doble del presupuesto mensual, y sin él una inundación sin token no recibe 429 (el authorizer la rechaza antes del throttling, HAL-16) y una ráfaga autenticada recibe 500 en lugar de 429 (HAL-17). Daniel, como dueño del riesgo, la aceptó de forma temporal el 31 de octubre con un plan: encender el WAF de forma permanente si Q-Wallet pasa a producción. La otra amenaza que se verificó solo en parte (RSK-03) quedó en Medio. RSK-02 y RSK-10, parciales mientras la app no iniciaba sesión, quedaron verificadas con un token real (EVD-7-01) y volvieron a su residual proyectado.",
+    "cierre": "Con esto cerramos el ciclo de la Fase 6: los controles de operación están desplegados y probados contra ataques reales, el SIEM detecta y avisa, cada hallazgo nuevo se registró y corrigió por el mismo proceso que en las fases anteriores, y cada riesgo tiene una decisión formal con su evidencia. El riesgo total bajó de 580 a 202 puntos, sin amenazas en nivel Crítico. El inicio de sesión real y HAL-16 se cerraron al final del proyecto (EVD-7-01 y EVD-7-05); HAL-17 y el SIEM con Wazuh pasan al roadmap de la sección 6.3."
   }
 }

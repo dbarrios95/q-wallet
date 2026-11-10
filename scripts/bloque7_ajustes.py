@@ -7,12 +7,13 @@ Uso (desde la raíz del repo), después de final_ensamblar.py y antes del format
     python scripts/entrega1_indice.py docs/entregas/Informe_Final_QWallet.docx
 
 Qué cambia:
-  A. Redacción: Q-Wallet, S.A. se presenta como empresa y producto (sin «simulado» ni «ficticio»),
+  Redacción: Q-Wallet, S.A. se presenta como empresa y producto (sin «simulado» ni «ficticio»),
      «antes de manejar dinero real» pasa a «antes de pasar a producción» y nada queda «pendiente»
      (siguiente versión, riesgo aceptado o roadmap). Límite acordado: lo que no se hizo no se
      reporta como hecho.
-  B. Resultados del bloque 7: inicio de sesión real con Cognito y CA-07 con un token real
-     (EVD-7-01 a 7-04) y la prueba de saturación de HAL-16 (EVD-7-05).
+Los resultados del bloque 7 (inicio de sesión real y CA-07, EVD-7-01 a 7-04; HAL-16 y HAL-17,
+EVD-7-05) no se aplican aquí: van en sus fuentes (resultados.json, verificacion_bloque5.json,
+bloque5_word.py, bloque6_word.py, bloque6_capturas.py y final_ensamblar.py), que se regeneran antes.
 Cada reemplazo exige el número exacto de coincidencias (reemplazar() de final_ensamblar.py):
 si el Word no es el esperado, el script se detiene sin guardar.
 """
@@ -23,11 +24,11 @@ from docx import Document
 
 RAIZ = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ / "scripts"))
-from final_ensamblar import estado_fila, reemplazar  # noqa: E402
+from final_ensamblar import reemplazar  # noqa: E402
 
 ARCHIVO = Path(sys.argv[1]) if len(sys.argv) > 1 else RAIZ / "docs/entregas/Informe_Final_QWallet.docx"
 
-# ---------------------------------------------------------------- A. redacción
+# ---------------------------------------------------------------- redacción
 REDACCION = [
     # 1.1 a 1.3 (Entrega 1)
     ("En este contexto planteamos Q-Wallet, una billetera digital de la empresa ficticia Q-Wallet, S.A.,",
@@ -59,30 +60,15 @@ REDACCION = [
     ("La app Android todavía muestra datos simulados: en esta fase reforzamos su configuración de compilación y dejamos claro qué controles del cliente faltan. La Tabla 37 separa lo que ya está en el código, lo que configuramos ahora y lo pendiente.",
      "En esta fase reforzamos la configuración de compilación de la app Android. La Tabla 37 muestra cómo quedó cada control del cliente al cierre del proyecto.", 1),
     ("Tope por transferencia: Q5,000.00 de dinero simulado.", "Tope por transferencia: Q5,000.00.", 1),
-    # 5.6
-    ("aunque la decisión de no procesar tarjetas ni dinero real (sección 1.3)",
-     "aunque la decisión de no procesar tarjetas ni conectarse con bancos (sección 1.3)", 1),
-    # 6.2
-    ("Las ordenamos por prioridad: Alta es antes de manejar dinero real;",
-     "Las ordenamos por prioridad: Alta es antes de pasar a producción;", 1),
-    ("Antes de manejar dinero real", "Antes de pasar a producción", 1),
 ]
-
-# ---------------------------------------------------------------- B. resultados del bloque 7
-# (se completan con las cifras de EVD-7-01 y EVD-7-05)
-RESULTADOS = []
-ESTADOS_43 = []
 
 
 def main():
     doc = Document(str(ARCHIVO))
-    for viejo, nuevo, n in REDACCION + RESULTADOS:
+    for viejo, nuevo, n in REDACCION:
         reemplazar(doc, viejo, nuevo, n)
-    for primera, nuevo in ESTADOS_43:
-        estado_fila(doc, primera, nuevo)
     doc.save(str(ARCHIVO))
-    print(f"ok {ARCHIVO}: {len(REDACCION)} ajustes de redacción, {len(RESULTADOS)} de resultados, "
-          f"{len(ESTADOS_43)} filas de la Tabla 37")
+    print(f"ok {ARCHIVO}: {len(REDACCION)} ajustes de redacción")
 
 
 if __name__ == "__main__":

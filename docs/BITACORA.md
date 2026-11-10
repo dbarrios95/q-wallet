@@ -3,6 +3,22 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-11-10 — Daniel — Claude (claude.ai), bloque 7: inicio de sesión real con Cognito, CA-07, HAL-16 y ajustes del informe
+- Fase / sección del informe: 3.2, 4.3, 5.2, 5.5, 5.6 y 6 (dictamen); redacción de todo el informe. PR #63.
+- Decisiones de Daniel (10-nov, opción múltiple): sí implementar el inicio de sesión real con Cognito y repetir CA-07; sí correr la prueba de saturación más larga para HAL-16.
+- Paso manual de Daniel: en CloudShell corrió `infra/scripts/usuario_prueba.py` (crea un usuario de prueba con MFA TOTP por SRP, sin cambiar el pool) y guardó correo, clave y semilla como secretos `QWALLET_PRUEBA_*` de GitHub.
+- Qué se hizo:
+  - App: `mobile/src/seguridad/sesion.ts` (login administrado de Cognito con PKCE S256 vía expo-auth-session; canje, renovación y revocación por `pedirHttps()` con pinning; access token en memoria; refresh token en SecureStore con biometría fuerte o bloqueo del teléfono; sin bloqueo no se guarda). `red.ts` fija también el dominio de Cognito. Pantallas de login, desbloqueo, bienvenida, inicio y perfil sin sesión simulada ni PIN falso; perfil con GET /me real.
+  - `movil.yml`: verificación de pines también para Cognito; APK de prueba con freeRASP en modo registro (`EXPO_PUBLIC_QWALLET_APK_PRUEBA=ca07`, no se publica); sección E de `dispositivo.sh` con `mobile/pruebas/sesion_ca07.py` (uiautomator). `apk_estatico.sh`: el patrón `client_secret` exige un valor (el nombre del parámetro venía de expo-auth-session; el cliente de Cognito no tiene secreto).
+  - `saturacion.yml` + `infra/pruebas/saturacion.py` y `token_prueba.py` (Playwright, PKCE + MFA; el retorno `qwallet://` se toma por CDP).
+  - Resultados: EVD-7-01 login ok (PKCE S256), GET /me 200, 0 tokens legibles con root, 0 en logcat, desbloqueo con PIN, revocación 200. EVD-7-05: sin token 0 × 429 en 2 540 solicitudes; con token 244 × 429 de 600 a 30/s; ráfagas de 40 y 100 con token: 10 y 23 respuestas 200 y el resto 500 (HAL-17, nuevo, abierto). HAL-16 cerrado.
+  - Riesgo: AME-02 y AME-10 a "prueba" (`verificacion_bloque5.json`); residual 580 → 202 (−65 %), 25 medios y 15 bajos; mapa de calor EVD-5-09 regenerado. OE3 12 de 13; 17 hallazgos.
+  - Informe: `scripts/bloque7_ajustes.py` (redacción sin «simulado»/«ficticio», «antes de pasar a producción», sin «pendiente») y cambios en `bloque5_word.py`, `bloque6_word.py`, `bloque6_capturas.py`, `final_ensamblar.py` y `resultados.json`. Figura 9 sin la pantalla de login; Figura 10 nueva con el login real (correo de prueba tapado). Informe de 166 págs., 60 tablas, 21 figuras; render revisado en las páginas cambiadas.
+  - Presentación final (Claude Slides) actualizada: cifras, CA-07, dictamen y números de figura; mapa de calor nuevo. Guion `Final_Presentacion.md` actualizado. `REGISTRO_RIESGOS.md` y `CHECKLIST_EVIDENCIAS.md` al día.
+- Nota de exposición: las capturas sin tapar de la rama `evidencias-ci` (pública) muestran el correo del usuario de prueba (`qwallet.example`, dominio reservado, sin datos). Las del repo y del informe van tapadas. Durante las pruebas de saturación pudieron dispararse alarmas de 4xx o 5xx por correo: es esperado.
+- Borrados: ninguno. El usuario de prueba de Cognito queda activo (lo usan los flujos).
+- Siguiente paso: Daniel revisa y hace merge del PR #63, actualiza el índice en Word y presenta (14-nov y 28-nov).
+
 ### 2026-11-10 — Daniel — Claude (claude.ai), bloque 6: informe final, dictamen y presentaciones (cierre)
 - Fase / sección del informe: secciones 0 a 6 completas; dictamen 6.1 a 6.6. PR #60 (pendientes técnicos) y el PR de cierre.
 - Decisiones de Daniel (10-nov, opción múltiple): portada con los tres integrantes; presentación final de 10 minutos; resolver los pendientes técnicos en este bloque; las dos excepciones SCA (HAL-02 y zod de `@expo/cli`) se renuevan al 31-ene-2027 y Expo SDK 58 pasa al roadmap (subir el SDK a 18 días de la entrega obligaba a repetir MobSF, Frida y MITM).
