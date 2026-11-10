@@ -20,6 +20,10 @@ RUN node esbuild.mjs svc-transfers
 # SDK empaquetado, Lambda no usa los demás y traían 24 vulnerabilidades HIGH (Trivy, EVD-3-05).
 # La prueba de humo (scripts/humo_lambda.py, EVD-3-15) comprueba que el runtime sigue arrancando.
 FROM base AS final
+# HAL-15 (bloque 5, 10-nov-2026): la imagen base publicada aún trae glibc con CVE-2026-86805
+# (HIGH, con corrección en Amazon Linux 2023). Se actualizan los paquetes del sistema al
+# construir; Trivy (EVD-3-05) comprueba el resultado en cada cambio.
+RUN dnf -y upgrade && dnf clean all && rm -rf /var/cache/dnf
 RUN rm -rf /var/lang/lib/node_modules/npm /var/lang/lib/node_modules/corepack \
       /var/lang/bin/npm /var/lang/bin/npx /var/lang/bin/corepack /usr/local/bin/aws-lambda-rie \
       /var/runtime/node_modules/@aws-sdk
