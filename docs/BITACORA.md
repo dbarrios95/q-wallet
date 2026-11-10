@@ -3,6 +3,19 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-11-10 — Daniel — Claude (claude.ai), bloque 6: informe final, dictamen y presentaciones (cierre)
+- Fase / sección del informe: secciones 0 a 6 completas; dictamen 6.1 a 6.6. PR #60 (pendientes técnicos) y el PR de cierre.
+- Decisiones de Daniel (10-nov, opción múltiple): portada con los tres integrantes; presentación final de 10 minutos; resolver los pendientes técnicos en este bloque; las dos excepciones SCA (HAL-02 y zod de `@expo/cli`) se renuevan al 31-ene-2027 y Expo SDK 58 pasa al roadmap (subir el SDK a 18 días de la entrega obligaba a repetir MobSF, Frida y MITM).
+- Qué se hizo:
+  - Presentación de la Entrega 2 (sáb 14-nov): diapositiva 5 con resultados (14 de 14 requisitos, 3/3 pruebas del despliegue, MITM rechazado, PIN bloqueado al 5.º intento, cuenta ajena 404/403) y fecha de la portada corregida al 14-nov. Guion actualizado.
+  - PR #60: la alarma `aws-no-autorizado` ignora solo las negaciones de KMS del rol `qwallet-gha-plan` (otras negaciones de ese rol siguen alertando; prueba nueva en `infra/pruebas/siem.sh`); excepciones SCA renovadas; Dependabot #53 a #57 en un solo cambio (setup-java 6.2.0, codeql-action 4.39.3 con init y analyze juntos, proveedor AWS 6.71.0). Plan: 0 destrucciones, 0 reemplazos, 6 cambios en sitio (el filtro y las variables cifradas de las Lambdas que el rol de plan no puede leer).
+  - `scripts/bloque6_word.py` → `Final_Seccion_6_Dictamen.docx`: dictamen favorable con tres condiciones (WAF permanente, inicio de sesión real y CA-07, Expo SDK 58); cumplimiento de OE1 a OE5 (OE3 parcial: 11 de 13 casos, CA-03 sin 429 y CA-07 sin token); 10 recomendaciones; roadmap por horizonte y actividades permanentes; 7 lecciones; Anexo A (evidencias), Anexo B (trazabilidad de las 41 amenazas) y Anexo C (repositorio).
+  - `scripts/final_ensamblar.py` → `Informe_Final_QWallet.docx` (154 págs., 60 tablas, 13 figuras, 35 referencias): portada de informe final, resumen ejecutivo nuevo, partes en el orden del esquema, tablas 24 a 41 y figuras 7 a 9 renumeradas por orden de aparición con sus referencias, textos viejos actualizados (REQ-01/04/05 cumplidos, evidencia del primer despliegue, excepciones renovadas, alarma ajustada), referencias unidas en 6.6 en APA 7 (sin duplicados, sin fecha primero, títulos en cursiva) y citas agregadas en 3.4 a 4.4 para las referencias que no se citaban. Índice general reconstruido. Render completo revisado.
+  - Presentación final en Claude Slides "Q-Wallet — Presentación final" (10 diapositivas, ~10 min, notas del orador). Guion en `docs/entregas/Final_Presentacion.md`.
+- Quedan `[VERIFICAR]` en el informe (2): origen del archivo `files/tcb` de la app (Tabla 45) y costo real de CloudWatch en la factura de noviembre (sección 5.3).
+- Borrados: ninguno.
+- Siguiente paso: Daniel hace merge de #60 (y aprueba el despliegue) y de este PR; revisa el Word completo; presenta la Entrega 2 el 14-nov y la final el 28-nov.
+
 ### 2026-11-10 — Daniel — Claude (claude.ai), bloque 5: WAF, RASP, SIEM, alertas y tratamiento del riesgo (cierre)
 - Fase / sección del informe: Fase 6; secciones 5.1 a 5.6. PR #47, #50, #51, #52, #58 y el PR de cierre.
 - Decisiones de Daniel (31-oct, opción múltiple): SIEM con CloudWatch (Wazuh al roadmap por RAM y costo); aviso por correo con SNS; pruebas del teléfono en emulador de GitHub Actions; conexión mínima app–API. Después: gitleaks ignora 13 falsos positivos exactos de la rama `evidencias-ci` (`.gitleaksignore`); WAF solo para pruebas (RSK-11 queda Alto, aceptado de forma temporal); aprobación manual de cada despliegue en el entorno `dev` (configurada por Daniel).
