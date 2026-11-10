@@ -67,11 +67,19 @@ def apilar(archivos, salida, ancho=1600, sep=30):
     return salida
 
 
+# Bloque 7: sin la pantalla de inicio de sesión de la versión de desarrollo (EVD-6-02); el inicio
+# de sesión real con Cognito tiene su propia figura con capturas del emulador de GitHub Actions.
 F_APP = fila_telefonos(
-    [FIG / "EVD-6-01_bienvenida.png", FIG / "EVD-6-02_login.png", FIG / "EVD-6-03_inicio.png",
+    [FIG / "EVD-6-01_bienvenida.png", FIG / "EVD-6-03_inicio.png",
      FIG / "EVD-6-04_movimientos.png", FIG / "EVD-6-05_presupuestos.png"],
-    ["Bienvenida", "Inicio de sesión", "Inicio", "Movimientos", "Presupuestos"],
+    ["Bienvenida", "Inicio", "Movimientos", "Presupuestos"],
     FIG / "FIG_app_pantallas.png")
+FIG7 = EV / "bloque7"
+F_LOGIN = fila_telefonos(
+    [FIG7 / "EVD-7-01_app_login.png", FIG7 / "EVD-7-02_cognito_login.png",
+     FIG7 / "EVD-7-03_cognito_mfa.png", FIG7 / "EVD-7-04_app_inicio.png"],
+    ["App: inicio de sesión", "Cognito: contraseña", "Cognito: código MFA", "App: sesión abierta"],
+    FIG7 / "FIG_login_cognito.png")
 F_SECURE = fila_telefonos(
     [FIG / "EVD-6-06a_transferir_en_pantalla.png", FIG / "EVD-6-06b_transferir_screencap.png",
      FIG / "EVD-6-07a_perfil_en_pantalla.png", FIG / "EVD-6-07b_perfil_screencap.png"],
@@ -271,22 +279,42 @@ parrafo(
     "Para mostrar la app tal como la ve el usuario, la Figura 101 reúne sus pantallas principales. "
     "Las capturamos el 10 de noviembre de 2026 en el emulador Android con la versión de desarrollo, "
     "porque en la versión de producción freeRASP detecta el emulador y bloquea la app (Figura 10). "
-    "Los datos son simulados: esta versión todavía no inicia sesión contra Cognito, y el botón para "
-    "entrar con una sesión simulada solo existe en la versión de desarrollo."
+    "Las pantallas de saldo, movimientos y presupuestos muestran datos de ejemplo de la propia app; "
+    "conectarlas con la API (que ya existe y se probó en la sección 3) es parte de la siguiente "
+    "versión (sección 6.3)."
 )
 figura(
     "Pantallas principales de Q-Wallet en el emulador Android",
     F_APP, 6.3,
     "Capturas propias en el emulador Pixel 8 (Android, API 36), versión de desarrollo, 10 de "
-    "noviembre de 2026 (EVD-6-01 a EVD-6-05). Datos simulados. En algunas pantallas el título queda "
-    "bajo la barra de estado: es una observación de interfaz sin efecto en la seguridad.",
+    "noviembre de 2026 (EVD-6-01, EVD-6-03 a EVD-6-05). En algunas pantallas el título queda bajo "
+    "la barra de estado: es una observación de interfaz sin efecto en la seguridad.",
+)
+parrafo(
+    "La versión final de la app inicia sesión de verdad (Figura 102). La app abre el inicio de sesión "
+    "administrado de Amazon Cognito en una pestaña segura del navegador del teléfono, con el flujo "
+    "de código de autorización y PKCE (S256): la contraseña y el código TOTP del segundo factor se "
+    "escriben en la página de Cognito y la app nunca los ve. Con el código que devuelve Cognito, la "
+    "app pide los tokens por una conexión con fijación de llaves (CTRL-08), guarda el access token "
+    "de 15 minutos solo en memoria y el refresh token cifrado con una llave de Android Keystore "
+    "(CTRL-07). Al volver a abrir la app, esa llave solo se usa después de la huella, el rostro o el "
+    "bloqueo del teléfono, y al cerrar sesión la app revoca el refresh token en Cognito. Las "
+    "capturas salen del emulador de GitHub Actions con un usuario de prueba que tiene MFA "
+    "obligatorio; el resultado de CA-07 con este token real está en la Tabla 45."
+)
+figura(
+    "Inicio de sesión real con Amazon Cognito: código de autorización con PKCE y MFA TOTP",
+    F_LOGIN, 6.3,
+    "Capturas propias en el emulador Android 13 (API 33) de GitHub Actions, con la copia de prueba "
+    "del APK de producción (EVD-7-01 a EVD-7-04). El correo es el del usuario de prueba, con "
+    "dominio reservado; la contraseña se escribe en un campo enmascarado.",
 )
 parrafo(
     "Con la misma versión probamos FLAG_SECURE (CTRL-22), que hasta entonces solo habíamos "
     "verificado leyendo el código. Con la pantalla Transferir abierta tomamos una captura desde "
     "dentro de Android con adb shell screencap y salió completamente negra; con Perfil pasó lo "
     "mismo. Al mismo tiempo, dumpsys window mostró el flag SECURE en la ventana de la app. La Figura "
-    "102 pone lado a lado lo que ve el usuario y lo que obtiene una captura. Con esta prueba, la "
+    "103 pone lado a lado lo que ve el usuario y lo que obtiene una captura. Con esta prueba, la "
     "amenaza de exposición del saldo en capturas y en la vista de apps recientes (AME-09) pasó de "
     "verificada por configuración a verificada con una prueba; su riesgo residual no cambia."
 )
