@@ -1,0 +1,82 @@
+EVD-5-05 SIEM en CloudWatch: fuentes, reglas, alarmas y aviso (CTRL-20)
+Fecha: 2026-11-10 15:32:37 UTC
+Región: us-east-1
+
+1) CloudTrail -> CloudWatch Logs (fuente de auditoría de la cuenta):
+   {
+       "grupoDeLogs": true,
+       "rolDeEntrega": true
+   }
+   {
+       "ultimaEntregaACloudWatch": "2026-11-10T15:33:36.245000+00:00",
+       "errorDeEntrega": null
+   }
+   Selectores de eventos:
+     - Eventos de administracion
+     - Invocaciones de las Lambdas de Q-Wallet
+
+2) Reglas de correlación (filtros de métrica) por fuente:
+   /aws/cloudtrail/qwallet-auditoria        6 reglas
+   /aws/apigateway/qwallet-api              3 reglas
+   aws-waf-logs-qwallet                     0 reglas
+   /aws/lambda/qwallet-svc-profile          5 reglas
+   /aws/lambda/qwallet-svc-accounts         5 reglas
+   /aws/lambda/qwallet-svc-transfers        5 reglas
+   /aws/lambda/qwallet-svc-budgets          5 reglas
+   /aws/lambda/qwallet-svc-admin            5 reglas
+   Métricas que publican (espacio QWallet/Seguridad):
+     - acceso_prohibido
+     - api_bloqueo_waf
+     - api_limite
+     - api_no_autenticado
+     - entrada_invalida
+     - error_no_controlado
+     - pin_bloqueado
+     - pin_incorrecto
+     - trail_admin_cognito
+     - trail_auditoria_y_llaves
+     - trail_cambios_iam
+     - trail_consola_sin_mfa
+     - trail_no_autorizado
+     - trail_uso_root
+
+3) Consultas de correlación guardadas (Logs Insights):
+   - qwallet/correlacion/waf-bloqueos
+   - qwallet/correlacion/rechazos-por-usuario
+   - qwallet/correlacion/por-correlationId
+   - qwallet/correlacion/ips-sospechosas
+   - qwallet/correlacion/denegaciones-aws
+
+4) Alarmas de seguridad (umbral, ventana y estado):
+   qwallet-acceso-prohibido	acceso_prohibido	5.0	300	OK
+   qwallet-auditoria-y-llaves	trail_auditoria_y_llaves	1.0	300	OK
+   qwallet-aws-no-autorizado	trail_no_autorizado	5.0	300	ALARM
+   qwallet-consola-sin-mfa	trail_consola_sin_mfa	1.0	300	OK
+   qwallet-error-no-controlado	error_no_controlado	1.0	300	OK
+   qwallet-pin-bloqueado	pin_bloqueado	1.0	300	OK
+   qwallet-rafaga-401	api_no_autenticado	50.0	300	OK
+   qwallet-throttling	api_limite	20.0	300	OK
+   qwallet-uso-root	trail_uso_root	1.0	300	OK
+
+5) Aviso: tema SNS cifrado y suscripción por correo (sin mostrar el correo):
+   {
+       "cifradoConKms": true,
+       "suscripcionesConfirmadas": "1",
+       "suscripcionesPendientes": "0"
+   }
+   [
+       {
+           "protocolo": "email",
+           "estado": "confirmada"
+       }
+   ]
+
+6) Tablero:
+   qwallet-seguridad
+
+7) MFA de Cognito leído con GetUserPoolMfaConfig (Prowler lo marcó como no requerido):
+   {
+       "mfa": "ON",
+       "totp": true,
+       "sms": false
+   }

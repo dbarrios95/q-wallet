@@ -371,9 +371,10 @@ parrafo(
     "planteamos con Wazuh en un contenedor local; al llegar a esta fase lo cambiamos por los "
     "servicios nativos de AWS (CloudWatch Logs, filtros de métrica, Logs Insights y alarmas). "
     "Wazuh necesita 4 GB de memoria o más y un servidor encendido, lo que no cabe en el "
-    "presupuesto de US$5, mientras que CloudWatch no tiene servidores propios y cuesta menos de "
-    "US$1 al mes con este volumen. Wazuh queda en el roadmap (sección 6.3). La Figura 10 muestra "
-    "el diseño."
+    "presupuesto de US$5, mientras que CloudWatch no tiene servidores propios y, con este "
+    "volumen, su costo se estima en uno o dos dólares al mes por las métricas personalizadas "
+    "[VERIFICAR con la factura de noviembre]. Wazuh queda en el roadmap (sección 6.3). La "
+    "Figura 11 muestra el diseño."
 )
 figura("SIEM de Q-Wallet en CloudWatch: fuentes, correlación, alerta y respuesta",
        RAIZ / "docs/evidencias/EVD-5-08_siem.png", 6.5,
@@ -462,13 +463,14 @@ parrafo(
     "El tablero qwallet-seguridad reúne en una sola pantalla el estado de las alarmas, los "
     "rechazos de la aplicación por regla, el perímetro (401, 429 y bloqueos del WAF), los eventos "
     "de CloudTrail por regla, el tráfico de API Gateway y una tabla con los usuarios que acumulan "
-    "rechazos. La Figura 12 es una de sus gráficas durante la prueba, generada por la API de "
-    "CloudWatch sin capturas manuales de la consola."
+    "rechazos. Sus métricas solo publican datos cuando hay eventos, por eso fuera de las "
+    "pruebas se ve en cero; lo que importa en operación son las alarmas y el aviso por correo."
 )
 if R["alertas"].get("grafica"):
-    figura("Perímetro de la API durante la prueba del WAF (tablero qwallet-seguridad)",
-           EVD / R["alertas"]["grafica"], 6.3,
-           "Imagen generada con GetMetricWidgetImage de CloudWatch (EVD-5-07).")
+    figura("Correo de alarma recibido durante la prueba del SIEM",
+           EVD / R["alertas"]["grafica"], 6.5,
+           "Captura del correo enviado por el tema SNS qwallet-alertas el 1 de noviembre de 2026 "
+           "(EVD-5-06d). El número de cuenta y el ARN van tapados.")
 
 # ---------------------------------------------------------------- 5.5
 titulo("5.5 Gestión continua de vulnerabilidades", 2)
@@ -555,7 +557,7 @@ parrafo(
     "dinero real (sección 1.3) es en sí una forma de evitar el riesgo de PCI DSS y de fraude real."
 )
 parrafo(
-    "La Tabla 51 es la matriz de decisiones por riesgo que pide el enunciado: para cada uno, su "
+    "La Tabla 53 es la matriz de decisiones por riesgo que pide el enunciado: para cada uno, su "
     "tipo, el impacto en el negocio, la decisión, los controles, cómo se verificó y el riesgo "
     "antes y después."
 )

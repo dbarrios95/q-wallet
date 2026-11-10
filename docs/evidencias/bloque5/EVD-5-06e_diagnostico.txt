@@ -1,0 +1,66 @@
+EVD-5-06e Diagnóstico de las reglas del perímetro (por qué no saltó rafaga-401 y no hubo 429)
+Fecha: 2026-11-10 16:04:26 UTC
+
+1) Datos publicados por cada métrica del perímetro en las últimas 24 horas (suma por hora):
+   api_no_autenticado     8.0
+   api_limite             (sin datos)
+   api_bloqueo_waf        (sin datos)
+   trail_no_autorizado    12.0
+   trail_uso_root         (sin datos)
+
+2) Tres líneas reales del log de acceso de API Gateway (último octeto de la IP tapado):
+   {"error":"UNAUTHORIZED","estado":"401","ip":"51.8.144.x","latenciaMs":"2","metodo":"GET","requestId":"af2cd80c-87de-47a4-9c6f-8e7e4b6d8b1b","ruta":"/me","tiempo":"10/Nov/2026:15:32:40 +0000","usuario":"-","waf":"-"}
+   {"error":"MISSING_AUTHENTICATION_TOKEN","estado":"403","ip":"51.8.144.x","latenciaMs":"2","metodo":"GET","requestId":"96cec956-4689-444d-859f-b22dfd376b27","ruta":"/v1/ruta-que-no-existe","tiempo":"10/Nov/2026:15:32:40 +0000","usuario":"-","waf":"-"}
+   {"error":"UNAUTHORIZED","estado":"401","ip":"172.174.133.x","latenciaMs":"1","metodo":"GET","requestId":"c4b7a2fa-66fd-49ee-96d2-2951dd16d661","ruta":"/me","tiempo":"10/Nov/2026:15:35:05 +0000","usuario":"-","waf":"-"}
+   None
+
+3) Respuestas por estado y decisión del WAF en el log de acceso (últimas 24 h):
+   estado=401 | waf=- | solicitudes=8
+   estado=403 | waf=- | solicitudes=2
+
+4) Throttling configurado en la etapa v1:
+   {
+       "metodos": {
+           "rafaga": 20,
+           "porSegundo": 10.0
+       }
+   }
+
+5) Uso del usuario raíz (CloudTrail, últimas 24 h): evento, origen y hora (sin IP)
+   (sin resultados)
+
+6) Log de acceso de API Gateway: ¿por qué no llegan eventos?
+   Prueba activa: 3 solicitudes GET /me sin token (esperado 401) y búsqueda en el log tras 90 s
+     solicitud 1: HTTP 401
+     solicitud 2: HTTP 401
+     solicitud 3: HTTP 401
+     Eventos en el log de acceso en los últimos 5 minutos: 3
+0
+     -> el log de acceso funciona
+     {"error":"UNAUTHORIZED","estado":"401","ip":"20.83.38.x","latenciaMs":"2","metodo":"GET","requestId":"a1b7f2a3-2a9b-420d-b05b-9518886d4e90","ruta":"/me","tiempo":"10/Nov/2026:16:04:37 +0000","usuario":"-","waf":"-"}
+     {"error":"UNAUTHORIZED","estado":"401","ip":"20.83.38.x","latenciaMs":"1","metodo":"GET","requestId":"5982a7ce-6407-40c0-8134-eda39fc9bebd","ruta":"/me","tiempo":"10/Nov/2026:16:04:38 +0000","usuario":"-","waf":"-"}
+     None
+   Grupo de log (cifrado y retención):
+     [
+         {
+             "cifradoKms": true,
+             "retencionDias": 365,
+             "bytes": 0
+         }
+     ]
+   Rol de CloudWatch registrado en la cuenta de API Gateway:
+     {
+         "rol": "arn:aws:iam::************:role/qwallet-apigateway-logs"
+     }
+   Destino y formato del log de acceso de la etapa v1:
+     {
+         "destino": "arn:aws:logs:us-east-1:************:log-group:/aws/apigateway/qwallet-api",
+         "tieneFormato": true
+     }
+   Simulación de permisos del rol qwallet-apigateway-logs (incluye el límite de permisos):
+     logs:CreateLogStream	allowed
+     logs:PutLogEvents	allowed
+     logs:DescribeLogStreams	allowed
+     logs:DescribeLogGroups	implicitDeny
+   Política de la llave KMS para CloudWatch Logs (condición):
+      CloudWatchLogs {"ArnLike": {"kms:EncryptionContext:aws:logs:arn": "arn:aws:logs:us-east-1:************:log-group:*"}}
