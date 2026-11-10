@@ -2,13 +2,13 @@
 
 > Punto de arranque de cada chat. Se reescribe al cerrar cada bloque. Máximo una página.
 
-**Actualizado:** 10-nov-2026 · **Hoy toca:** bloque 6 (Word final, dictamen 6.1 a 6.6, presentación final)
+**Actualizado:** 10-nov-2026 · **Hoy toca:** bloque 6 (informe final, dictamen 6.1 a 6.6, presentación final). Primero, antes del sáb 14-nov: actualizar la presentación de la Entrega 2
 
 ## Fechas
 | Hito | Fecha | Fase del enunciado |
 |---|---|---|
 | Entrega 1 | 17-oct-2026 ✔ | Fase 1 |
-| Entrega 2 (presentación de 5 min) | 7-nov-2026 (tentativo) [VERIFICAR con Daniel si se presentó o se corrió] | Fase 2 |
+| Entrega 2: Word de la sección 4 ✔ (lo entregó Daniel) + **presentación de 5 min, cámara abierta** | **sáb 14-nov-2026** | Fase 2 |
 | **Entrega final** (incluye la presentación final) | **sáb 28-nov-2026** (confirmada) | Fases 3 a 6 + informe completo |
 
 > Las entregas parciales van sin portada ni índice; la portada, el índice y el resumen ejecutivo se agregan solo en el informe final (bloque 6).
@@ -36,6 +36,7 @@
 SIEM con CloudWatch (Wazuh al roadmap); aviso por correo; pruebas del teléfono en Actions; conexión mínima app–API; gitleaks ignora 13 falsos positivos (`.gitleaksignore`); WAF solo para pruebas (RSK-11 Alto aceptado temporal); aprobación manual de despliegues (RSK-32 → P1×I5).
 
 ## Pendientes para el bloque 6
+- **Primero (antes del sáb 14-nov):** actualizar la presentación de la Entrega 2 en Claude Slides ("Q-Wallet — Entrega 2 (Fase 2)"). La diapositiva 5 decía "qué sigue": ahora puede decir que las pruebas del despliegue pasaron (EVD-3-11, 3-12, 5-04) y que REQ-01 (pinning, tras HAL-13), REQ-04 (PIN, CA-02) y REQ-05 (dueño del recurso, CA-01) ya están cumplidos y probados. Guion en `docs/entregas/Entrega2_Presentacion.md`. Exportar PDF/PPTX para Daniel.
 - Ensamblar el informe final (secciones 0 a 6) con los Word de cada bloque; renumerar tablas y figuras; revisar `w:tblLayout` duplicado del Word de la Entrega 2; portada, índice y resumen ejecutivo.
 - Dictamen 6.1 a 6.6. Roadmap: Wazuh, inicio de sesión real con Cognito en la app, HAL-16 (throttling), WAF permanente en producción, usuario IAM administrador en vez de root, dominio propio (HAL-09), Play App Signing.
 - **Vencen el 28-nov** las excepciones SCA de HAL-02 (decode-uri-component) y zod de `@expo/cli`: revisar Expo SDK 58 antes.
