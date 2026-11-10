@@ -22,9 +22,10 @@
 | 6 | Informe final, dictamen, presentación final | 0 a 6 | ☑ PR #60 y PR de cierre (este) |
 
 ## Qué dejó el bloque 6
-- **Informe final** `docs/entregas/Informe_Final_QWallet.docx`: 154 págs., secciones 0 a 6 en el orden del enunciado, 60 tablas y 13 figuras renumeradas, 35 referencias APA 7 en 6.6, índice general. Se rearma con: `bloque6_word.py` → `entrega1_estilos.py` (sección 6) → `final_ensamblar.py` → `entrega1_estilos.py` → `entrega1_indice.py`.
+- **Informe final** `docs/entregas/Informe_Final_QWallet.docx`: 161 págs., secciones 0 a 6 en el orden del enunciado, 60 tablas y 20 figuras renumeradas (con capturas de la app y Anexo D), 35 referencias APA 7 en 6.6, índice general. Se rearma con: `bloque6_word.py` y `bloque6_capturas.py` (cada uno con `entrega1_estilos.py`) → `final_ensamblar.py` → `entrega1_estilos.py` → `entrega1_indice.py`.
 - **Dictamen** (sección 6): favorable para la versión evaluada, con tres condiciones antes de dinero real: WAF permanente, inicio de sesión real con CA-07 y Expo SDK 58 antes del 31-ene-2027. OE1, OE2, OE4 y OE5 cumplidos; OE3 parcial (11 de 13).
 - **Presentaciones** en Claude Slides: "Q-Wallet — Entrega 2 (Fase 2)" actualizada y "Q-Wallet — Presentación final" (10 diapositivas, ~10 min). Guiones en `docs/entregas/`.
+- **Capturas**: pantallas de la app y prueba de FLAG_SECURE en el emulador (EVD-6-01 a 6-07, `docs/evidencias/bloque6/`); AME-09 ahora verificada con prueba.
 - **PR #60**: alarma `aws-no-autorizado` sin el falso positivo del rol de plan; excepciones SCA renovadas al 31-ene-2027; Dependabot #53 a #57 aplicados juntos.
 
 ## Lo que le toca a Daniel

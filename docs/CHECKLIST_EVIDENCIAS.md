@@ -81,3 +81,10 @@ Como no hay demo en vivo, toda afirmación técnica del informe necesita una evi
 | ☑ | EVD-5-08 | Re-test de cada HAL en la Tabla 50 del Word del bloque 5; figura del SIEM `EVD-5-08_siem.png` |
 | ☑ | EVD-5-09 | Mapa de calor antes y después verificado: 580 → 208 (`scripts/bloque5_residual.py`) |
 | ☑ | EVD-5-11 | Ofuscación y firma del APK: Hermes bytecode, R8 renombró 20 836 de 22 027 clases |
+
+### App en el emulador (bloque 6, informe 4.3 y Anexo D)
+
+| ✔ | EVD | Qué debe verse |
+|---|---|---|
+| ☑ | EVD-6-01 a 6-05 | Pantallas de la app (bienvenida, login, inicio, movimientos, presupuestos), versión de desarrollo en Pixel_8_API_36, 10-nov (`docs/evidencias/bloque6/`) |
+| ☑ | EVD-6-06 y 6-07 | FLAG_SECURE: Transferir y Perfil en pantalla frente a `adb shell screencap` en negro; `dumpsys window` con el flag SECURE (EVD-6-06c) |

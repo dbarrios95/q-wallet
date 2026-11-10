@@ -1,0 +1,13 @@
+EVD-6-06c / EVD-6-07c  FLAG_SECURE (CTRL-22, AME-09) en el emulador Pixel_8_API_36, versión de desarrollo de Q-Wallet
+Fecha: 2026-11-10. Comandos ejecutados por Daniel en PowerShell 5.1 con la pantalla Transferir y luego Perfil abiertas.
+
+> adb shell screencap -p /sdcard/cap.png ; adb pull /sdcard/cap.png C:\dev\capturas\EVD-6-06_transferir_flag_secure.png
+/sdcard/cap.png: 1 file pulled, 0 skipped. 1.1 MB/s (15580 bytes in 0.014s)
+   -> imagen 1080x2400 completamente negra (EVD-6-06b_transferir_screencap.png)
+
+> adb shell dumpsys window windows | Select-String "SECURE"
+      fl=LAYOUT_IN_SCREEN SECURE LAYOUT_INSET_DECOR SPLIT_TOUCH HARDWARE_ACCELERATED DRAWS_SYSTEM_BAR_BACKGROUNDS
+  mDisableSecureWindows=false
+
+Perfil: misma prueba, imagen 1080x2400 completamente negra (EVD-6-07b_perfil_screencap.png) y el mismo flag SECURE.
+Las capturas "en pantalla" (EVD-6-06a, EVD-6-07a) se tomaron con el botón de captura del emulador, desde fuera de Android.
