@@ -1,6 +1,7 @@
 # HAL-16 (bloque 7): prueba de saturación más larga del throttling de API Gateway.
-# Sin AWS: solo llama a la API pública sin token. Unas 2 500 solicitudes en ~3 minutos,
-# máximo 60 por segundo (prueba de carga acotada, no inundación).
+# Sin credenciales de AWS: llama a la API pública. Fases sin token (~2 500 solicitudes, máximo
+# 60 por segundo) y, si están los secretos QWALLET_PRUEBA_*, fases con un access token real
+# del usuario de prueba (~900 solicitudes). Prueba de carga acotada, no inundación.
 # Evidencia: issue "Evidencias Pentest", el PR y la rama evidencias-ci (saturacion/).
 name: saturacion
 
@@ -9,6 +10,7 @@ on:
   pull_request:
     paths:
       - "infra/pruebas/saturacion.py"
+      - "infra/pruebas/token_prueba.py"
       - ".github/workflows/saturacion.yml"
 
 permissions:
@@ -32,11 +34,29 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Token real del usuario de prueba (PKCE + MFA, Chromium sin ventana)
+        id: token
+        continue-on-error: true
+        env:
+          QWALLET_PRUEBA_CORREO: ${{ secrets.QWALLET_PRUEBA_CORREO }}
+          QWALLET_PRUEBA_CLAVE: ${{ secrets.QWALLET_PRUEBA_CLAVE }}
+          QWALLET_PRUEBA_TOTP: ${{ secrets.QWALLET_PRUEBA_TOTP }}
+        run: |
+          [ -n "$QWALLET_PRUEBA_TOTP" ] || { echo "Sin secretos QWALLET_PRUEBA_*: solo fases sin token."; exit 1; }
+          pip install --quiet --break-system-packages playwright==1.65.0
+          python3 -m playwright install --with-deps chromium > /dev/null
+          cognito=$(grep -o '"[a-z0-9-]*\.auth\.[a-z0-9-]*\.amazoncognito\.com"' mobile/src/seguridad/config.ts | tr -d '"')
+          cliente=$(grep -o 'EXPO_PUBLIC_COGNITO_CLIENT_ID ?? "[a-z0-9]*"' mobile/src/seguridad/config.ts | grep -o '"[a-z0-9]*"' | tr -d '"')
+          python3 infra/pruebas/token_prueba.py "$cognito" "$cliente" /tmp/token_prueba
+          echo "::add-mask::$(cat /tmp/token_prueba)"
+
       - name: Prueba de saturación
         run: |
           mkdir -p evidencias
           host=$(grep -o '[a-z0-9]*\.execute-api\.[a-z0-9-]*\.amazonaws\.com' mobile/src/seguridad/config.ts | head -1)
-          python3 infra/pruebas/saturacion.py "https://${host}/v1" evidencias
+          token=""; [ -s /tmp/token_prueba ] && token=/tmp/token_prueba
+          python3 infra/pruebas/saturacion.py "https://${host}/v1" evidencias $token
+          rm -f /tmp/token_prueba
 
       - name: Publicar evidencias
         if: always()
