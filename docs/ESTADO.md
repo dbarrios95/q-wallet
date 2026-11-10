@@ -2,47 +2,40 @@
 
 > Punto de arranque de cada chat. Se reescribe al cerrar cada bloque. Máximo una página.
 
-**Actualizado:** 10-nov-2026 · **Hoy toca:** bloque 6 (informe final, dictamen 6.1 a 6.6, presentación final). Primero, antes del sáb 14-nov: actualizar la presentación de la Entrega 2
+**Actualizado:** 10-nov-2026 · **Hoy toca:** nada de construcción. Quedan la revisión de Daniel, las dos presentaciones y la entrega del 28-nov
 
 ## Fechas
 | Hito | Fecha | Fase del enunciado |
 |---|---|---|
 | Entrega 1 | 17-oct-2026 ✔ | Fase 1 |
-| Entrega 2: Word de la sección 4 ✔ (lo entregó Daniel) + **presentación de 5 min, cámara abierta** | **sáb 14-nov-2026** | Fase 2 |
-| **Entrega final** (incluye la presentación final) | **sáb 28-nov-2026** (confirmada) | Fases 3 a 6 + informe completo |
-
-> Las entregas parciales van sin portada ni índice; la portada, el índice y el resumen ejecutivo se agregan solo en el informe final (bloque 6).
+| Entrega 2: Word de la sección 4 ✔ + **presentación de 5 min, cámara abierta** | **sáb 14-nov-2026** | Fase 2 |
+| **Entrega final**: informe completo + presentación final (10 min) | **sáb 28-nov-2026** | Fases 1 a 6 |
 
 ## Bloques
 | # | Bloque | Secciones | Estado |
 |---|---|---|---|
 | 1 | Terraform + despliegue OIDC | 4.1, 4.2, 4.5 | ☑ |
-| 2 | Presentación del 7-nov | — | ☑ Lista (Claude Slides) |
+| 2 | Presentación de la Entrega 2 | — | ☑ (diapositiva 5 con resultados, 10-nov) |
 | 3 | Lambdas, SAST/SCA, minSdk 29 | 3.4, 3.5, 4.3, 4.4, 4.6 | ☑ |
 | 4 | Pentest, OWASP API, casos de abuso | 3.1, 3.2, 3.3, 3.6 | ☑ |
-| 5 | WAF, RASP, SIEM, alertas, tratamiento, mapa "después" | 5.1 a 5.6 | ☑ PR de cierre (este) |
-| 6 | Word final, dictamen, presentación final | 0, 6 | ☐ Siguiente |
+| 5 | WAF, RASP, SIEM, alertas, tratamiento | 5.1 a 5.6 | ☑ |
+| 6 | Informe final, dictamen, presentación final | 0 a 6 | ☑ PR #60 y PR de cierre (este) |
 
-## Qué dejó el bloque 5 (PR #47, #50, #51, #52, #58 y este)
-- **SIEM en CloudWatch** (`infra/monitoreo.tf`): CloudTrail → CloudWatch Logs, 14 reglas de correlación, 5 consultas guardadas, 9 alarmas (+1 del WAF) → SNS cifrado → correo (confirmado), tablero `qwallet-seguridad`. Probado de punta a punta: correos reales (EVD-5-06d).
-- **WAF** con SQLi agregado (HAL-07): 9/9 ataques bloqueados con la regla correcta (EVD-5-02/02b). Flujo `waf-siem.yml` (modo completo o **consultas**); el WAF se apaga solo.
-- **App**: freeRASP con política de reacción, pinning de las raíces de Amazon y cliente `llamarApi()` por XHR (HAL-13: `fetch` de Expo SDK 57 no tiene pinning; regla Semgrep lo prohíbe). Flujo `movil.yml`: APK release, MobSF, emulador con Frida, MITM y almacenamiento.
-- **Hallazgos HAL-06 a HAL-16** en `docs/REGISTRO_RIESGOS.md` (todos cerrados salvo HAL-09 aceptado y HAL-16 abierto).
-- **Riesgo**: inherente 580 → residual verificado 208; 0 Crítico, 1 Alto (RSK-11, aceptado temporal), 26 Medio, 14 Bajo. `scripts/bloque5_residual.py` + `docs/threat-model/verificacion_bloque5.json`.
-- **Word** `docs/entregas/Final_Secciones_5-1_a_5-6_Operaciones.docx` (24 págs., Tablas 42–53, Figuras 10–13; Arial 12 / 1.5, render revisado). Evidencias en `docs/evidencias/bloque5/` y `resultados.json`.
-- Cuenta endurecida por el bootstrap (S3 BPA de cuenta, política de contraseñas IAM). Despliegues con aprobación manual de Daniel (entorno `dev`).
+## Qué dejó el bloque 6
+- **Informe final** `docs/entregas/Informe_Final_QWallet.docx`: 154 págs., secciones 0 a 6 en el orden del enunciado, 60 tablas y 13 figuras renumeradas, 35 referencias APA 7 en 6.6, índice general. Se rearma con: `bloque6_word.py` → `entrega1_estilos.py` (sección 6) → `final_ensamblar.py` → `entrega1_estilos.py` → `entrega1_indice.py`.
+- **Dictamen** (sección 6): favorable para la versión evaluada, con tres condiciones antes de dinero real: WAF permanente, inicio de sesión real con CA-07 y Expo SDK 58 antes del 31-ene-2027. OE1, OE2, OE4 y OE5 cumplidos; OE3 parcial (11 de 13).
+- **Presentaciones** en Claude Slides: "Q-Wallet — Entrega 2 (Fase 2)" actualizada y "Q-Wallet — Presentación final" (10 diapositivas, ~10 min). Guiones en `docs/entregas/`.
+- **PR #60**: alarma `aws-no-autorizado` sin el falso positivo del rol de plan; excepciones SCA renovadas al 31-ene-2027; Dependabot #53 a #57 aplicados juntos.
 
-## Decisiones tomadas por Daniel (31-oct-2026)
-SIEM con CloudWatch (Wazuh al roadmap); aviso por correo; pruebas del teléfono en Actions; conexión mínima app–API; gitleaks ignora 13 falsos positivos (`.gitleaksignore`); WAF solo para pruebas (RSK-11 Alto aceptado temporal); aprobación manual de despliegues (RSK-32 → P1×I5).
+## Lo que le toca a Daniel
+1. Merge del PR #60 y aprobar el despliegue en `dev` (el plan del despliegue debe salir sin destrucciones ni reemplazos). Después cerrar los PR #53 a #57 si Dependabot no los cierra solo.
+2. Merge del PR de cierre del bloque 6.
+3. Abrir el Word final en Word, clic derecho en el índice → Actualizar campo → Toda la tabla, y leerlo completo.
+4. Resolver los dos `[VERIFICAR]` que quedan en el Word: costo de CloudWatch en la factura de noviembre (sección 5.3) y origen de `files/tcb` (Tabla 45). Si no se pueden verificar, se dejan marcados.
+5. Exportar cada presentación como PDF de respaldo y ensayar con cronómetro.
 
-## Pendientes para el bloque 6
-- **Primero (antes del sáb 14-nov):** actualizar la presentación de la Entrega 2 en Claude Slides ("Q-Wallet — Entrega 2 (Fase 2)"). La diapositiva 5 decía "qué sigue": ahora puede decir que las pruebas del despliegue pasaron (EVD-3-11, 3-12, 5-04) y que REQ-01 (pinning, tras HAL-13), REQ-04 (PIN, CA-02) y REQ-05 (dueño del recurso, CA-01) ya están cumplidos y probados. Guion en `docs/entregas/Entrega2_Presentacion.md`. Exportar PDF/PPTX para Daniel.
-- Ensamblar el informe final (secciones 0 a 6) con los Word de cada bloque; renumerar tablas y figuras; revisar `w:tblLayout` duplicado del Word de la Entrega 2; portada, índice y resumen ejecutivo.
-- Dictamen 6.1 a 6.6. Roadmap: Wazuh, inicio de sesión real con Cognito en la app, HAL-16 (throttling), WAF permanente en producción, usuario IAM administrador en vez de root, dominio propio (HAL-09), Play App Signing.
-- **Vencen el 28-nov** las excepciones SCA de HAL-02 (decode-uri-component) y zod de `@expo/cli`: revisar Expo SDK 58 antes.
-- Alarma `aws-no-autorizado` salta con los planes de PR (rol de plan sin `kms:Decrypt`): excluir ese rol como al de Prowler.
-- PR de Dependabot #53 a #57 sin revisar (setup-java 6, CodeQL 4.39.3, proveedor AWS 6.71.0).
-- [VERIFICAR] costo real de CloudWatch en la factura de noviembre; origen del archivo `files/tcb` de la app (probable freeRASP).
+## Pendientes que pasan al roadmap (sección 6.3)
+Expo SDK 58 (vence la excepción el 31-ene-2027); HAL-16 (prueba de saturación más larga); inicio de sesión con Cognito en la app; WAF permanente; dominio propio (HAL-09); Play App Signing; IAM Identity Center en vez de root; Wazuh.
 
 ## Recursos AWS
-Cuenta de Daniel, us-east-1: toda la arquitectura, SIEM y alarmas desplegados; WAF apagado. Gasto esperado ~US$2–3 al mes (llave KMS + métricas de CloudWatch) [VERIFICAR]; el WAF ~US$9 al mes solo encendido.
+Cuenta de Daniel, us-east-1: toda la arquitectura, SIEM y alarmas desplegados; WAF apagado. Gasto esperado ~US$2–3 al mes [VERIFICAR en la factura]; el WAF ~US$9 al mes solo encendido. Antes de cerrar la cuenta o borrar recursos después del curso: preguntar y respaldar (regla de borrado).
