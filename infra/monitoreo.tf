@@ -59,9 +59,12 @@ locals {
   # Reglas sobre CloudTrail (basadas en CIS AWS Foundations, sección de monitoreo).
   # Se excluye el rol de pentest: Prowler hace cientos de lecturas autorizadas que
   # AWS niega por diseño (rol de solo lectura) y saturarían la alerta.
+  # Del rol de plan (PR) solo se excluyen las negaciones de KMS: terraform plan lee
+  # recursos cifrados y ese rol no tiene kms:Decrypt a propósito (falso positivo del
+  # bloque 5). Cualquier otra negación del rol de plan sigue alertando.
   reglas_trail = {
     trail_no_autorizado = {
-      patron      = "{ ($.errorCode = \"*UnauthorizedOperation\" || $.errorCode = \"AccessDenied*\") && $.userIdentity.sessionContext.sessionIssuer.userName != \"qwallet-gha-pentest\" }"
+      patron      = "{ ($.errorCode = \"*UnauthorizedOperation\" || $.errorCode = \"AccessDenied*\") && $.userIdentity.sessionContext.sessionIssuer.userName != \"qwallet-gha-pentest\" && ($.userIdentity.sessionContext.sessionIssuer.userName != \"qwallet-gha-plan\" || $.eventSource != \"kms.amazonaws.com\") }"
       descripcion = "Llamadas a la API de AWS negadas por IAM (CIS 4.1)"
     }
     trail_uso_root = {
