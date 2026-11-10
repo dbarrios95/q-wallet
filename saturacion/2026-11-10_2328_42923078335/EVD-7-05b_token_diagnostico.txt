@@ -1,0 +1,3 @@
+EVD-7-05b diagnóstico del login automático (sin secretos)
+paso 1: /login campos=['email/username/on', 'password/password/on', 'checkbox/None/None'] botones=['Iniciar sesión'] hecho=[]
+paso 2: /mfa/totp campos=['text/code/one-time-code'] botones=['Iniciar sesión'] hecho=['clave', 'correo']
