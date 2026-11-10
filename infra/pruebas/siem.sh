@@ -69,6 +69,9 @@ reglas)
     probar trail_no_autorizado "$(pat /tmp/f_trail.txt trail_no_autorizado)" \
       '{"eventSource":"iam.amazonaws.com","eventName":"ListUsers","errorCode":"AccessDenied","userIdentity":{"type":"AssumedRole","sessionContext":{"sessionIssuer":{"userName":"qwallet-gha-despliegue"}}}}' \
       '{"eventSource":"iam.amazonaws.com","eventName":"ListUsers","errorCode":"AccessDenied","userIdentity":{"type":"AssumedRole","sessionContext":{"sessionIssuer":{"userName":"qwallet-gha-pentest"}}}}'
+    probar trail_no_autorizado_plan "$(pat /tmp/f_trail.txt trail_no_autorizado)" \
+      '{"eventSource":"dynamodb.amazonaws.com","eventName":"PutItem","errorCode":"AccessDenied","userIdentity":{"type":"AssumedRole","sessionContext":{"sessionIssuer":{"userName":"qwallet-gha-plan"}}}}' \
+      '{"eventSource":"kms.amazonaws.com","eventName":"Decrypt","errorCode":"AccessDenied","userIdentity":{"type":"AssumedRole","sessionContext":{"sessionIssuer":{"userName":"qwallet-gha-plan"}}}}'
     probar trail_uso_root "$(pat /tmp/f_trail.txt trail_uso_root)" \
       '{"eventName":"GetAccountSummary","eventType":"AwsApiCall","userIdentity":{"type":"Root"}}' \
       '{"eventName":"GetAccountSummary","eventType":"AwsApiCall","userIdentity":{"type":"AssumedRole"}}'

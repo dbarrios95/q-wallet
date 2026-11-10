@@ -184,7 +184,7 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 | Componente | Versión |
 |---|---|
 | Terraform | 1.16.5 (`required_version = "= 1.16.5"`) |
-| hashicorp/aws provider | 6.67.0 (`version = "= 6.67.0"`) |
+| hashicorp/aws provider | 6.71.0 (`version = "= 6.71.0"`; 10-nov-2026, Dependabot #57) |
 
 #### Seguridad y DevSecOps
 | Herramienta | Versión | Uso |
@@ -216,7 +216,7 @@ Dinero **simulado**, moneda **GTQ**, montos almacenados como **enteros en centav
 | aquasecurity/trivy-action | No se usa: Trivy 0.75.0 se descarga y se verifica por SHA-256 (bloque 3) |
 | bridgecrewio/checkov-action | v12.3128.0 |
 | zaproxy/action-api-scan | v0.10.0 |
-| github/codeql-action | v4.39.1 (`9b3254085494b55a0f7c4c2b3d2d52cc712ce370`) |
+| github/codeql-action | v4.39.3 (`33d7b85da1a04171e211befe2c739303b9a4c066`; 10-nov-2026, Dependabot #54 a #56) |
 | actions/download-artifact | v8.0.2 (`9000827ccba6bdab643e8b6fd33ac0654aef8333`) |
 | gitleaks/gitleaks-action | No se usa: el binario 8.30.1 se descarga y se verifica por SHA-256 (bloque 3) |
 
