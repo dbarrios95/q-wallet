@@ -92,7 +92,7 @@
         "EVD-5-06e",
         "EVD-7-05"
       ],
-      "nota": "El límite por IP del WAF bloqueó la ráfaga en la solicitud 111 (EVD-5-02), pero el WAF solo se enciende para pruebas por presupuesto y sin token el throttling de API Gateway no devuelve 429 (el authorizer rechaza antes, HAL-16); con token sí, pero una ráfaga autenticada recibe 500 por el límite de Lambda (HAL-17, EVD-7-05). Decisión de Daniel (31-oct-2026): residual Alto aceptado de forma temporal, con el plan de encender el WAF de forma permanente si la app pasa a producción."
+      "nota": "El límite por IP del WAF bloqueó la ráfaga en la solicitud 111 (EVD-5-02), pero el WAF solo se enciende para pruebas por presupuesto y sin token el throttling de API Gateway no devuelve 429 (el authorizer rechaza antes, HAL-16); con token sí, pero una ráfaga autenticada recibe 500 porque el límite de Lambda de la cuenta (10) es menor que la ráfaga (20) (HAL-17, EVD-7-05). Decisión de Daniel (31-oct-2026): residual Alto aceptado de forma temporal, con el plan de encender el WAF de forma permanente si la app pasa a producción."
     },
     "AME-12": {
       "estado": "prueba",

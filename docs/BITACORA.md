@@ -17,6 +17,7 @@
   - Presentación final (Claude Slides) actualizada: cifras, CA-07, dictamen y números de figura; mapa de calor nuevo. Guion `Final_Presentacion.md` actualizado. `REGISTRO_RIESGOS.md` y `CHECKLIST_EVIDENCIAS.md` al día.
 - Nota de exposición: las capturas sin tapar de la rama `evidencias-ci` (pública) muestran el correo del usuario de prueba (`qwallet.example`, dominio reservado, sin datos). Las del repo y del informe van tapadas. Durante las pruebas de saturación pudieron dispararse alarmas de 4xx o 5xx por correo: es esperado.
 - gitleaks: marcó como `generic-api-key` el inicio del valor CIFRADO de SecureStore que imprimía EVD-7-01 (`key_v1-qw_refresh: ... {"ct":"VV...`). Falso positivo (texto cifrado con Keystore de un emulador destruido). `sesion_ca07.py` ya no imprime ningún fragmento del valor, la copia del repo se corrigió y `.gitleaksignore` suma solo esas 2 entradas (commit de evidencias-ci y commit 4422646), con su motivo.
+- HAL-17: Daniel verificó en CloudShell `aws lambda get-account-settings` → límite de ejecuciones simultáneas de la cuenta = 10 (menor que la ráfaga de 20 de API Gateway). Causa confirmada y citada en el informe.
 - Borrados: ninguno. El usuario de prueba de Cognito queda activo (lo usan los flujos).
 - Siguiente paso: Daniel revisa y hace merge del PR #63, actualiza el índice en Word y presenta (14-nov y 28-nov).
 
