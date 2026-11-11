@@ -233,11 +233,15 @@ def revisar_almacenamiento() -> list[str]:
         contenido = sh(f"cat {p}")
         claves = re.findall(r'name="([^"]+)"', contenido)
         lineas.append("")
-        lineas.append(f"{p}: entradas {', '.join(claves) if claves else '(vacío)'}")
+        # Nombres sin el prefijo de SecureStore y unidos con «y»: «key_v1-a, key_v1-b» parece a
+        # gitleaks una asignación de llave (falso positivo generic-api-key, bloque 7).
+        nombres = [c.split("-", 1)[-1] for c in claves]
+        lineas.append(f"{p}: {len(nombres)} entradas ({' y '.join(nombres) if nombres else 'ninguna'})")
         for nombre, valor in re.findall(r'name="([^"]+)"[^>]*>([^<]*)<', contenido):
             # Ni un fragmento del valor en la evidencia: solo su tamaño y su forma (bloque 7: gitleaks
             # marcó como posible llave el inicio del texto cifrado).
             forma = "objeto con texto cifrado (ct)" if "ct&quot;" in valor or '"ct"' in valor else "otro formato"
+            nombre = nombre.split("-", 1)[-1]
             lineas.append(f"   {nombre}: {len(valor)} caracteres, {forma}; cifrado, no es JWT"
                           if "eyJ" not in valor else f"   {nombre}: CONTIENE UN JWT EN CLARO")
     llaves = sh("ls /data/misc/keystore/persistent.sqlite 2>/dev/null && echo keystore2_presente")
@@ -317,7 +321,7 @@ def main() -> int:
     esperar_marca(r"QWALLET_AUTH .*logout=", 30)
     resultado["logout"] = next((x for x in marcas() if "logout=" in x), "sin marca")
     restos = sh(f"cat /data/data/{PKG}/shared_prefs/*SecureStore*.xml 2>/dev/null")
-    resultado["tras_logout"] = ", ".join(re.findall(r'name="([^"]+)"', restos)) or "ninguna entrada"
+    resultado["tras_logout"] = " y ".join(n.split("-", 1)[-1] for n in re.findall(r'name="([^"]+)"', restos)) or "ninguna entrada"
     log(f"Cierre de sesión: {resultado['logout']}")
     return fin(fecha, resultado, True)
 
