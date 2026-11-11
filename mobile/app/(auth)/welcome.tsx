@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { ShieldCheck, Wallet, ArrowRight, Fingerprint } from "lucide-react-native";
@@ -6,10 +6,15 @@ import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { useTheme } from "../../src/theme";
 import { Button } from "../../src/components";
+import { haySesionGuardada } from "../../src/seguridad/sesion";
 
 export default function WelcomeScreen() {
   const router = useRouter();
   const { colors, palette, isDark } = useTheme();
+  const [haySesion, setHaySesion] = useState(false);
+  useEffect(() => {
+    haySesionGuardada().then(setHaySesion).catch(() => setHaySesion(false));
+  }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -58,15 +63,18 @@ export default function WelcomeScreen() {
             iconPosition="right"
           />
 
-          <View style={{ height: 12 }} />
-
-          <Button
-            title="Desbloquear con Biometría"
-            onPress={() => router.push("/(auth)/unlock")}
-            variant="outline"
-            size="lg"
-            icon={<Fingerprint size={20} color={palette.accent} />}
-          />
+          {haySesion ? (
+            <>
+              <View style={{ height: 12 }} />
+              <Button
+                title="Desbloquear con Biometría"
+                onPress={() => router.push("/(auth)/unlock")}
+                variant="outline"
+                size="lg"
+                icon={<Fingerprint size={20} color={palette.accent} />}
+              />
+            </>
+          ) : null}
         </Animated.View>
 
         {/* Security badge at bottom */}

@@ -8,8 +8,21 @@ export const API_HOST = "dk1m3avi8i.execute-api.us-east-1.amazonaws.com";
 export const API_URL = `https://${API_HOST}/v1`;
 
 /**
+ * CTRL-18 (bloque 7): login administrado de Amazon Cognito con Authorization Code + PKCE.
+ * Valores públicos (el cliente es público, sin secreto). Salen del user pool qwallet-usuarios
+ * (scripts/usuario_prueba.py los imprime); se pueden reemplazar en la compilación con
+ * EXPO_PUBLIC_COGNITO_HOST y EXPO_PUBLIC_COGNITO_CLIENT_ID.
+ */
+export const COGNITO_HOST = process.env.EXPO_PUBLIC_COGNITO_HOST ?? "qwallet-55abf6fc.auth.us-east-1.amazoncognito.com";
+export const COGNITO_CLIENT_ID = process.env.EXPO_PUBLIC_COGNITO_CLIENT_ID ?? "6f44qm9tc4frn87uka01mqc15r";
+/** Alcance propio de la API: el authorizer de API Gateway lo exige en el access token. */
+export const API_SCOPE = "qwallet/api";
+/** Deben coincidir con callback_urls y logout_urls de infra/variables.tf. */
+export const REDIRECT_LOGIN = "qwallet://auth/callback";
+
+/**
  * CTRL-08: pinning por llave pública (SHA-256 del SubjectPublicKeyInfo, en base64)
- * de las raíces de Amazon Trust Services. Se fija la raíz y no el certificado del
+ * de las raíces de Amazon Trust Services (API y dominio de Cognito). Se fija la raíz y no el certificado del
  * servidor porque AWS rota el certificado del endpoint sin aviso; las cuatro raíces
  * dan pines de respaldo. Calculados desde el almacén de raíces del sistema (bloque 5)
  * y verificados contra la cadena real en el flujo movil.yml.

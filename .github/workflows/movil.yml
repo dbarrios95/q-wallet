@@ -1,11 +1,13 @@
 # App móvil en producción (bloque 5): compilación, análisis estático y pruebas en emulador.
-# No usa AWS: solo llama a la API pública sin token (espera 401).
+# No usa credenciales de AWS: llama a la API pública y al login de Cognito como cualquier usuario.
 #   apk ........ APK release (Hermes + R8), verificación de los pines contra la cadena
 #                real, secretos y manifiesto (EVD-4-11), ofuscación y firma (EVD-5-11),
 #                MobSF 4.5.3 (EVD-3-07)
 #   dispositivo  emulador Android 13 (API 33, Google APIs, x86_64, con root):
 #                freeRASP (EVD-5-03), CA-10 Frida (EVD-4-10), CA-08 MITM (EVD-4-08),
-#                CA-07 almacenamiento (EVD-4-08b)
+#                CA-07 almacenamiento (EVD-4-08b) y, desde el bloque 7, CA-07 con sesión real
+#                de Cognito (EVD-7-01 a 7-04) con un APK de prueba (freeRASP solo registra)
+#                y el usuario de prueba de los secretos QWALLET_PRUEBA_*
 # Las evidencias van al issue "Evidencias Móvil", al PR y a la rama evidencias-ci.
 name: movil
 
@@ -98,9 +100,12 @@ jobs:
       - name: Verificar los pines contra la cadena real del endpoint (CTRL-08)
         run: |
           mkdir -p evidencias
-          host=$(grep -o '[a-z0-9]*\.execute-api\.[a-z0-9-]*\.amazonaws\.com' mobile/src/seguridad/config.ts | head -1)
+          api=$(grep -o '[a-z0-9]*\.execute-api\.[a-z0-9-]*\.amazonaws\.com' mobile/src/seguridad/config.ts | head -1)
+          cognito=$(grep -o '[a-z0-9-]*\.auth\.[a-z0-9-]*\.amazoncognito\.com' mobile/src/seguridad/config.ts | head -1)
           spki() { openssl x509 -in "$1" -pubkey -noout | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | base64; }
           {
+          for host in "$api" "$cognito"; do
+            rm -f /tmp/cadena*.pem
             echo "Pines configurados en la app vs. cadena real de ${host}"
             echo "Fecha: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
             echo
@@ -124,10 +129,12 @@ jobs:
             fi
             echo
             if [ "$aciertos" -gt 0 ]; then
-              echo "Resultado: la cadena real pasa por ${aciertos} llave(s) fijada(s). Correcto."
+              echo "Resultado ${host}: la cadena real pasa por ${aciertos} llave(s) fijada(s). Correcto."
             else
-              echo "Resultado: FALLA, ninguna llave de la cadena real está fijada."; exit 1
+              echo "Resultado ${host}: FALLA, ninguna llave de la cadena real está fijada."; exit 1
             fi
+            echo
+          done
           } 2>&1 | tee evidencias/EVD-4-08c_pines_vs_cadena.txt
 
       - name: Secretos, manifiesto, ofuscación y firma (EVD-4-11, EVD-5-11)
@@ -135,6 +142,26 @@ jobs:
           cp mobile/android/app/build/outputs/apk/release/app-release.apk evidencias/
           MAPA_R8=mobile/android/app/build/outputs/mapping/release/mapping.txt \
             bash mobile/pruebas/apk_estatico.sh evidencias/app-release.apk evidencias
+
+      - name: APK de prueba para CA-07 con sesión real (freeRASP solo registra; no se publica)
+        working-directory: mobile/android
+        env:
+          EXPO_PUBLIC_QWALLET_APK_PRUEBA: ca07
+        run: |
+          # Se vuelve a generar solo el paquete de JavaScript (la variable se incrusta al empaquetar).
+          rm -rf /tmp/metro-* /tmp/haste-map-* ../node_modules/.cache
+          ./gradlew :app:createBundleReleaseJsAndAssets --rerun --no-daemon --console=plain > /tmp/gradle2.log 2>&1 \
+            && ./gradlew assembleRelease --no-daemon --console=plain -PreactNativeArchitectures=x86_64,arm64-v8a >> /tmp/gradle2.log 2>&1 \
+            || { tail -40 /tmp/gradle2.log; exit 1; }
+          tail -5 /tmp/gradle2.log
+          mkdir -p ../../prueba
+          cp app/build/outputs/apk/release/app-release.apk ../../prueba/app-prueba-ca07.apk
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: movil-apk-prueba
+          path: prueba/
+          retention-days: 7
 
       - name: MobSF 4.5.3 (EVD-3-07)
         env:
@@ -171,6 +198,12 @@ jobs:
           name: movil-apk
           path: evidencias
 
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        continue-on-error: true
+        with:
+          name: movil-apk-prueba
+          path: prueba
+
       - name: Herramientas del atacante (Frida, mitmproxy)
         run: |
           pip install --quiet --break-system-packages "frida==${FRIDA_VERSION}" \
@@ -191,17 +224,21 @@ jobs:
 
       - name: Pruebas en el emulador
         if: hashFiles('evidencias/app-release.apk') != ''
-        timeout-minutes: 25
+        timeout-minutes: 35
+        env:
+          QWALLET_PRUEBA_CORREO: ${{ secrets.QWALLET_PRUEBA_CORREO }}
+          QWALLET_PRUEBA_CLAVE: ${{ secrets.QWALLET_PRUEBA_CLAVE }}
+          QWALLET_PRUEBA_TOTP: ${{ secrets.QWALLET_PRUEBA_TOTP }}
         run: |
           export PATH="$ANDROID_HOME/platform-tools:$PATH"
-          bash mobile/pruebas/dispositivo.sh evidencias/app-release.apk evidencias
+          bash mobile/pruebas/dispositivo.sh evidencias/app-release.apk evidencias prueba/app-prueba-ca07.apk
 
       - name: Publicar evidencias
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          rm -f evidencias/app-release.apk
+          rm -f evidencias/app-release.apk prueba/*.apk
           bash scripts/publicar_evidencias.sh evidencias "Evidencias Móvil" movil "${{ job.status }}"
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import React, { useState, useEffect, useCallback } from "react";
+import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import * as LocalAuthentication from "expo-local-authentication";
 import { usePreventScreenCapture } from "expo-screen-capture";
-import { Fingerprint, ShieldCheck, KeyRound } from "lucide-react-native";
+import { Fingerprint, ShieldCheck } from "lucide-react-native";
 import { useTheme } from "../../src/theme";
-import { Header, Input, Button, Card } from "../../src/components";
+import { Header, Button, Card } from "../../src/components";
+import { desbloquear, haySesionGuardada } from "../../src/seguridad/sesion";
 
+// CTRL-07: la sesión guardada (refresh token cifrado con Android Keystore) solo se abre con la
+// biometría del teléfono o con su PIN/patrón; después se renuevan los tokens en Cognito.
 export default function UnlockScreen() {
   const router = useRouter();
   const { colors, palette, isDark } = useTheme();
@@ -14,67 +16,34 @@ export default function UnlockScreen() {
   // FLAG_SECURE: previene captura de pantalla y grabación en vistas sensibles (MASVS-STORAGE)
   usePreventScreenCapture();
 
-  const [pin, setPin] = useState("");
-  const [pinError, setPinError] = useState<string | undefined>();
-  const [biometryType, setBiometryType] = useState<string>("Biometría");
-  const [hasBiometry, setHasBiometry] = useState<boolean>(false);
+  const [mensaje, setMensaje] = useState<string | null>(null);
+  const [cargando, setCargando] = useState(false);
+
+  const intentar = useCallback(async () => {
+    setMensaje(null);
+    setCargando(true);
+    try {
+      if (!(await haySesionGuardada())) {
+        router.replace("/(auth)/login");
+        return;
+      }
+      if (await desbloquear()) {
+        router.replace("/(tabs)/home");
+      } else if (await haySesionGuardada()) {
+        setMensaje("No se pudo confirmar tu identidad. Intenta de nuevo.");
+      } else {
+        setMensaje("Tu sesión venció. Inicia sesión de nuevo.");
+      }
+    } finally {
+      setCargando(false);
+    }
+  }, [router]);
 
   useEffect(() => {
-    checkBiometrics();
-  }, []);
+    void intentar();
+  }, [intentar]);
 
-  const checkBiometrics = async () => {
-    try {
-      const compatible = await LocalAuthentication.hasHardwareAsync();
-      const enrolled = await LocalAuthentication.isEnrolledAsync();
-      if (compatible && enrolled) {
-        setHasBiometry(true);
-        const types = await LocalAuthentication.supportedAuthenticationTypesAsync();
-        if (
-          types.includes(
-            LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION
-          )
-        ) {
-          setBiometryType("Reconocimiento Facial");
-        } else {
-          setBiometryType("Huella Dactilar");
-        }
-        // Solicitar automáticamente al cargar
-        handleBiometricAuth();
-      }
-    } catch {
-      // Entorno simulador o sin soporte de hardware biométrico
-      setHasBiometry(false);
-    }
-  };
-
-  // TODO(CTRL-07): Recuperar tokens de sesión desde expo-secure-store con requireAuthentication biométrico
-  const handleBiometricAuth = async () => {
-    try {
-      const result = await LocalAuthentication.authenticateAsync({
-        promptMessage: "Desbloquear Q-Wallet",
-        cancelLabel: "Cancelar",
-        fallbackLabel: "Usar PIN de seguridad",
-        disableDeviceFallback: false,
-      });
-
-      if (result.success) {
-        router.replace("/(tabs)/home");
-      }
-    } catch {
-      // Ignorar si el usuario cancela
-    }
-  };
-
-  const handlePinSubmit = () => {
-    if (pin.length !== 6) {
-      setPinError("El PIN debe ser de exactamente 6 dígitos");
-      return;
-    }
-    // PIN de prueba simulado para desarrollo
-    setPinError(undefined);
-    router.replace("/(tabs)/home");
-  };
+  const fondo = isDark ? colors.surfaceSubtle : palette.gray[100];
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -82,76 +51,28 @@ export default function UnlockScreen() {
 
       <View style={styles.content}>
         <View style={styles.topSection}>
-          <View
-            style={[
-              styles.avatarCircle,
-              {
-                backgroundColor: isDark
-                  ? colors.surfaceSubtle
-                  : palette.gray[100],
-              },
-            ]}
-          >
+          <View style={[styles.avatarCircle, { backgroundColor: fondo }]}>
             <ShieldCheck size={48} color={palette.accent} />
           </View>
-
-          <Text style={[styles.greeting, { color: colors.text }]}>
-            Hola, María Morales
-          </Text>
+          <Text style={[styles.greeting, { color: colors.text }]}>Hola de nuevo</Text>
           <Text style={[styles.subGreeting, { color: colors.textMuted }]}>
-            Confirma tu identidad para continuar
+            Confirma tu identidad con la huella, el rostro o el bloqueo de tu teléfono
           </Text>
         </View>
 
         <Card style={styles.unlockCard}>
-          <Text style={[styles.pinPrompt, { color: colors.text }]}>
-            Ingresa tu PIN de 6 dígitos
-          </Text>
-
-          <Input
-            variant="pin"
-            pinLength={6}
-            value={pin}
-            onChangeText={(text) => {
-              setPin(text);
-              if (text.length === 6) {
-                setPinError(undefined);
-              }
-            }}
-            error={pinError}
-            helper="PIN numérico de seguridad"
-          />
-
-          <View style={{ height: 16 }} />
-
           <Button
-            title="Desbloquear con PIN"
-            onPress={handlePinSubmit}
+            title="Desbloquear"
+            onPress={intentar}
             variant="primary"
-            size="md"
-            icon={<KeyRound size={18} color="#FFFFFF" />}
+            size="lg"
+            loading={cargando}
+            icon={<Fingerprint size={20} color="#FFFFFF" />}
           />
+          {mensaje ? <Text style={[styles.mensaje, { color: colors.textMuted }]}>{mensaje}</Text> : null}
+          <View style={{ height: 12 }} />
+          <Button title="Iniciar sesión con otra cuenta" onPress={() => router.replace("/(auth)/login")} variant="ghost" size="md" />
         </Card>
-
-        {hasBiometry && (
-          <TouchableOpacity
-            onPress={handleBiometricAuth}
-            style={[
-              styles.biometryButton,
-              {
-                backgroundColor: isDark
-                  ? colors.surfaceSubtle
-                  : palette.gray[100],
-              },
-            ]}
-            activeOpacity={0.8}
-          >
-            <Fingerprint size={28} color={palette.accent} />
-            <Text style={[styles.biometryText, { color: colors.text }]}>
-              Usar {biometryType}
-            </Text>
-          </TouchableOpacity>
-        )}
 
         <View style={styles.footerNote}>
           <Text style={[styles.footerText, { color: colors.textSubtle }]}>
@@ -197,6 +118,12 @@ const styles = StyleSheet.create({
   unlockCard: {
     marginVertical: 20,
     alignItems: "center",
+  },
+  mensaje: {
+    marginTop: 12,
+    fontSize: 13,
+    fontFamily: "Inter_500Medium",
+    textAlign: "center",
   },
   pinPrompt: {
     fontSize: 15,

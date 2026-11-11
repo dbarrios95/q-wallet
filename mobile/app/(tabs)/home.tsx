@@ -21,11 +21,14 @@ import {
   TransactionItem,
   Card,
 } from "../../src/components";
-import { mockAccount, mockTransactions, mockUser } from "../../src/mocks";
+import { mockAccount, mockTransactions } from "../../src/mocks";
+import { useUsuario } from "../../src/seguridad/sesion";
 
 export default function HomeScreen() {
   const router = useRouter();
   const { colors, palette, isDark } = useTheme();
+  const usuario = useUsuario();
+  const alias = (usuario?.correo ?? "").split("@")[0] || "Q-Wallet";
 
   const recentTransactions = mockTransactions.slice(0, 4);
 
@@ -40,14 +43,14 @@ export default function HomeScreen() {
               { backgroundColor: palette.primary },
             ]}
           >
-            <Text style={styles.avatarText}>MM</Text>
+            <Text style={styles.avatarText}>{alias.slice(0, 2).toUpperCase()}</Text>
           </View>
           <View>
             <Text style={[styles.greeting, { color: colors.textMuted }]}>
-              Hola, bienvenida
+              Hola, bienvenido(a)
             </Text>
             <Text style={[styles.userName, { color: colors.text }]}>
-              {mockUser.name}
+              {alias}
             </Text>
           </View>
         </View>

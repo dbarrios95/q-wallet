@@ -1,153 +1,93 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
-import { z } from "zod";
-import { Lock, Mail, ShieldAlert } from "lucide-react-native";
+import { KeyRound, ShieldCheck, Smartphone } from "lucide-react-native";
 import { useTheme } from "../../src/theme";
-import { Header, Input, Button, Card } from "../../src/components";
+import { Header, Button, Card } from "../../src/components";
+import { iniciarSesion, loginConfigurado, tokenAcceso } from "../../src/seguridad/sesion";
+import { llamarApi } from "../../src/seguridad/red";
+import { marcaSeguridad } from "../../src/seguridad/registro";
 
-// Esquema Zod estricto para validación de inicio de sesión
-const loginSchema = z
-  .object({
-    username: z
-      .string()
-      .min(3, "El usuario, teléfono o correo es requerido")
-      .max(100, "Máximo 100 caracteres"),
-    password: z
-      .string()
-      .min(8, "La contraseña debe tener al menos 8 caracteres"),
-  })
-  .strict();
-
+// CTRL-18: la contraseña y el código TOTP se escriben en la página de inicio de sesión de
+// Q-Wallet (login administrado de Amazon Cognito, con PKCE), nunca en esta pantalla.
 export default function LoginScreen() {
   const router = useRouter();
   const { colors, palette, isDark } = useTheme();
+  const [cargando, setCargando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<{ username?: string; password?: string }>({});
-  const [loading, setLoading] = useState(false);
-
-  // TODO(CTRL-18): Integrar flujo OAuth2 Authorization Code con PKCE usando expo-auth-session
-  // hacia el Hosted UI de Amazon Cognito con MFA TOTP obligatorio.
-  const handleLogin = () => {
-    setErrors({});
-    const result = loginSchema.safeParse({ username, password });
-
-    if (!result.success) {
-      const fieldErrors: { username?: string; password?: string } = {};
-      result.error.issues.forEach((issue) => {
-        if (issue.path[0] === "username") fieldErrors.username = issue.message;
-        if (issue.path[0] === "password") fieldErrors.password = issue.message;
-      });
-      setErrors(fieldErrors);
-      return;
-    }
-
-    setLoading(true);
-    // Simulación de navegación hacia pantalla principal sin backend
-    setTimeout(() => {
-      setLoading(false);
+  const entrar = async () => {
+    setError(null);
+    setCargando(true);
+    try {
+      if (!(await iniciarSesion())) {
+        setError("No se completó el inicio de sesión. Intenta de nuevo.");
+        return;
+      }
+      // Primera llamada con el token: el authorizer de API Gateway y la Lambda lo validan (CTRL-18).
+      const r = await llamarApi("/me", { token: await tokenAcceso() });
+      marcaSeguridad("AUTH", { api: "GET_/me", estado: r.estado });
       router.replace("/(tabs)/home");
-    }, 600);
+    } catch (e) {
+      marcaSeguridad("AUTH", { login: "error", motivo: e instanceof Error ? e.message : "desconocido" });
+      setError("No se pudo iniciar sesión. Revisa tu conexión e intenta de nuevo.");
+    } finally {
+      setCargando(false);
+    }
   };
 
-  const handleBypassToHome = () => {
-    // Acceso directo simulado para desarrollo
-    router.replace("/(tabs)/home");
-  };
+  const fondoAviso = isDark ? colors.surfaceSubtle : palette.gray[100];
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      style={[styles.container, { backgroundColor: colors.background }]}
-    >
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Header title="Iniciar Sesión" showBack />
 
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
-      >
+      <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.introSection}>
-          <Text style={[styles.title, { color: colors.text }]}>
-            Bienvenido de nuevo
-          </Text>
+          <Text style={[styles.title, { color: colors.text }]}>Bienvenido de nuevo</Text>
           <Text style={[styles.subtitle, { color: colors.textMuted }]}>
-            Ingresa tus credenciales para acceder a tu billetera Q-Wallet.
+            Vas a ingresar tu correo, tu contraseña y el código de tu app autenticadora en la página
+            segura de inicio de sesión de Q-Wallet.
           </Text>
         </View>
 
         <Card style={styles.formCard}>
-          <Input
-            label="Correo o Teléfono"
-            placeholder="ej. usuario@qwallet.gt o 55551234"
-            value={username}
-            onChangeText={setUsername}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            leftIcon={<Mail size={20} color={colors.textMuted} />}
-            error={errors.username}
-          />
-
-          <Input
-            label="Contraseña"
-            placeholder="••••••••"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            leftIcon={<Lock size={20} color={colors.textMuted} />}
-            error={errors.password}
-          />
+          <View style={styles.paso}>
+            <KeyRound size={20} color={palette.accent} />
+            <Text style={[styles.pasoTexto, { color: colors.text }]}>Correo y contraseña</Text>
+          </View>
+          <View style={styles.paso}>
+            <Smartphone size={20} color={palette.accent} />
+            <Text style={[styles.pasoTexto, { color: colors.text }]}>
+              Código de 6 dígitos de tu app autenticadora (MFA)
+            </Text>
+          </View>
 
           <View style={{ height: 16 }} />
 
           <Button
-            title="Iniciar sesión"
-            onPress={handleLogin}
+            title="Continuar a la página segura"
+            onPress={entrar}
             variant="accent"
             size="lg"
-            loading={loading}
+            loading={cargando}
+            disabled={!loginConfigurado()}
           />
+          {error ? <Text style={[styles.error, { color: palette.error }]}>{error}</Text> : null}
         </Card>
 
-        {/* Banner de arquitectura e integración futura */}
-        <View
-          style={[
-            styles.noticeBox,
-            {
-              backgroundColor: isDark ? colors.surfaceSubtle : palette.gray[100],
-              borderColor: colors.cardBorder,
-            },
-          ]}
-        >
-          <ShieldAlert size={20} color={palette.info} style={styles.noticeIcon} />
+        <View style={[styles.noticeBox, { backgroundColor: fondoAviso, borderColor: colors.cardBorder }]}>
+          <ShieldCheck size={20} color={palette.info} style={styles.noticeIcon} />
           <View style={styles.noticeContent}>
-            <Text style={[styles.noticeTitle, { color: colors.text }]}>
-              Control CTRL-18 (Cognito PKCE)
-            </Text>
+            <Text style={[styles.noticeTitle, { color: colors.text }]}>Tu contraseña no pasa por la app</Text>
             <Text style={[styles.noticeText, { color: colors.textMuted }]}>
-              En producción este botón invoca el Cognito Hosted UI con PKCE y MFA TOTP. En esta fase de andamiaje, puedes continuar al panel principal.
+              La página se abre en el navegador del teléfono con conexión cifrada. Q-Wallet recibe solo
+              un permiso temporal (OAuth 2.0 con PKCE) y lo guarda cifrado con el almacén de llaves de Android.
             </Text>
           </View>
         </View>
-
-        <View style={styles.bypassSection}>
-          <Button
-            title="Entrar con sesión simulada (Dev)"
-            onPress={handleBypassToHome}
-            variant="ghost"
-            size="md"
-          />
-        </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -199,8 +139,20 @@ const styles = StyleSheet.create({
     fontFamily: "Inter_400Regular",
     lineHeight: 18,
   },
-  bypassSection: {
-    marginTop: 24,
+  paso: {
+    flexDirection: "row",
     alignItems: "center",
+    gap: 10,
+    marginBottom: 10,
+  },
+  pasoTexto: {
+    fontSize: 14,
+    fontFamily: "Inter_500Medium",
+    flex: 1,
+  },
+  error: {
+    marginTop: 12,
+    fontSize: 13,
+    fontFamily: "Inter_500Medium",
   },
 });

@@ -88,3 +88,5 @@ Como no hay demo en vivo, toda afirmación técnica del informe necesita una evi
 |---|---|---|
 | ☑ | EVD-6-01 a 6-05 | Pantallas de la app (bienvenida, login, inicio, movimientos, presupuestos), versión de desarrollo en Pixel_8_API_36, 10-nov (`docs/evidencias/bloque6/`) |
 | ☑ | EVD-6-06 y 6-07 | FLAG_SECURE: Transferir y Perfil en pantalla frente a `adb shell screencap` en negro; `dumpsys window` con el flag SECURE (EVD-6-06c) |
+| ☑ | EVD-7-01 a 7-04 | Inicio de sesión real con Cognito (PKCE + MFA TOTP) en el emulador de GitHub Actions y CA-07 con token real: almacenamiento con root, desbloqueo con PIN, revocación al cerrar sesión (`docs/evidencias/bloque7/`, correo de prueba tapado) |
+| ☑ | EVD-7-05 | HAL-16 y HAL-17: saturación sin token (0 × 429) y con token real (244 × 429; ráfagas con 500) (`saturacion.yml`) |
