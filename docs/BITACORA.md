@@ -3,6 +3,11 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-11-11 — Daniel — Claude (claude.ai), fix: gitleaks en main tras el merge del PR #63
+- Después del merge, gitleaks falló en main por la evidencia del último emulador (rama `evidencias-ci`, commit f8eedeb). La causa real no era el valor cifrado (eso ya se había quitado) sino la línea con los nombres de las entradas de SecureStore, «entradas key_v1-qw_refresh, key_v1-qw_modo», que la regla generic-api-key toma como asignación de llave. No es un secreto.
+- Arreglo: `sesion_ca07.py` escribe los nombres sin el prefijo `key_v1-` y unidos con «y»; `.gitleaksignore` suma esa línea más las 2 corridas del 11-nov (f8eedeb y 9fefa1e, la del merge); 4 entradas del bloque 7 en total, con motivo.
+- Borrados: ninguno.
+
 ### 2026-11-10 — Daniel — Claude (claude.ai), bloque 7: inicio de sesión real con Cognito, CA-07, HAL-16 y ajustes del informe
 - Fase / sección del informe: 3.2, 4.3, 5.2, 5.5, 5.6 y 6 (dictamen); redacción de todo el informe. PR #63.
 - Decisiones de Daniel (10-nov, opción múltiple): sí implementar el inicio de sesión real con Cognito y repetir CA-07; sí correr la prueba de saturación más larga para HAL-16.
