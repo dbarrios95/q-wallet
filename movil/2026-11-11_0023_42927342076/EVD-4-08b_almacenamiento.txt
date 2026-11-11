@@ -1,0 +1,31 @@
+EVD-4-08b CA-07 datos de la app en el dispositivo (CTRL-07)
+Fecha: 2026-11-11 00:18:30 UTC
+Con root se listan los archivos privados de la app y se buscan tokens (JWT) o datos en claro.
+
+   /data/data/gt.qwallet.app/cache/ExponentAsset-51b6ad87261f18b6433ec52871ddfabc.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-a5f35888d2da465de352e0dcfaf33324.ttf
+   /data/data/gt.qwallet.app/cache/ExponentAsset-6e237de4f1f413afa2fcc45c77ac343a.ttf
+   /data/data/gt.qwallet.app/cache/http-cache/journal
+   /data/data/gt.qwallet.app/shared_prefs/expo.modules.kotlin.PersistentDataManager.xml
+   /data/data/gt.qwallet.app/shared_prefs/coM1EdRxfIiQZlGgxGFxtTosw4Cwts9ObwBvWjhYKvJt.xml
+   /data/data/gt.qwallet.app/shared_prefs/LPt9JpdnamySZF158wdBLPFrX1JpnkHM8pDnWz3rOa82.xml
+   /data/data/gt.qwallet.app/shared_prefs/WebViewChromiumPrefs.xml
+   /data/data/gt.qwallet.app/shared_prefs/rPt4EdRxfIiQZlGgxGFxtTosw4Cwts9ObwBvWjhYKvJt.xml
+   /data/data/gt.qwallet.app/shared_prefs/WlT3nlB75Y385CfODI2wcUJPYoLF7LG3bDbLLoo.xml
+   /data/data/gt.qwallet.app/shared_prefs/fvR3elj4u5DpAtc1XVkKap7l8KEeL4LOphMFXqkkD5oe.xml
+   /data/data/gt.qwallet.app/files/tcb
+   /data/data/gt.qwallet.app/files/profileinstaller_profileWrittenFor_lastUpdateTime.dat
+   /data/data/gt.qwallet.app/files/profileInstalled
+   /data/data/gt.qwallet.app/app_webview/variations_stamp
+   /data/data/gt.qwallet.app/app_webview/Default/Cookies
+   /data/data/gt.qwallet.app/app_webview/Default/Cookies-journal
+   /data/data/gt.qwallet.app/app_webview/variations_seed
+
+Archivos con algo parecido a un JWT: /data/data/gt.qwallet.app/files/tcb
+   /data/data/gt.qwallet.app/files/tcb: campos del contenido -> no decodificable
+allowBackup del paquete: 
+(vacío = allowBackup desactivado; ver también el manifiesto en EVD-4-11)
+
+Nota: esta revisión es SIN sesión abierta (estado inicial de la app). La prueba con una
+sesión real de Cognito está en EVD-7-01 (sección E de este script, bloque 7).

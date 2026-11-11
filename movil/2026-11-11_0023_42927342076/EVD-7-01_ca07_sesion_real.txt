@@ -1,0 +1,64 @@
+EVD-7-01 CA-07 extraer tokens del dispositivo, con sesión real (CTRL-07, CTRL-18)
+Fecha: 2026-11-11 00:21:30 UTC
+Dispositivo: emulador Android 13 (API 33), imagen userdebug con root; bloqueo de pantalla con PIN.
+APK: copia de prueba de la versión de producción (release, Hermes + R8) con freeRASP en modo
+registro (EXPO_PUBLIC_QWALLET_APK_PRUEBA=ca07), porque en este emulador la versión de producción
+se bloquea (EVD-5-03). El código de sesión y de almacenamiento es el mismo.
+Usuario: usuario de prueba de Cognito con MFA TOTP obligatorio (correo de dominio reservado).
+
+1) Inicio de sesión real (login administrado de Cognito, Authorization Code + PKCE, MFA TOTP)
+   QWALLET_AUTH login=ok pkce=S256 refresh=bloqueo
+   QWALLET_AUTH api=GET_/me estado=200
+
+2) Almacenamiento con la sesión abierta (atacante con root lee /data/data de la app)
+   Archivos privados de la app (con root): 20
+      /data/data/gt.qwallet.app/cache/ExponentAsset-51b6ad87261f18b6433ec52871ddfabc.ttf
+      /data/data/gt.qwallet.app/cache/ExponentAsset-137ab18bace28dd0bd83eb3b8ed2bc54.ttf
+      /data/data/gt.qwallet.app/cache/ExponentAsset-a5f35888d2da465de352e0dcfaf33324.ttf
+      /data/data/gt.qwallet.app/cache/ExponentAsset-6e237de4f1f413afa2fcc45c77ac343a.ttf
+      /data/data/gt.qwallet.app/cache/http-cache/journal
+      /data/data/gt.qwallet.app/shared_prefs/expo.modules.kotlin.PersistentDataManager.xml
+      /data/data/gt.qwallet.app/shared_prefs/coM1EdRxfIiQZlGgxGFxtTosw4Cwts9ObwBvWjhYKvJt.xml
+      /data/data/gt.qwallet.app/shared_prefs/LPt9JpdnamySZF158wdBLPFrX1JpnkHM8pDnWz3rOa82.xml
+      /data/data/gt.qwallet.app/shared_prefs/WebViewChromiumPrefs.xml
+      /data/data/gt.qwallet.app/shared_prefs/rPt4EdRxfIiQZlGgxGFxtTosw4Cwts9ObwBvWjhYKvJt.xml
+      /data/data/gt.qwallet.app/shared_prefs/WlT3nlB75Y385CfODI2wcUJPYoLF7LG3bDbLLoo.xml
+      /data/data/gt.qwallet.app/shared_prefs/fvR3elj4u5DpAtc1XVkKap7l8KEeL4LOphMFXqkkD5oe.xml
+      /data/data/gt.qwallet.app/shared_prefs/SecureStore.xml
+      /data/data/gt.qwallet.app/files/tcb
+      /data/data/gt.qwallet.app/files/profileinstaller_profileWrittenFor_lastUpdateTime.dat
+      /data/data/gt.qwallet.app/files/profileInstalled
+      /data/data/gt.qwallet.app/app_webview/variations_stamp
+      /data/data/gt.qwallet.app/app_webview/Default/Cookies
+      /data/data/gt.qwallet.app/app_webview/Default/Cookies-journal
+      /data/data/gt.qwallet.app/app_webview/variations_seed
+   
+   Archivos con texto de JWT (eyJ...): /data/data/gt.qwallet.app/files/tcb
+   Archivos con el correo del usuario en claro: ninguno
+   Archivos con la contraseña en claro: ninguno
+   
+   /data/data/gt.qwallet.app/shared_prefs/SecureStore.xml: entradas key_v1-qw_refresh, key_v1-qw_modo
+      key_v1-qw_refresh: 2694 caracteres, objeto con texto cifrado (ct); cifrado, no es JWT
+      key_v1-qw_modo: 284 caracteres, objeto con texto cifrado (ct); cifrado, no es JWT
+   
+   Llaves de Android Keystore: en keystore2 (fuera del alcance de la app y de la carpeta de datos)
+   Tokens (eyJ...) en el registro del sistema (logcat): 0
+
+3) Volver a abrir la app: desbloqueo con el bloqueo del teléfono y renovación en Cognito
+   QWALLET_AUTH desbloqueo=ok modo=bloqueo
+
+4) Cierre de sesión: revocación del refresh token en Cognito y borrado local
+   QWALLET_AUTH logout=ok revocacion=200
+   Entradas de SecureStore después del cierre: ninguna entrada
+
+Bitácora de la prueba:
+   [00:21:31] Navegadores instalados: package:com.google.android.overlay.googlewebview package:com.google.android.webview package:com.android.chrome
+   [00:21:32] Bloqueo de pantalla: Pin set to '1234'
+   [00:22:24] Correo escrito en la página de Cognito (com.android.chrome).
+   [00:22:28] Contraseña escrita (campo de contraseña, enmascarado) y enviada.
+   [00:22:42] Código TOTP de 6 dígitos escrito en la página de Cognito (com.android.chrome).
+   [00:22:56] Marca de login: QWALLET_AUTH login=ok pkce=S256 refresh=bloqueo
+   [00:22:56] Primera llamada a la API con el token: QWALLET_AUTH api=GET_/me estado=200
+   [00:23:20] PIN del teléfono ingresado en el diálogo del sistema.
+   [00:23:29] Desbloqueo: QWALLET_AUTH desbloqueo=ok modo=bloqueo
+   [00:23:36] Cierre de sesión: QWALLET_AUTH logout=ok revocacion=200
