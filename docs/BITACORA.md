@@ -3,6 +3,14 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-11-25 — Daniel — Claude (claude.ai), cierre del informe final y guion de la demo
+- Fase / sección del informe: 1.2 (OE5), 1.3 (Tabla 5), 1.5, 5.3, 3.2 (Tabla 45), 5.6 (Tabla 53), Anexo B (Tabla 59) y 6.6.
+- Decisiones de Daniel: la presentación final es un recorrido por la app funcionando (no solo diapositivas), sin transferencias ni ataques en vivo; el costo de CloudWatch queda como estimado; el origen de files/tcb queda como no identificado (lo probado es que existe antes de iniciar sesión).
+- Auditoría del Word contra CONTEXTO, sección 9 y APA 7: Arial en todo, 1.5 con 0/8 pt fuera de tablas y 0/0 pt dentro, 60 tablas y 21 figuras numeradas en orden, todas las citas con su referencia y todas las referencias citadas. Ajustes con `scripts/final_entrega.py` (nuevo): textos de «sin demostración en vivo», los dos [VERIFICAR], salto de página antes de 6.6 Referencias (APA 7) y Tablas 53 y 59 de 8 a 9 pt (la excepción de 8 pt es solo la Tabla 12). Después `entrega1_estilos.py` y `entrega1_indice.py`. Resultado: 166 páginas, 0 [VERIFICAR]; renderizado y revisado completo con LibreOffice.
+- Guion nuevo `docs/entregas/Final_Guion_Demo.md`: qué protege cada pantalla, cómo se probó y la buena práctica, repartido entre Daniel (bienvenida, inicio de sesión, desbloqueo y cierre), Katherine (inicio, movimientos y presupuestos) y Aroldo (transferir, perfil y HAL-13), con preguntas probables. Advierte que Desbloqueo, Transferir y Perfil salen en negro al proyectar (FLAG_SECURE) y que saldo, movimientos y presupuestos usan datos de ejemplo.
+- Pendiente: las 11 capturas de consola (lista enviada a Daniel), que irán al Anexo D.
+- Borrados: ninguno.
+
 ### 2026-11-11 — Daniel — Claude (claude.ai), fix: gitleaks en main tras el merge del PR #63
 - Después del merge, gitleaks falló en main por la evidencia del último emulador (rama `evidencias-ci`, commit f8eedeb). La causa real no era el valor cifrado (eso ya se había quitado) sino la línea con los nombres de las entradas de SecureStore, «entradas key_v1-qw_refresh, key_v1-qw_modo», que la regla generic-api-key toma como asignación de llave. No es un secreto.
 - Arreglo: `sesion_ca07.py` escribe los nombres sin el prefijo `key_v1-` y unidos con «y»; `.gitleaksignore` suma esa línea más las 2 corridas del 11-nov (f8eedeb y 9fefa1e, la del merge); 4 entradas del bloque 7 en total, con motivo.
