@@ -17,9 +17,10 @@ import { Buffer } from "buffer";
 import { useSyncExternalStore } from "react";
 import { AuthRequest, ResponseType } from "expo-auth-session";
 import * as LocalAuthentication from "expo-local-authentication";
+import * as WebBrowser from "expo-web-browser";
 import * as SecureStore from "expo-secure-store";
 import { z } from "zod";
-import { API_SCOPE, COGNITO_CLIENT_ID, COGNITO_HOST, REDIRECT_LOGIN } from "./config";
+import { API_SCOPE, COGNITO_CLIENT_ID, COGNITO_HOST, REDIRECT_LOGIN, REDIRECT_LOGOUT } from "./config";
 import { pedirHttps } from "./red";
 import { marcaSeguridad } from "./registro";
 
@@ -236,5 +237,22 @@ export async function cerrarSesion(): Promise<void> {
     } catch {
       marcaSeguridad("AUTH", { logout: "ok", revocacion: "sin_conexion" });
     }
+  }
+  await cerrarSesionNavegador();
+}
+
+/**
+ * Cierra también la sesión del login administrado en el navegador (cookie de Cognito).
+ * Sin esto, después de "Cerrar sesión" la página de Cognito dejaba entrar otra vez sin
+ * contraseña ni MFA mientras la cookie siguiera vigente (hallado en la prueba del 27-nov).
+ * /logout borra la cookie y regresa a qwallet://auth/logout (logout_urls en infra/variables.tf).
+ */
+async function cerrarSesionNavegador(): Promise<void> {
+  const url = `${BASE}/logout?${formulario({ client_id: COGNITO_CLIENT_ID, logout_uri: REDIRECT_LOGOUT })}`;
+  try {
+    const r = await WebBrowser.openAuthSessionAsync(url, REDIRECT_LOGOUT, { showInRecents: false });
+    marcaSeguridad("AUTH", { logout_navegador: r.type });
+  } catch {
+    marcaSeguridad("AUTH", { logout_navegador: "error" });
   }
 }

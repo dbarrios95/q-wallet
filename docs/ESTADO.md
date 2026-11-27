@@ -24,7 +24,7 @@
 
 ## App para la demo (27-nov, tarde)
 - Se presenta desde el **teléfono de Daniel (sin root) con el APK release** del flujo `movil` (artefacto `movil-apk`), no con Metro. En emulador ese APK se bloquea (freeRASP); ahí iría `movil-apk-prueba`.
-- Arreglos del PR `fix/demo-movil`: la pantalla de regreso del login ya no se queda cargando; la barra de pestañas, Bienvenida, Desbloqueo y la ventana del PIN respetan los botones del teléfono; Acciones rápidas en una tarjeta.
+- Arreglos del PR `fix/demo-movil`: la pantalla de regreso del login ya no se queda cargando; la barra de pestañas, Bienvenida, Desbloqueo y la ventana del PIN respetan los botones del teléfono; Acciones rápidas en una tarjeta; «Cerrar sesión» cierra también la sesión de Cognito en el navegador (antes se podía volver a entrar sin contraseña ni MFA).
 - Para Metro en la laptop: `npm ci --legacy-peer-deps` en `mobile/` (sin eso falta `buffer`).
 - El PIN de Transferir no se valida (pantalla de ejemplo): no hacer transferencias en la demo.
 
