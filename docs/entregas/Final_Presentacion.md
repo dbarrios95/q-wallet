@@ -1,5 +1,7 @@
 # Presentación final (sábado 28-nov-2026)
 
+> **25-nov-2026:** la presentación pasa a ser un recorrido por la app (guion en `Final_Guion_Demo.md`). Estas diapositivas quedan como respaldo.
+
 > Formato: 10 minutos (decisión de Daniel, 10-nov-2026), sin demostración en vivo; cada cifra sale de una ejecución guardada.
 > Presentación: Claude Slides "Q-Wallet — Presentación final" en claude.ai (privada; se descarga como PDF o PowerPoint desde el menú de la presentación). No vive en el repo.
 > Bloque 7 (10-nov): cifras actualizadas al login real y a HAL-16/17 (580 → 202, 12 de 13, 17 hallazgos).
