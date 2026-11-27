@@ -3,6 +3,14 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-11-27 — Daniel — Claude (claude.ai), capturas de consola en el Anexo D
+- Daniel pasó 11 capturas. Se insertan 9 como Figuras 22 a 30 del Anexo D con `scripts/final_capturas.py` (nuevo), guardadas en `docs/evidencias/final/`. Tapados: el ARN con el número de cuenta en CAP-09 y el ID de la llave en CAP-08.
+- No se insertan: CAP-03 (Code scanning vacío: los resultados de CodeQL no se suben a GitHub, la compuerta usa el SARIF del flujo; además la barra lateral muestra 11 alertas de Dependabot abiertas) y CAP-07 (Daniel abrió Custom domain names, que está vacío porque no hay dominio propio; la política TLS 1.3 está en la propia API, `infra/apigateway.tf`).
+- Checkov: la captura del PR #60 (10-nov) da 337 aprobadas, 0 fallidas y 38 omitidas; el informe solo tenía el primer análisis (29-oct: 282/0/39). Se agrega una frase en 4.5 con el dato nuevo.
+- CloudWatch muestra 9 alarmas: la décima (qwallet-waf-bloqueos) solo existe con el WAF encendido. qwallet-uso-root y qwallet-aws-no-autorizado pasaron a «In alarm» el 27-nov (16:29 y 16:33 UTC), a la hora de la sesión de consola de las capturas.
+- Pendiente: recapturas opcionales de CAP-04 (ZAP desplegado), CAP-07 (TLS de la API) y CAP-08 (pestaña de rotación); revisar las 11 alertas de Dependabot.
+- Borrados: ninguno.
+
 ### 2026-11-25 — Daniel — Claude (claude.ai), cierre del informe final y guion de la demo
 - Fase / sección del informe: 1.2 (OE5), 1.3 (Tabla 5), 1.5, 5.3, 3.2 (Tabla 45), 5.6 (Tabla 53), Anexo B (Tabla 59) y 6.6.
 - Decisiones de Daniel: la presentación final es un recorrido por la app funcionando (no solo diapositivas), sin transferencias ni ataques en vivo; el costo de CloudWatch queda como estimado; el origen de files/tcb queda como no identificado (lo probado es que existe antes de iniciar sesión).

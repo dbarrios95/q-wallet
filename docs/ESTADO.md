@@ -2,7 +2,7 @@
 
 > Punto de arranque de cada chat. Se reescribe al cerrar cada bloque. Máximo una página.
 
-**Actualizado:** 25-nov-2026 · **Hoy toca:** capturas de consola, revisión final y ensayo de la demo
+**Actualizado:** 27-nov-2026 · **Hoy toca:** revisión final, PDF y ensayo de la demo
 
 ## Fechas
 | Hito | Fecha | Fase del enunciado |
@@ -15,14 +15,14 @@
 | # | Bloque | Estado |
 |---|---|---|
 | 1 a 7 | Terraform, presentación E2, Lambdas, pentest, operación, informe final, login real | ☑ |
-| Cierre | Informe listo para entregar y guion de la demo | ☑ salvo las capturas de consola |
+| Cierre | Informe listo para entregar (172 págs., capturas en el Anexo D) y guion de la demo | ☑ |
 
 ## Qué dejó el cierre (25-nov)
 - **Informe** `Informe_Final_QWallet.docx` (166 págs.): auditado contra CONTEXTO, sección 9 y APA 7 (Arial, 1.5, 0/8 pt y 0/0 pt en tablas, tablas y figuras en orden, citas y referencias cruzadas sin faltantes). `scripts/final_entrega.py` quitó los 2 [VERIFICAR], cambió «sin demostración en vivo» (OE5, Tabla 5, 1.5), puso 6.6 Referencias en página nueva y llevó las Tablas 53 y 59 a 9 pt. Cadena completa: la del bloque 7 → `final_entrega.py` → `entrega1_estilos.py` → `entrega1_indice.py`.
 - **Presentación:** ahora es un recorrido por la app, pantalla por pantalla, sin transferencias ni ataques en vivo. Guion repartido entre los tres en `docs/entregas/Final_Guion_Demo.md`. Las diapositivas de Claude Slides quedan de respaldo.
 
 ## Lo que le toca a Daniel
-1. Tomar las **11 capturas de consola** (lista en el chat del 25-nov: CAP-01 a CAP-11; tapar cuenta, ARN y correo) y pasarlas a Claude, que las inserta en el Anexo D y regenera el índice.
+1. Opcional: recapturar CAP-04 (ZAP desplegado), CAP-07 (API → API settings, política TLS 1.3) y CAP-08 (pestaña Key rotation) y correr `final_capturas.py` desde el Word de `final_entrega.py`. Revisar las 11 alertas de Dependabot (Security → Dependabot) antes de la defensa.
 2. Merge del PR de cierre.
 3. Abrir el Word final, clic derecho en el índice → Actualizar campo → Toda la tabla, leerlo y exportar el PDF.
 4. Mandar al equipo el Word y el guion; ensayar una vez con cronómetro usando la misma versión de la app de las capturas (el APK de producción se bloquea en emulador o con root).
