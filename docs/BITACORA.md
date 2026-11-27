@@ -3,6 +3,16 @@
 > Entradas nuevas **arriba**. Una por sesión de trabajo.
 > El resumen vigente está en `ESTADO.md` (arranque) y `CONTEXTO.md` sección 11; aquí queda el historial.
 
+### 2026-11-27 — Daniel — Claude (claude.ai), app lista para la demo en teléfono físico
+- Metro fallaba con «import buffer» en `sesion.ts`: `buffer` 6.0.3 está en `package.json` y en el lock, pero no estaba en el `node_modules` de Daniel. Se arregla con `npm ci --legacy-peer-deps` (igual que `movil.yml`); sin `--legacy-peer-deps` npm se queja de que el lock no coincide. Sin cambio de código.
+- La demo se hace con el APK release de `movil.yml` en el teléfono de Daniel (sin root), no con Metro. Daniel creó un segundo usuario de prueba con `infra/scripts/usuario_prueba.py` (correo `ca07-…@qwallet.example`) solo para la demo; los secretos `QWALLET_PRUEBA_*` no se tocan. En CloudShell ya no sirve `pip3 install --user` (ahora corre en un virtualenv): se instala sin `--user`.
+- Inicio de sesión real en el teléfono: funciona (al reabrir pide la huella y entra), pero al volver de Cognito la pantalla de paso `auth/callback` se quedaba con la rueda de carga. Causa probable: el enlace de regreso abre esa pantalla después de que el login ya llevó a Inicio. Arreglo: la pantalla se cierra sola cuando la sesión queda abierta, o a los 20 s si no, para que se vea el error del login.
+- Teléfono con botones de navegación: la barra de pestañas, el botón de Bienvenida y Desbloqueo y la ventana del PIN de Transferir quedaban debajo de los botones (Android dibuja de borde a borde). Se suma el margen seguro inferior (`useSafeAreaInsets`).
+- Decisión de Daniel: Acciones rápidas en una sola tarjeta con los cuatro accesos y el texto en una línea («Presupuestos» se partía con la letra grande del teléfono).
+- Aclarado: el PIN de 6 dígitos de Transferir no se valida (cualquier número pasa; es pantalla de ejemplo, CTRL-02 queda en el backend y el roadmap). En la demo no se hacen transferencias.
+- Las capturas del informe (Anexo D, Figuras de la app) muestran el estilo anterior de Acciones rápidas; no cambia nada de seguridad, así que no se recapturan.
+- Borrados: ninguno.
+
 ### 2026-11-27 — Daniel — Claude (claude.ai), capturas de consola en el Anexo D
 - Daniel pasó 11 capturas. Se insertan 9 como Figuras 22 a 30 del Anexo D con `scripts/final_capturas.py` (nuevo), guardadas en `docs/evidencias/final/`. Tapados: el ARN con el número de cuenta en CAP-09 y el ID de la llave en CAP-08.
 - No se insertan: CAP-03 (Code scanning vacío: los resultados de CodeQL no se suben a GitHub, la compuerta usa el SARIF del flujo; además la barra lateral muestra 11 alertas de Dependabot abiertas) y CAP-07 (Daniel abrió Custom domain names, que está vacío porque no hay dominio propio; la política TLS 1.3 está en la propia API, `infra/apigateway.tf`).

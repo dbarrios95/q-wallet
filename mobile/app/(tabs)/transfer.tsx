@@ -10,6 +10,7 @@ import {
   Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePreventScreenCapture } from "expo-screen-capture";
 import { z } from "zod";
 import {
@@ -47,6 +48,7 @@ const transferFormSchema = z
 export default function TransferScreen() {
   const router = useRouter();
   const { colors, palette, isDark } = useTheme();
+  const { bottom } = useSafeAreaInsets(); // botones del teléfono (borde a borde)
 
   // FLAG_SECURE: previene captura de pantalla durante transferencias y PIN (MASVS-STORAGE)
   usePreventScreenCapture();
@@ -332,7 +334,7 @@ export default function TransferScreen() {
           <View
             style={[
               styles.modalContainer,
-              { backgroundColor: colors.surface },
+              { backgroundColor: colors.surface, paddingBottom: 36 + bottom },
             ]}
           >
             <View style={styles.modalHeader}>

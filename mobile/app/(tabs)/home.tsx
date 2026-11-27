@@ -24,6 +24,22 @@ import {
 import { mockAccount, mockTransactions } from "../../src/mocks";
 import { useUsuario } from "../../src/seguridad/sesion";
 
+type RutaAccion = "/(tabs)/transfer" | "/(tabs)/budgets" | "/(tabs)/activity" | "/(tabs)/profile";
+
+// color undefined = verde de la marca (palette.accent)
+const accionesRapidas: {
+  etiqueta: string;
+  Icono: typeof Send;
+  color?: string;
+  fondo: string;
+  ruta: RutaAccion;
+}[] = [
+  { etiqueta: "Transferir", Icono: Send, fondo: "rgba(0, 168, 107, 0.15)", ruta: "/(tabs)/transfer" },
+  { etiqueta: "Presupuestos", Icono: PieChart, color: "#3B82F6", fondo: "rgba(59, 130, 246, 0.15)", ruta: "/(tabs)/budgets" },
+  { etiqueta: "Movimientos", Icono: ArrowDownLeft, color: "#F59E0B", fondo: "rgba(245, 158, 11, 0.15)", ruta: "/(tabs)/activity" },
+  { etiqueta: "Servicios", Icono: Zap, color: "#8B5CF6", fondo: "rgba(139, 92, 246, 0.15)", ruta: "/(tabs)/profile" },
+];
+
 export default function HomeScreen() {
   const router = useRouter();
   const { colors, palette, isDark } = useTheme();
@@ -84,109 +100,42 @@ export default function HomeScreen() {
           />
         </View>
 
-        {/* Quick Actions */}
+        {/* Acciones rápidas: una sola tarjeta con cuatro accesos */}
         <View style={styles.sectionHeader}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            Acciones Rápidas
+            Acciones rápidas
           </Text>
         </View>
 
-        <View style={styles.quickActionsGrid}>
-          <TouchableOpacity
-            style={[
-              styles.actionItem,
-              {
-                backgroundColor: colors.card,
-                borderColor: colors.cardBorder,
-              },
-            ]}
-            onPress={() => router.push("/(tabs)/transfer")}
-            activeOpacity={0.7}
-          >
-            <View
-              style={[
-                styles.actionIconCircle,
-                { backgroundColor: "rgba(0, 168, 107, 0.15)" },
-              ]}
+        <View
+          style={[
+            styles.quickActionsCard,
+            { backgroundColor: colors.card, borderColor: colors.cardBorder },
+          ]}
+        >
+          {accionesRapidas.map(({ etiqueta, Icono, color, fondo, ruta }) => (
+            <TouchableOpacity
+              key={etiqueta}
+              style={styles.actionItem}
+              onPress={() => router.push(ruta)}
+              activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityLabel={etiqueta}
             >
-              <Send size={22} color={palette.accent} />
-            </View>
-            <Text style={[styles.actionLabel, { color: colors.text }]}>
-              Transferir
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.actionItem,
-              {
-                backgroundColor: colors.card,
-                borderColor: colors.cardBorder,
-              },
-            ]}
-            onPress={() => router.push("/(tabs)/budgets")}
-            activeOpacity={0.7}
-          >
-            <View
-              style={[
-                styles.actionIconCircle,
-                { backgroundColor: "rgba(59, 130, 246, 0.15)" },
-              ]}
-            >
-              <PieChart size={22} color="#3B82F6" />
-            </View>
-            <Text style={[styles.actionLabel, { color: colors.text }]}>
-              Presupuestos
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.actionItem,
-              {
-                backgroundColor: colors.card,
-                borderColor: colors.cardBorder,
-              },
-            ]}
-            onPress={() => router.push("/(tabs)/activity")}
-            activeOpacity={0.7}
-          >
-            <View
-              style={[
-                styles.actionIconCircle,
-                { backgroundColor: "rgba(245, 158, 11, 0.15)" },
-              ]}
-            >
-              <ArrowDownLeft size={22} color="#F59E0B" />
-            </View>
-            <Text style={[styles.actionLabel, { color: colors.text }]}>
-              Movimientos
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.actionItem,
-              {
-                backgroundColor: colors.card,
-                borderColor: colors.cardBorder,
-              },
-            ]}
-            onPress={() => router.push("/(tabs)/profile")}
-            activeOpacity={0.7}
-          >
-            <View
-              style={[
-                styles.actionIconCircle,
-                { backgroundColor: "rgba(139, 92, 246, 0.15)" },
-              ]}
-            >
-              <Zap size={22} color="#8B5CF6" />
-            </View>
-            <Text style={[styles.actionLabel, { color: colors.text }]}>
-              Servicios
-            </Text>
-          </TouchableOpacity>
+              <View style={[styles.actionIconCircle, { backgroundColor: fondo }]}>
+                <Icono size={22} color={color ?? palette.accent} />
+              </View>
+              <Text
+                style={[styles.actionLabel, { color: colors.text }]}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.75}
+                maxFontSizeMultiplier={1.2}
+              >
+                {etiqueta}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
         {/* Recent Transactions */}
@@ -287,23 +236,24 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: "Inter_600SemiBold",
   },
-  quickActionsGrid: {
+  quickActionsCard: {
     flexDirection: "row",
-    gap: 12,
+    justifyContent: "space-between",
+    paddingVertical: 16,
+    paddingHorizontal: 8,
+    borderRadius: 16,
+    borderWidth: 1,
     marginBottom: 20,
   },
   actionItem: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 14,
-    borderRadius: 16,
-    borderWidth: 1,
+    paddingHorizontal: 2,
   },
   actionIconCircle: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 8,
@@ -311,6 +261,7 @@ const styles = StyleSheet.create({
   actionLabel: {
     fontSize: 12,
     fontFamily: "Inter_600SemiBold",
+    textAlign: "center",
   },
   transactionsList: {
     gap: 6,

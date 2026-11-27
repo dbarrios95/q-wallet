@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ShieldCheck, Wallet, ArrowRight, Fingerprint } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
@@ -11,6 +12,7 @@ import { haySesionGuardada } from "../../src/seguridad/sesion";
 export default function WelcomeScreen() {
   const router = useRouter();
   const { colors, palette, isDark } = useTheme();
+  const { bottom } = useSafeAreaInsets(); // botones del teléfono (borde a borde)
   const [haySesion, setHaySesion] = useState(false);
   useEffect(() => {
     haySesionGuardada().then(setHaySesion).catch(() => setHaySesion(false));
@@ -39,7 +41,7 @@ export default function WelcomeScreen() {
       </LinearGradient>
 
       {/* Main content */}
-      <View style={styles.content}>
+      <View style={[styles.content, { paddingBottom: 24 + bottom }]}>
         <Animated.View entering={FadeInDown.delay(200).duration(700)}>
           <Text style={[styles.heading, { color: colors.text }]}>
             Tu dinero en Quetzales, seguro y al instante.
