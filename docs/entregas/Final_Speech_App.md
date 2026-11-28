@@ -11,7 +11,7 @@
 1. En la app: **Perfil → Cerrar sesión**, para que arranque en Bienvenida. Revisar que al tocar «Continuar a la página segura» pida correo, contraseña y código.
 2. Teléfono con internet, batería cargada, brillo alto y en modo «No molestar».
 3. La app de códigos (Google Authenticator) a la mano, y la contraseña del usuario de la demo guardada en Chrome.
-4. Si se proyecta el teléfono: Desbloqueo, Transferir y Perfil se ven **en negro**. Tener abierta la Figura 11 del informe para mostrar cómo se ven en el teléfono.
+4. Al proyectar el teléfono, todas las pantallas se ven menos **Desbloqueo, Transferir y Perfil, que salen en negro**: es la protección contra capturas, y se demuestra en vivo. Tener abierta la Figura 11 del informe (cómo se ven en el teléfono frente a la captura). Opcional: una segunda cámara (otro celular en videollamada o una cámara web) apuntando al teléfono, para que se vea la pantalla real al mismo tiempo que la proyección en negro.
 5. Tener abiertas la Figura 10 (inicio de sesión) y la Figura 13 (pantalla de bloqueo) del informe, y el PDF de las diapositivas, por si algo falla.
 
 ---
@@ -44,7 +44,7 @@ La lección aquí es no inventar un inicio de sesión propio, sino usar un servi
 ### 3. Desbloqueo (~1 min)
 [Cerrar la app desde recientes y volver a abrirla. Pide la huella. Ponerla y entrar.]
 
-"Ahora cierro la app y la vuelvo a abrir, como haría cualquiera durante el día. Ya no me pide la contraseña: me pide la huella. Si en la proyección lo ven en negro, no es una falla. Esta pantalla no deja tomar capturas ni grabarla.
+"Ahora cierro la app y la vuelvo a abrir, como haría cualquiera durante el día. Ya no me pide la contraseña: me pide la huella. Fíjense que la proyección se puso en negro. No es una falla: esta pantalla no deja que nada la capture ni la grabe, ni siquiera la proyección que están viendo. En el teléfono yo la veo normal. Apenas entre a la app, la imagen vuelve.
 
 Lo importante es dónde queda guardada la sesión. El permiso para usar la app dura solo 15 minutos y nunca se escribe en el teléfono. El permiso para renovarlo sí se guarda, pero encerrado con una llave del propio teléfono que solo se abre con la huella o el bloqueo de pantalla.
 
@@ -88,9 +88,9 @@ La segunda es cómo se vigila. Delante del servidor hay un filtro que detiene at
 ## Aroldo
 
 ### 7. Transferir (~1 min 15 s)
-[Pestaña «Transferir». Se puede llenar el formulario y abrir la ventana del PIN, pero **no se confirma la transferencia**. Si se proyecta, sale en negro.]
+[Pestaña «Transferir». Se puede llenar el formulario y abrir la ventana del PIN, pero **no se confirma la transferencia**. Al entrar, la proyección se pone en negro: mostrar la Figura 11 o la segunda cámara.]
 
-"Esta es la pantalla para mandar dinero a otro número de teléfono. Como mueve dinero, tiene varias capas. La primera revisa lo que se escribe, para que no se cuele nada raro. Después pide un PIN de seis números para autorizar. Y tampoco deja tomar capturas.
+"Esta es la pantalla para mandar dinero a otro número de teléfono. Como ven, en cuanto entramos la proyección se puso en negro: aquí no se permiten capturas ni grabaciones, para que ninguna app espía se lleve los datos de la transferencia. Como mueve dinero, tiene varias capas más. La primera revisa lo que se escribe, para que no se cuele nada raro. Después pide un PIN de seis números para autorizar.
 
 Esta pantalla todavía no envía la transferencia al servidor. Lo que sí está construido y probado es el servidor que la va a recibir, y ahí pusimos dos reglas más. Si alguien intenta adivinar el PIN, al quinto error la cuenta se bloquea 15 minutos. Y cada transferencia lleva una clave única: aunque se mande dos veces por error, solo se cobra una.
 
@@ -99,13 +99,13 @@ Lo probamos directamente contra el servidor. Tratamos de adivinar el PIN y se bl
 La regla aquí es que todo lo que mueve dinero se confirma dos veces y se revisa en el servidor, nunca solo en el teléfono."
 
 ### 8. Perfil y cierre de sesión (~1 min)
-[Pestaña «Perfil». Bajar hasta «Cerrar sesión segura», tocarlo y que se vea cómo regresa a Bienvenida.]
+[Pestaña «Perfil» (sale en negro en la proyección). Bajar hasta «Cerrar sesión segura», tocarlo; la imagen vuelve cuando regresa a Bienvenida.]
 
-"En el perfil, los datos sí vienen del servidor real, y los datos personales salen ocultos en parte: solo se ve lo necesario.
+"El perfil también sale en negro, por la misma protección. Aquí los datos sí vienen del servidor real, y los datos personales salen ocultos en parte: solo se ve lo necesario.
 
 Lo más importante es este botón de cerrar sesión. No solo borra la sesión del teléfono: también le avisa a Amazon que anule el permiso. Así, aunque alguien lo hubiera copiado antes, ya no le sirve. Lo comprobamos, y Amazon confirmó que el permiso quedó anulado.
 
-Y aquí tenemos algo que encontramos ayer, ensayando esta misma demo. Al cerrar sesión y volver a entrar, la página de Amazon nos dejaba pasar sin pedir contraseña ni código. Era porque el navegador del teléfono todavía recordaba la sesión. O sea, si alguien tomaba el teléfono después de que cerráramos sesión, podía volver a entrar. Lo corregimos: ahora cerrar sesión también cierra la sesión en el navegador. Por eso vieron que se abrió un momento y regresó a la bienvenida."
+Y aquí tenemos algo que encontramos ayer, ensayando esta misma demo. Al cerrar sesión y volver a entrar, la página de Amazon nos dejaba pasar sin pedir contraseña ni código. Era porque el navegador del teléfono todavía recordaba la sesión. O sea, si alguien tomaba el teléfono después de que cerráramos sesión, podía volver a entrar. Lo corregimos: ahora cerrar sesión también cierra la sesión en el navegador. Por eso, al tocar el botón, se abrió un momento el navegador y regresó a la bienvenida, que ya se ve otra vez en la proyección."
 
 ### 9. El hallazgo que solo apareció atacando (~1 min)
 [Mostrar la Figura 13 del informe: pantalla de bloqueo.]
@@ -138,7 +138,7 @@ Todo el código y las evidencias están en el repositorio. Muchas gracias; queda
 | Qué pasa | Qué hacer y qué decir |
 |---|---|
 | No hay internet o el inicio de sesión no carga | Mostrar la Figura 10 del informe (inicio de sesión): "La conexión nos falló, pero así se ve la página; lo probamos con un usuario real en las pruebas automáticas." Seguir con la Figura 11 para el desbloqueo. |
-| La proyección sale en negro | Es lo esperado en Desbloqueo, Transferir y Perfil: "Esto es la protección contra capturas." Mostrar la Figura 11. |
+| La proyección sale en negro | En Desbloqueo, Transferir y Perfil es lo esperado: "Esto es la protección contra capturas." Mostrar la Figura 11. Si sale en negro en otra pantalla, cerrar la app desde recientes, abrirla de nuevo y seguir. |
 | El código de seis números falla | Esperar a que cambie (30 s) y escribir el nuevo. Revisar que la hora del teléfono esté en automático. |
 | La app se bloquea con la pantalla de seguridad | Era lo que debía pasar si el teléfono parece manipulado: aprovecharlo para la parte 9. |
 
@@ -147,6 +147,7 @@ Todo el código y las evidencias están en el repositorio. Muchas gracias; queda
 | Pregunta | Quién | Respuesta |
 |---|---|---|
 | ¿Por qué el inicio de sesión se va a la página de Amazon y no es una pantalla de la app? | Daniel | Se podía hacer dentro de la app, pero elegimos que la contraseña nunca la toque. Es lo que recomienda el estándar para apps de teléfono, y nos protege si alguien copia o modifica la app. |
+| ¿Por qué no ponen un botón para apagar la protección de capturas durante la demo? | Daniel | Porque un botón así sería una debilidad: cualquiera con el teléfono podría apagarla. Preferimos que se vea en negro, que es justo la prueba de que funciona. |
 | ¿El PIN de la transferencia es real? | Aroldo | En la pantalla todavía no se revisa, porque la transferencia no se envía. La revisión del PIN y el bloqueo al quinto intento están en el servidor y se probaron ahí. Conectar la pantalla está en el plan de trabajo. |
 | ¿Por qué el saldo es de ejemplo? | Katherine | La prioridad fue proteger y probar el servidor y el inicio de sesión reales. El servidor ya existe y pasó las pruebas; conectar estas pantallas es el siguiente paso y no cambia el diseño. |
 | ¿Qué encontraron al final? | Aroldo | Que cerrar sesión no cerraba la sesión del navegador, y se podía volver a entrar sin contraseña. Lo vimos en el ensayo y ya está corregido. |

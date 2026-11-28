@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { usePreventScreenCapture } from "expo-screen-capture";
+import { useSinCapturas } from "../../src/seguridad/pantalla";
 import { z } from "zod";
 import {
   Send,
@@ -51,7 +51,7 @@ export default function TransferScreen() {
   const { bottom } = useSafeAreaInsets(); // botones del teléfono (borde a borde)
 
   // FLAG_SECURE: previene captura de pantalla durante transferencias y PIN (MASVS-STORAGE)
-  usePreventScreenCapture();
+  useSinCapturas("transferir"); // solo mientras esta pantalla está a la vista
 
   const [phone, setPhone] = useState("");
   const [amountStr, setAmountStr] = useState("");

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { usePreventScreenCapture } from "expo-screen-capture";
+import { useSinCapturas } from "../../src/seguridad/pantalla";
 import { Fingerprint, ShieldCheck } from "lucide-react-native";
 import { useTheme } from "../../src/theme";
 import { Header, Button, Card } from "../../src/components";
@@ -16,7 +16,7 @@ export default function UnlockScreen() {
   const { bottom } = useSafeAreaInsets(); // botones del teléfono (borde a borde)
 
   // FLAG_SECURE: previene captura de pantalla y grabación en vistas sensibles (MASVS-STORAGE)
-  usePreventScreenCapture();
+  useSinCapturas("desbloqueo"); // solo mientras esta pantalla está a la vista
 
   const [mensaje, setMensaje] = useState<string | null>(null);
   const [cargando, setCargando] = useState(false);

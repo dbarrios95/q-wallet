@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { usePreventScreenCapture } from "expo-screen-capture";
+import { useSinCapturas } from "../../src/seguridad/pantalla";
 import {
   User,
   Shield,
@@ -33,7 +33,7 @@ export default function ProfileScreen() {
   const { colors, palette, isDark } = useTheme();
 
   // FLAG_SECURE: protege información sensible (PII, DPI, datos bancarios) contra capturas y grabación (MASVS-STORAGE)
-  usePreventScreenCapture();
+  useSinCapturas("perfil"); // solo mientras esta pantalla está a la vista
 
   const [biometricsEnabled, setBiometricsEnabled] = useState(true);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);

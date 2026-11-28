@@ -24,7 +24,7 @@
 
 ## App para la demo (27-nov, tarde)
 - Se presenta desde el **teléfono de Daniel (sin root) con el APK release** del flujo `movil` (artefacto `movil-apk`), no con Metro. En emulador ese APK se bloquea (freeRASP); ahí iría `movil-apk-prueba`.
-- Arreglos del PR `fix/demo-movil`: la pantalla de regreso del login ya no se queda cargando; la barra de pestañas, Bienvenida, Desbloqueo y la ventana del PIN respetan los botones del teléfono; Acciones rápidas en una tarjeta; «Cerrar sesión» cierra también la sesión de Cognito en el navegador (antes se podía volver a entrar sin contraseña ni MFA).
+- Arreglos del PR `fix/demo-movil`: la pantalla de regreso del login ya no se queda cargando; la barra de pestañas, Bienvenida, Desbloqueo y la ventana del PIN respetan los botones del teléfono; Acciones rápidas en una tarjeta; «Cerrar sesión» cierra también la sesión de Cognito en el navegador (antes se podía volver a entrar sin contraseña ni MFA); la protección contra capturas queda solo en Desbloqueo, Transferir y Perfil mientras están a la vista (antes, al proyectar, toda la app salía en negro).
 - Para Metro en la laptop: `npm ci --legacy-peer-deps` en `mobile/` (sin eso falta `buffer`).
 - El PIN de Transferir no se valida (pantalla de ejemplo): no hacer transferencias en la demo.
 
@@ -36,7 +36,7 @@
 
 ## Datos útiles
 - Usuario de prueba de Cognito: `ca07-202611102156@qwallet.example` (MFA TOTP); datos en los secretos `QWALLET_PRUEBA_*` de GitHub. Para la demo, Daniel tiene un segundo usuario `ca07-…` (27-nov) con sus datos fuera del repo.
-- Al proyectar, Desbloqueo, Transferir y Perfil salen en negro (FLAG_SECURE): usar la Figura 11 como respaldo.
+- Al proyectar, solo Desbloqueo, Transferir y Perfil salen en negro (FLAG_SECURE): se usa en vivo como demostración, con la Figura 11 de respaldo.
 
 ## Roadmap (sección 6.3)
 Expo SDK 58 (antes del 31-ene-2027); HAL-17 (límite de Lambda y ráfaga; repetir CA-03 en la búsqueda); conectar saldo, movimientos, presupuestos y transferencias con la API; biometría en teléfono físico; WAF permanente; dominio propio (HAL-09); Play App Signing; IAM Identity Center en vez de root; Wazuh.
