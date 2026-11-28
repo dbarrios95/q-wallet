@@ -224,7 +224,7 @@ export default function ProfileScreen() {
         <View style={styles.complianceBox}>
           <Shield size={16} color={palette.accent} />
           <Text style={[styles.complianceText, { color: colors.textSubtle }]}>
-            FLAG_SECURE activo. Q-Wallet protege tus datos contra ingeniería inversa, captura de pantalla y fugas en memoria.
+            Q-Wallet protege tus datos contra ingeniería inversa y fugas en memoria.
           </Text>
         </View>
 

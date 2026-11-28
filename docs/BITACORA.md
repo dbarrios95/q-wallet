@@ -15,6 +15,7 @@
 - Speech nuevo en lenguaje sencillo, `docs/entregas/Final_Speech_App.md`: login en vivo, desbloqueo cerrando y abriendo la app, el hallazgo del cierre de sesión en Perfil, plan B si algo falla y preguntas probables. `Final_Guion_Demo.md` no se toca.
 - La presentación es en línea y en grupo: el speech indica quién comparte qué. Daniel comparte el teléfono (cámara apuntando al teléfono si se puede); cuando Transferir y Perfil salen en negro, Aroldo comparte la Figura 11 (o EVD-6-06a y 6-07a) y la Figura 13; Katherine tiene el informe de respaldo.
 - A pedido de Daniel, el speech ya no lleva la introducción ni el cierre con el dictamen (la app es del curso y no se va a publicar); Aroldo cierra con el agradecimiento.
+- Decisión de Daniel (28-nov, víspera de la demo): apagar FLAG_SECURE en toda la app para presentar en línea compartiendo solo la pantalla del teléfono, sin cambios de pantalla compartida entre integrantes. Se apaga en un solo lugar (`PROTECCION_CAPTURAS_ACTIVA = false` en `src/seguridad/pantalla.ts`; con `true` vuelve). Se quitan los textos de Desbloqueo y Perfil que decían que había protección contra capturas. Advertido: el informe (CTRL-22, Figura 11, EVD-6-06 y 6-07) describe la protección activa y no se modifica. El speech queda sin pantallas en negro, sin intercambios y sin la sección de preguntas (Daniel: el catedrático no va a preguntar).
 - Las capturas del informe (Anexo D, Figuras de la app) muestran el estilo anterior de Acciones rápidas; no cambia nada de seguridad, así que no se recapturan.
 - Borrados: ninguno.
 

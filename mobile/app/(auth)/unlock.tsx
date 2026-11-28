@@ -78,7 +78,7 @@ export default function UnlockScreen() {
 
         <View style={styles.footerNote}>
           <Text style={[styles.footerText, { color: colors.textSubtle }]}>
-            Protegido con FLAG_SECURE y Android Keystore
+            Protegido con Android Keystore
           </Text>
         </View>
       </View>
