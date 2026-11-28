@@ -1,0 +1,11 @@
+[01:23:10] SDK: /usr/local/lib/android/sdk · KVM: crw-rw-rw- 1 root kvm 10, 232 Nov 28 01:23 /dev/kvm
+[01:23:10] Licencias e imagen system-images;android-33;google_apis;x86_64
+yes: standard output: Broken pipe
+
+
+[01:24:13] Crear el dispositivo virtual
+qwallet-prueba
+[01:24:14] Arrancar el emulador
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+[01:25:30] Arrancó en 61 s: Android 13, userdebug
