@@ -1,10 +1,14 @@
 import React from "react";
 import { Tabs } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Home, Send, Clock, PieChart, User } from "lucide-react-native";
 import { useTheme } from "../../src/theme";
 
 export default function TabLayout() {
-  const { colors, palette, isDark } = useTheme();
+  const { colors, palette } = useTheme();
+  // Android dibuja la app de borde a borde: la barra se sube lo que ocupen los botones
+  // o el gesto de navegación del teléfono, para que no queden encima de las pestañas.
+  const { bottom } = useSafeAreaInsets();
 
   return (
     <Tabs
@@ -15,8 +19,8 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
-          height: 64,
-          paddingBottom: 10,
+          height: 64 + bottom,
+          paddingBottom: 10 + bottom,
           paddingTop: 8,
         },
         tabBarLabelStyle: {

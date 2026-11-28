@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import { usePreventScreenCapture } from "expo-screen-capture";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSinCapturas } from "../../src/seguridad/pantalla";
 import { Fingerprint, ShieldCheck } from "lucide-react-native";
 import { useTheme } from "../../src/theme";
 import { Header, Button, Card } from "../../src/components";
@@ -12,9 +13,10 @@ import { desbloquear, haySesionGuardada } from "../../src/seguridad/sesion";
 export default function UnlockScreen() {
   const router = useRouter();
   const { colors, palette, isDark } = useTheme();
+  const { bottom } = useSafeAreaInsets(); // botones del teléfono (borde a borde)
 
   // FLAG_SECURE: previene captura de pantalla y grabación en vistas sensibles (MASVS-STORAGE)
-  usePreventScreenCapture();
+  useSinCapturas("desbloqueo"); // solo mientras esta pantalla está a la vista
 
   const [mensaje, setMensaje] = useState<string | null>(null);
   const [cargando, setCargando] = useState(false);
@@ -49,7 +51,7 @@ export default function UnlockScreen() {
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Header title="Desbloqueo de Sesión" showBack />
 
-      <View style={styles.content}>
+      <View style={[styles.content, { paddingBottom: 24 + bottom }]}>
         <View style={styles.topSection}>
           <View style={[styles.avatarCircle, { backgroundColor: fondo }]}>
             <ShieldCheck size={48} color={palette.accent} />
@@ -76,7 +78,7 @@ export default function UnlockScreen() {
 
         <View style={styles.footerNote}>
           <Text style={[styles.footerText, { color: colors.textSubtle }]}>
-            Protegido con FLAG_SECURE y Android Keystore
+            Protegido con Android Keystore
           </Text>
         </View>
       </View>

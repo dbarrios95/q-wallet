@@ -19,6 +19,7 @@ export const COGNITO_CLIENT_ID = process.env.EXPO_PUBLIC_COGNITO_CLIENT_ID ?? "6
 export const API_SCOPE = "qwallet/api";
 /** Deben coincidir con callback_urls y logout_urls de infra/variables.tf. */
 export const REDIRECT_LOGIN = "qwallet://auth/callback";
+export const REDIRECT_LOGOUT = "qwallet://auth/logout";
 
 /**
  * CTRL-08: pinning por llave pública (SHA-256 del SubjectPublicKeyInfo, en base64)
