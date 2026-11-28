@@ -1,9 +1,5 @@
 # Speech de la presentación final: recorrido por Q-Wallet (sábado 28-nov-2026)
 
-> Versión para decir en voz alta, con lenguaje sencillo. Sale del guion de `Final_Guion_Demo.md` (27-nov) y se ajusta a la app que ya probamos en el teléfono de Daniel: el inicio de sesión va en vivo, el desbloqueo se muestra cerrando y abriendo la app, y se suma lo que encontramos en el ensayo al cerrar sesión.
->
-> **Reparto:** Daniel (apertura, bienvenida, inicio de sesión, desbloqueo y cierre), Katherine (inicio, movimientos y presupuestos) y Aroldo (transferir, perfil y el hallazgo). **Duración:** unos 10 minutos. La presentación es **en línea** (videollamada): Daniel comparte la pantalla del teléfono y lo maneja; cada uno habla de sus pantallas. Las indicaciones entre corchetes no se leen.
-
 ---
 
 ## Quién comparte qué (presentación en línea)
@@ -133,18 +129,7 @@ Algo parecido pasó con la protección del teléfono: estaba instalada, pero no 
 
 La lección más importante del proyecto: una protección no cuenta hasta que alguien intenta romperla."
 
-[Pase.] "Daniel les resume los resultados."
-
----
-
-## Daniel
-
-### Cierre (~45 s)
-"Para resumir: al inicio identificamos 41 amenazas, y 18 eran críticas. Después de aplicar las protecciones y probarlas con ataques reales, no queda ninguna crítica, y el riesgo total bajó un 65 %. Las pruebas encontraron 17 problemas reales, y cada uno tiene una decisión tomada.
-
-Nuestro dictamen es favorable, con tres condiciones antes de abrir la app al público. La primera es dejar encendido siempre el filtro de ataques, que hoy solo prendemos para pruebas por costo. La segunda es ajustar los límites para que, cuando lleguen demasiadas solicitudes juntas, el sistema pida esperar en lugar de dar error. La tercera es actualizar la herramienta con la que se hizo la app antes del 31 de enero.
-
-Todo el código y las evidencias están en el repositorio. Muchas gracias; quedamos atentos a sus preguntas."
+[Cierre.] "Con esto terminamos el recorrido por Q-Wallet. Muchas gracias; quedamos atentos a sus preguntas."
 
 ---
 
@@ -152,7 +137,7 @@ Todo el código y las evidencias están en el repositorio. Muchas gracias; queda
 
 | Qué pasa | Qué hacer y qué decir |
 |---|---|
-| No hay internet o el inicio de sesión no carga | Mostrar la Figura 10 del informe (inicio de sesión): "La conexión nos falló, pero así se ve la página; lo probamos con un usuario real en las pruebas automáticas." Seguir con la Figura 11 para el desbloqueo. |
+| No hay internet o el inicio de sesión no carga | Mostrar la Figura 10 del informe (inicio de sesión): "La conexión nos falló, pero así se ve la página; lo probamos con un usuario real en las pruebas automáticas." El desbloqueo se cuenta de palabra. |
 | La pantalla compartida sale en negro | En Desbloqueo, Transferir y Perfil es lo esperado: "Esto es la protección contra capturas." Aroldo comparte la Figura 11. Si sale en negro en otra pantalla, cerrar la app desde recientes, abrirla de nuevo y seguir. |
 | Se cae la pantalla compartida de Daniel | Katherine comparte el informe (Figura 9 para Inicio, Movimientos y Presupuestos) mientras Daniel vuelve a conectar. |
 | El código de seis números falla | Esperar a que cambie (30 s) y escribir el nuevo. Revisar que la hora del teléfono esté en automático. |
