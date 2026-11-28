@@ -11,6 +11,7 @@
 - Decisión de Daniel: Acciones rápidas en una sola tarjeta con los cuatro accesos y el texto en una línea («Presupuestos» se partía con la letra grande del teléfono).
 - Aclarado: el PIN de 6 dígitos de Transferir no se valida (cualquier número pasa; es pantalla de ejemplo, CTRL-02 queda en el backend y el roadmap). En la demo no se hacen transferencias.
 - Hallazgo en el ensayo: después de «Cerrar sesión», «Continuar a la página segura» volvía a entrar sin contraseña ni MFA, porque la cookie del login administrado de Cognito seguía viva en el navegador (la app sí revocaba el refresh token y borraba lo guardado). Arreglo: `cerrarSesion()` abre también `/logout` de Cognito (regresa a `qwallet://auth/logout`, ya registrado en `logout_urls`) y la ruta nueva `app/auth/logout.tsx` lleva a Bienvenida. No se agrega al informe (ya cerrado); queda como respuesta si preguntan en la defensa.
+- Speech nuevo en lenguaje sencillo, `docs/entregas/Final_Speech_App.md`: login en vivo, desbloqueo cerrando y abriendo la app, el hallazgo del cierre de sesión en Perfil, plan B si algo falla y preguntas probables. `Final_Guion_Demo.md` no se toca.
 - Las capturas del informe (Anexo D, Figuras de la app) muestran el estilo anterior de Acciones rápidas; no cambia nada de seguridad, así que no se recapturan.
 - Borrados: ninguno.
 
