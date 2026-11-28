@@ -28,7 +28,7 @@
 
 La primera revisa el teléfono, con una herramienta que se llama freeRASP y que viene dentro de la app. Si el teléfono está modificado (lo que se conoce como 'root'), si es un teléfono falso de laboratorio o si alguien intenta meterse en la app mientras corre, la app se bloquea sola.
 
-La segunda cuida la conexión. La app solo habla con los servidores de Amazon que ya conoce. Si alguien se pone en medio para espiar, la app corta la comunicación. Esta segunda protección nos dio una sorpresa que Aroldo les va a contar al final."
+La segunda cuida la conexión, con una técnica que se llama 'pinning' o fijado de certificados, usando la librería react-native-ssl-public-key-pinning. La app trae grabada la identidad de los servidores de Amazon y solo habla con ellos. Si alguien se pone en medio para espiar, la app corta la comunicación. Esta segunda protección nos dio una sorpresa que Aroldo les va a contar al final."
 
 ### 2. Inicio de sesión (~1 min 15 s)
 [Tocar «Iniciar sesión» → «Continuar a la página segura». Escribir correo y contraseña, y después el código de la app de autenticación. Al terminar, el teléfono pide la huella para guardar la sesión. Se llega a Inicio.]
