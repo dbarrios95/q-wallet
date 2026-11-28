@@ -16,7 +16,7 @@
 ### Apertura (~30 s)
 [Teléfono en la pantalla de Bienvenida.]
 
-"Buenas tardes. Les presentamos Q-Wallet, una billetera digital para Android que maneja quetzales y funciona en la nube de Amazon. Nuestro papel fue ser los arquitectos de seguridad: la diseñamos segura desde el principio y después la atacamos para comprobar que cada protección funcionara de verdad. En vez de diapositivas, les vamos a mostrar la app funcionando, pantalla por pantalla. En cada una les contamos qué la protege y cómo lo probamos."
+"Buenos días. Les presentamos Q-Wallet, una billetera digital para Android que funciona en la nube de Amazon. Nuestro papel fue ser los arquitectos de seguridad: la diseñamos segura desde el principio y después la atacamos para comprobar que cada protección funcionara de verdad. Les vamos a mostrar la app funcionando, pantalla por pantalla. En cada una les contamos qué la protege y cómo lo probamos."
 
 ### 1. Bienvenida (~40 s)
 "Esta es la pantalla de bienvenida. Parece simple, pero desde que la app abre ya hay dos protecciones trabajando.
