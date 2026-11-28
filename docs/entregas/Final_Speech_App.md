@@ -26,7 +26,7 @@
 ### 1. Bienvenida (~40 s)
 "Esta es la pantalla de bienvenida. Parece simple, pero desde que la app abre ya hay dos protecciones trabajando.
 
-La primera revisa el teléfono. Si está modificado, si es un teléfono falso de laboratorio o si alguien intenta meterse en la app mientras corre, la app se bloquea sola.
+La primera revisa el teléfono, con una herramienta que se llama freeRASP y que viene dentro de la app. Si el teléfono está modificado (lo que se conoce como 'root'), si es un teléfono falso de laboratorio o si alguien intenta meterse en la app mientras corre, la app se bloquea sola.
 
 La segunda cuida la conexión. La app solo habla con los servidores de Amazon que ya conoce. Si alguien se pone en medio para espiar, la app corta la comunicación. Esta segunda protección nos dio una sorpresa que Aroldo les va a contar al final."
 
