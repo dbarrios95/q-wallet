@@ -2,17 +2,30 @@
 
 > Versión para decir en voz alta, con lenguaje sencillo. Sale del guion de `Final_Guion_Demo.md` (27-nov) y se ajusta a la app que ya probamos en el teléfono de Daniel: el inicio de sesión va en vivo, el desbloqueo se muestra cerrando y abriendo la app, y se suma lo que encontramos en el ensayo al cerrar sesión.
 >
-> **Reparto:** Daniel (apertura, bienvenida, inicio de sesión, desbloqueo y cierre), Katherine (inicio, movimientos y presupuestos) y Aroldo (transferir, perfil y el hallazgo). **Duración:** unos 10 minutos. Daniel maneja el teléfono y los demás hablan. Las indicaciones entre corchetes no se leen.
+> **Reparto:** Daniel (apertura, bienvenida, inicio de sesión, desbloqueo y cierre), Katherine (inicio, movimientos y presupuestos) y Aroldo (transferir, perfil y el hallazgo). **Duración:** unos 10 minutos. La presentación es **en línea** (videollamada): Daniel comparte la pantalla del teléfono y lo maneja; cada uno habla de sus pantallas. Las indicaciones entre corchetes no se leen.
 
 ---
+
+## Quién comparte qué (presentación en línea)
+
+| Quién | Qué tiene abierto | Cuándo comparte |
+|---|---|---|
+| **Daniel** | La pantalla del teléfono compartida en la llamada. Cámara encendida y, si se puede, apuntando al teléfono. | Toda la presentación, salvo cuando Aroldo comparte. |
+| **Katherine** | El informe en PDF por si falla algo (Figura 9: pantallas principales). | Solo si se cae la pantalla de Daniel. Sus pantallas (Inicio, Movimientos y Presupuestos) se ven normal. |
+| **Aroldo** | La **Figura 11** del informe (Transferir y Perfil: en el teléfono frente a la captura) o las dos imágenes sueltas: [Transferir en pantalla](https://github.com/dbarrios95/q-wallet/blob/main/docs/evidencias/bloque6/EVD-6-06a_transferir_en_pantalla.png) y [Perfil en pantalla](https://github.com/dbarrios95/q-wallet/blob/main/docs/evidencias/bloque6/EVD-6-07a_perfil_en_pantalla.png). También la **Figura 13** (pantalla de bloqueo). | En Transferir y Perfil, cuando la pantalla de Daniel se pone en negro, y en el hallazgo final (Figura 13). |
+
+**Por qué se ve en negro:** Desbloqueo, Transferir y Perfil no dejan que nada copie la pantalla (FLAG_SECURE). La pantalla compartida en la llamada también es una copia, así que sale en negro. En el teléfono de Daniel se ven normal. Las demás pantallas se ven sin problema.
+
+**Cómo hacer el cambio:** Aroldo dice su frase, comparte su pantalla con la figura, explica y deja de compartir. Daniel vuelve a compartir el teléfono (en Meet y Zoom, si Aroldo deja de compartir, la pantalla de Daniel vuelve sola o hay que darle «Compartir» de nuevo: ensayarlo).
 
 ## Antes de empezar
 
 1. En la app: **Perfil → Cerrar sesión**, para que arranque en Bienvenida. Revisar que al tocar «Continuar a la página segura» pida correo, contraseña y código.
 2. Teléfono con internet, batería cargada, brillo alto y en modo «No molestar».
 3. La app de códigos (Google Authenticator) a la mano, y la contraseña del usuario de la demo guardada en Chrome.
-4. Al proyectar el teléfono, todas las pantallas se ven menos **Desbloqueo, Transferir y Perfil, que salen en negro**: es la protección contra capturas, y se demuestra en vivo. Tener abierta la Figura 11 del informe (cómo se ven en el teléfono frente a la captura). Opcional: una segunda cámara (otro celular en videollamada o una cámara web) apuntando al teléfono, para que se vea la pantalla real al mismo tiempo que la proyección en negro.
-5. Tener abiertas la Figura 10 (inicio de sesión) y la Figura 13 (pantalla de bloqueo) del informe, y el PDF de las diapositivas, por si algo falla.
+4. Probar la pantalla compartida del teléfono en la llamada: todo se ve menos **Desbloqueo, Transferir y Perfil, que salen en negro**. Es lo esperado y se usa como demostración.
+5. Aroldo con la Figura 11 y la Figura 13 abiertas; Katherine con el informe en PDF (Figura 10: inicio de sesión; Figura 9: pantallas principales) por si algo falla.
+6. Ensayar una vez el cambio de pantalla compartida entre Daniel y Aroldo.
 
 ---
 
@@ -44,7 +57,7 @@ La lección aquí es no inventar un inicio de sesión propio, sino usar un servi
 ### 3. Desbloqueo (~1 min)
 [Cerrar la app desde recientes y volver a abrirla. Pide la huella. Ponerla y entrar.]
 
-"Ahora cierro la app y la vuelvo a abrir, como haría cualquiera durante el día. Ya no me pide la contraseña: me pide la huella. Fíjense que la proyección se puso en negro. No es una falla: esta pantalla no deja que nada la capture ni la grabe, ni siquiera la proyección que están viendo. En el teléfono yo la veo normal. Apenas entre a la app, la imagen vuelve.
+"Ahora cierro la app y la vuelvo a abrir, como haría cualquiera durante el día. Ya no me pide la contraseña: me pide la huella. Fíjense que mi pantalla compartida se puso en negro. No es una falla: esta pantalla no deja que nada la copie, ni una captura, ni una grabación, ni esta transmisión. En mi teléfono la veo normal: un candado y el botón para poner la huella. [Si la cámara apunta al teléfono: 'En mi cámara sí la pueden ver.'] Apenas entre a la app, la imagen vuelve.
 
 Lo importante es dónde queda guardada la sesión. El permiso para usar la app dura solo 15 minutos y nunca se escribe en el teléfono. El permiso para renovarlo sí se guarda, pero encerrado con una llave del propio teléfono que solo se abre con la huella o el bloqueo de pantalla.
 
@@ -88,9 +101,11 @@ La segunda es cómo se vigila. Delante del servidor hay un filtro que detiene at
 ## Aroldo
 
 ### 7. Transferir (~1 min 15 s)
-[Pestaña «Transferir». Se puede llenar el formulario y abrir la ventana del PIN, pero **no se confirma la transferencia**. Al entrar, la proyección se pone en negro: mostrar la Figura 11 o la segunda cámara.]
+[Daniel entra a la pestaña «Transferir» y su pantalla compartida se pone en negro. Aroldo dice la primera frase, comparte la Figura 11 (o la imagen «Transferir en pantalla») y sigue hablando. Daniel puede llenar el formulario y abrir la ventana del PIN, pero **no confirma la transferencia**.]
 
-"Esta es la pantalla para mandar dinero a otro número de teléfono. Como ven, en cuanto entramos la proyección se puso en negro: aquí no se permiten capturas ni grabaciones, para que ninguna app espía se lleve los datos de la transferencia. Como mueve dinero, tiene varias capas más. La primera revisa lo que se escribe, para que no se cuele nada raro. Después pide un PIN de seis números para autorizar.
+"Como ven, en cuanto Daniel entró a esta pantalla, su transmisión se puso en negro. No es una falla: aquí no se permite copiar la pantalla, para que ninguna app espía se lleve los datos de la transferencia. Les comparto cómo se ve en el teléfono. [Comparte la figura.] A la izquierda está lo que ve el usuario, y a la derecha lo que obtiene cualquiera que intente capturarla: negro.
+
+Esta es la pantalla para mandar dinero a otro número de teléfono. Como mueve dinero, tiene varias capas más. La primera revisa lo que se escribe, para que no se cuele nada raro. Después pide un PIN de seis números para autorizar.
 
 Esta pantalla todavía no envía la transferencia al servidor. Lo que sí está construido y probado es el servidor que la va a recibir, y ahí pusimos dos reglas más. Si alguien intenta adivinar el PIN, al quinto error la cuenta se bloquea 15 minutos. Y cada transferencia lleva una clave única: aunque se mande dos veces por error, solo se cobra una.
 
@@ -99,16 +114,16 @@ Lo probamos directamente contra el servidor. Tratamos de adivinar el PIN y se bl
 La regla aquí es que todo lo que mueve dinero se confirma dos veces y se revisa en el servidor, nunca solo en el teléfono."
 
 ### 8. Perfil y cierre de sesión (~1 min)
-[Pestaña «Perfil» (sale en negro en la proyección). Bajar hasta «Cerrar sesión segura», tocarlo; la imagen vuelve cuando regresa a Bienvenida.]
+[Aroldo sigue compartiendo la Figura 11, ahora en el par de Perfil (o la imagen «Perfil en pantalla»). Daniel entra a «Perfil», baja hasta «Cerrar sesión segura» y lo toca cuando Aroldo llegue a esa parte. Después Aroldo deja de compartir y Daniel vuelve a compartir el teléfono, que ya está en Bienvenida y se ve normal.]
 
-"El perfil también sale en negro, por la misma protección. Aquí los datos sí vienen del servidor real, y los datos personales salen ocultos en parte: solo se ve lo necesario.
+"El perfil también sale en negro en la transmisión de Daniel, por la misma protección; aquí les muestro cómo se ve en el teléfono. Los datos sí vienen del servidor real, y los datos personales salen ocultos en parte: solo se ve lo necesario.
 
 Lo más importante es este botón de cerrar sesión. No solo borra la sesión del teléfono: también le avisa a Amazon que anule el permiso. Así, aunque alguien lo hubiera copiado antes, ya no le sirve. Lo comprobamos, y Amazon confirmó que el permiso quedó anulado.
 
-Y aquí tenemos algo que encontramos ayer, ensayando esta misma demo. Al cerrar sesión y volver a entrar, la página de Amazon nos dejaba pasar sin pedir contraseña ni código. Era porque el navegador del teléfono todavía recordaba la sesión. O sea, si alguien tomaba el teléfono después de que cerráramos sesión, podía volver a entrar. Lo corregimos: ahora cerrar sesión también cierra la sesión en el navegador. Por eso, al tocar el botón, se abrió un momento el navegador y regresó a la bienvenida, que ya se ve otra vez en la proyección."
+Y aquí tenemos algo que encontramos ayer, ensayando esta misma demo. Al cerrar sesión y volver a entrar, la página de Amazon nos dejaba pasar sin pedir contraseña ni código. Era porque el navegador del teléfono todavía recordaba la sesión. O sea, si alguien tomaba el teléfono después de que cerráramos sesión, podía volver a entrar. Lo corregimos: ahora cerrar sesión también cierra la sesión en el navegador. Daniel, ¿podés cerrar sesión? [Daniel lo toca. Aroldo deja de compartir y Daniel vuelve a compartir el teléfono.] Ahí ven que regresó a la bienvenida, y la pantalla de Daniel se ve otra vez, porque esta pantalla no tiene datos delicados."
 
 ### 9. El hallazgo que solo apareció atacando (~1 min)
-[Mostrar la Figura 13 del informe: pantalla de bloqueo.]
+[Aroldo comparte la Figura 13 del informe: pantalla de bloqueo. Al terminar deja de compartir.]
 
 "Ese no fue el único caso. Les debíamos la sorpresa de la que habló Daniel.
 
@@ -138,7 +153,8 @@ Todo el código y las evidencias están en el repositorio. Muchas gracias; queda
 | Qué pasa | Qué hacer y qué decir |
 |---|---|
 | No hay internet o el inicio de sesión no carga | Mostrar la Figura 10 del informe (inicio de sesión): "La conexión nos falló, pero así se ve la página; lo probamos con un usuario real en las pruebas automáticas." Seguir con la Figura 11 para el desbloqueo. |
-| La proyección sale en negro | En Desbloqueo, Transferir y Perfil es lo esperado: "Esto es la protección contra capturas." Mostrar la Figura 11. Si sale en negro en otra pantalla, cerrar la app desde recientes, abrirla de nuevo y seguir. |
+| La pantalla compartida sale en negro | En Desbloqueo, Transferir y Perfil es lo esperado: "Esto es la protección contra capturas." Aroldo comparte la Figura 11. Si sale en negro en otra pantalla, cerrar la app desde recientes, abrirla de nuevo y seguir. |
+| Se cae la pantalla compartida de Daniel | Katherine comparte el informe (Figura 9 para Inicio, Movimientos y Presupuestos) mientras Daniel vuelve a conectar. |
 | El código de seis números falla | Esperar a que cambie (30 s) y escribir el nuevo. Revisar que la hora del teléfono esté en automático. |
 | La app se bloquea con la pantalla de seguridad | Era lo que debía pasar si el teléfono parece manipulado: aprovecharlo para la parte 9. |
 
